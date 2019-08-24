@@ -1,0 +1,73 @@
+{
+    "Description": "Linear Point Algebra", 
+    "Name": "Linear Point Algebra", 
+    "Relations": {
+        "<": {
+            "Domain": ["Point"], 
+            "Inverse": ">", 
+            "Name": "LessThan", 
+            "Range": ["Point"], 
+            "Reflexive": false, 
+            "Symmetric": false, 
+            "Transitive": true
+        }, 
+        "=": {
+            "Domain": ["Point"], 
+            "Inverse": "=", 
+            "Name": "Equals", 
+            "Range": ["Point"], 
+            "Reflexive": true, 
+            "Symmetric": true, 
+            "Transitive": true
+        }, 
+        ">": {
+            "Domain": ["Point"], 
+            "Inverse": "<", 
+            "Name": "GreaterThan", 
+            "Range": ["Point"], 
+            "Reflexive": false, 
+            "Symmetric": false, 
+            "Transitive": true
+        }
+    }, 
+    "TransTable": {
+        "<": {
+            "<": [
+                "<"
+            ], 
+            "=": [
+                "<"
+            ], 
+            ">": [
+                "<", 
+                "=", 
+                ">"
+            ]
+        }, 
+        "=": {
+            "<": [
+                "<"
+            ], 
+            "=": [
+                "="
+            ], 
+            ">": [
+                ">"
+            ]
+        }, 
+        ">": {
+            "<": [
+                "<", 
+                "=", 
+                ">"
+            ], 
+            "=": [
+                ">"
+            ], 
+            ">": [
+                ">"
+            ]
+        }
+    }, 
+    "Type": "Relation System"
+}

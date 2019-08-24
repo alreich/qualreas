@@ -1,0 +1,5 @@
+RELATION,ABBREVIATION,INVERSE,DOMAIN,RANGE,REFLEXIVE,SYMMETRIC,TRANSITIVE
+LessThan,<,>,Point,Point,False,False,True
+Equals,=,=,Point,Point,True,True,True
+GreaterThan,>,<,Point,Point,False,False,True
+Incomparable,l~,l~,Point,Point,False,True,False

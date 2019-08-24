@@ -1,0 +1,9 @@
+RELATION,ABBREVIATION,INVERSE,DOMAIN,RANGE,REFLEXIVE,SYMMETRIC,TRANSITIVE
+Disconnected,DC,DC,Region,Region,False,True,False
+ExternallyConnected,EC,EC,Region,Region,False,True,False
+Equal,EQ,EQ,Region,Region,True,True,True
+PartiallyOverlapping,PO,PO,Region,Region,False,True,False
+TangentialProperPart,TPP,TPPI,Region,Region,False,False,False
+TangentialProperPartInverse,TPPI,TPP,Region,Region,False,False,False
+NonTangentialProperPart,NTPP,NTPPI,Region,Region,False,False,True
+NonTangentialProperPartInverse,NTPPI,NTPP,Region,Region,False,False,True

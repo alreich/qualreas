@@ -1,0 +1,201 @@
+{
+  "@graph": [
+    {
+      "@id": "http://www.w3.org/2006/time#intervalStarts",
+      "@type": [
+        "http://www.w3.org/2002/07/owl#ObjectProperty",
+        "http://www.w3.org/2002/07/owl#TransitiveProperty"
+      ],
+      "http://www.w3.org/2000/01/rdf-schema#comment": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Added transitivity to the property's characteristics"
+      }
+    },
+    {
+      "@id": "http://www.w3.org/2006/time#intervalDuring",
+      "@type": [
+        "http://www.w3.org/2002/07/owl#TransitiveProperty",
+        "http://www.w3.org/2002/07/owl#ObjectProperty"
+      ],
+      "http://www.w3.org/2000/01/rdf-schema#comment": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Added transitivity to the property's characteristics"
+      },
+      "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": {
+        "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#generalDuring"
+      }
+    },
+    {
+      "@id": "http://www.w3.org/2006/time#intervalFinishes",
+      "@type": [
+        "http://www.w3.org/2002/07/owl#ObjectProperty",
+        "http://www.w3.org/2002/07/owl#TransitiveProperty"
+      ],
+      "http://www.w3.org/2000/01/rdf-schema#comment": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Added transitivity to the property's characteristics"
+      }
+    },
+    {
+      "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#pointStarts",
+      "@type": [
+        "http://www.w3.org/2002/07/owl#TransitiveProperty",
+        "http://www.w3.org/2002/07/owl#ObjectProperty"
+      ],
+      "http://www.w3.org/2000/01/rdf-schema#comment": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Indicates that the domain instant occurs at the beginning of the range interval."
+      },
+      "http://www.w3.org/2000/01/rdf-schema#domain": {
+        "@id": "http://www.w3.org/2006/time#Instant"
+      },
+      "http://www.w3.org/2000/01/rdf-schema#range": {
+        "@id": "http://www.w3.org/2006/time#ProperInterval"
+      },
+      "http://www.w3.org/2002/07/owl#inverseOf": {
+        "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#pointStartedBy"
+      }
+    },
+    {
+      "@id": "http://www.w3.org/2006/time#intervalBefore",
+      "@type": [
+        "http://www.w3.org/2002/07/owl#ObjectProperty",
+        "http://www.w3.org/2002/07/owl#TransitiveProperty"
+      ],
+      "http://www.w3.org/2000/01/rdf-schema#comment": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Added transitivity to the property's characteristics"
+      }
+    },
+    {
+      "@id": "http://purl.org/dc/elements/1.1/date",
+      "@type": "http://www.w3.org/2002/07/owl#AnnotationProperty"
+    },
+    {
+      "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#generalDuring",
+      "@type": [
+        "http://www.w3.org/2002/07/owl#ObjectProperty",
+        "http://www.w3.org/2002/07/owl#TransitiveProperty"
+      ],
+      "http://www.w3.org/2000/01/rdf-schema#comment": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Added so that the domain could be generalized to Temporal Entity"
+      },
+      "http://www.w3.org/2000/01/rdf-schema#domain": {
+        "@id": "http://www.w3.org/2006/time#TemporalEntity"
+      },
+      "http://www.w3.org/2000/01/rdf-schema#range": {
+        "@id": "http://www.w3.org/2006/time#ProperInterval"
+      },
+      "http://www.w3.org/2002/07/owl#inverseOf": {
+        "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#generalContains"
+      }
+    },
+    {
+      "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl",
+      "@type": "http://www.w3.org/2002/07/owl#Ontology",
+      "http://purl.org/dc/elements/1.1/creator": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Potomac Fusion, Inc."
+      },
+      "http://purl.org/dc/elements/1.1/date": {
+        "@type": "http://www.w3.org/2001/XMLSchema#date",
+        "@value": "May 9, 2009"
+      },
+      "http://www.w3.org/2000/01/rdf-schema#comment": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "This ontology was built on top of the W3C Time Ontology to support object properties that allow Intervals and Instants to be reasoned over together according to the algebra of time in Dr. Alfred J. Reich's paper, Intervals, Points, & Branching Time."
+      },
+      "http://www.w3.org/2000/01/rdf-schema#label": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Interval and Point Ontology of Time"
+      },
+      "http://www.w3.org/2002/07/owl#imports": {
+        "@id": "http://www.w3.org/2006/time"
+      },
+      "http://www.w3.org/2002/07/owl#versionInfo": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "0.1.0"
+      }
+    },
+    {
+      "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#generalContains",
+      "@type": "http://www.w3.org/2002/07/owl#ObjectProperty"
+    },
+    {
+      "@id": "http://www.w3.org/2006/time#intervalEquals",
+      "@type": [
+        "http://www.w3.org/2002/07/owl#SymmetricProperty",
+        "http://www.w3.org/2002/07/owl#ObjectProperty"
+      ],
+      "http://www.w3.org/2000/01/rdf-schema#comment": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Added symmetry to the property's characteristics"
+      }
+    },
+    {
+      "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#pointFinishes",
+      "@type": [
+        "http://www.w3.org/2002/07/owl#TransitiveProperty",
+        "http://www.w3.org/2002/07/owl#ObjectProperty"
+      ],
+      "http://www.w3.org/2000/01/rdf-schema#comment": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Indicates that the domain instant occurs at the end of the range interval."
+      },
+      "http://www.w3.org/2000/01/rdf-schema#domain": {
+        "@id": "http://www.w3.org/2006/time#Instant"
+      },
+      "http://www.w3.org/2000/01/rdf-schema#range": {
+        "@id": "http://www.w3.org/2006/time#ProperInterval"
+      },
+      "http://www.w3.org/2002/07/owl#inverseOf": {
+        "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#pointFinishedBy"
+      }
+    },
+    {
+      "@id": "http://purl.org/dc/elements/1.1/creator",
+      "@type": "http://www.w3.org/2002/07/owl#AnnotationProperty"
+    },
+    {
+      "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#pointFinishedBy",
+      "@type": "http://www.w3.org/2002/07/owl#ObjectProperty"
+    },
+    {
+      "@id": "http://www.w3.org/2006/time#Instant",
+      "@type": "http://www.w3.org/2002/07/owl#Class"
+    },
+    {
+      "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#pointEquals",
+      "@type": [
+        "http://www.w3.org/2002/07/owl#ObjectProperty",
+        "http://www.w3.org/2002/07/owl#SymmetricProperty"
+      ],
+      "http://www.w3.org/2000/01/rdf-schema#comment": {
+        "@type": "http://www.w3.org/2001/XMLSchema#string",
+        "@value": "Indicates that two instants are equal"
+      },
+      "http://www.w3.org/2000/01/rdf-schema#domain": {
+        "@id": "http://www.w3.org/2006/time#Instant"
+      },
+      "http://www.w3.org/2000/01/rdf-schema#range": {
+        "@id": "http://www.w3.org/2006/time#Instant"
+      },
+      "http://www.w3.org/2002/07/owl#inverseOf": {
+        "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#pointEquals"
+      }
+    },
+    {
+      "@id": "http://www.potomacfusion.com/ontology/2009/4/7/time.owl#pointStartedBy",
+      "@type": "http://www.w3.org/2002/07/owl#ObjectProperty"
+    },
+    {
+      "@id": "http://www.w3.org/2006/time#TemporalEntity",
+      "@type": "http://www.w3.org/2002/07/owl#Class"
+    },
+    {
+      "@id": "http://www.w3.org/2006/time#ProperInterval",
+      "@type": "http://www.w3.org/2002/07/owl#Class"
+    }
+  ]
+}

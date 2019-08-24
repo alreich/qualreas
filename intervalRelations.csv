@@ -1,0 +1,14 @@
+RELATION,ABBREVIATION,INVERSE,DOMAIN,RANGE,REFLEXIVE,SYMMETRIC,TRANSITIVE
+Before,B,BI,Interval,Interval,False,False,True
+After,BI,B,Interval,Interval,False,False,True
+Meets,M,MI,ProperInterval,ProperInterval,False,False,False
+Met-By,MI,M,ProperInterval,ProperInterval,False,False,False
+Overlaps,O,OI,ProperInterval,ProperInterval,False,False,False
+Overlapped-By,OI,O,ProperInterval,ProperInterval,False,False,False
+Starts,S,SI,ProperInterval,ProperInterval,False,False,True
+Started-By,SI,S,ProperInterval,ProperInterval,False,False,True
+During,D,DI,Interval,ProperInterval,False,False,True
+Contains,DI,D,ProperInterval,Interval,False,False,True
+Equals,E,E,ProperInterval,ProperInterval,True,True,True
+Finishes,F,FI,ProperInterval,ProperInterval,False,False,True
+Finished-by,FI,F,ProperInterval,ProperInterval,False,False,True
