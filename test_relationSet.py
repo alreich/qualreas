@@ -13,10 +13,10 @@ class TestRelationSet(unittest.TestCase):
         self.aaa = qr.Relation('aaa', 'a', 'A', 'testDomain', 'testRange')
         self.bbb = qr.Relation('bbb', 'b', 'B', 'testRange', 'testDomain')
 
-        self.AAA.set_inverse(self.aaa)  # AAA & aaa are each others' inverses
-        self.BBB.set_inverse(self.bbb)  # BBB & bbb are each others' inverses
-        self.aaa.set_inverse(self.AAA)
-        self.bbb.set_inverse(self.BBB)
+        self.AAA.set_converse(self.aaa)  # AAA & aaa are each others' converses
+        self.BBB.set_converse(self.bbb)  # BBB & bbb are each others' converses
+        self.aaa.set_converse(self.AAA)
+        self.bbb.set_converse(self.BBB)
 
         self.relset_ABa = qr.RelationSet([self.BBB, self.AAA, self.aaa])
         self.relset_Bab = qr.RelationSet([self.aaa, self.bbb, self.BBB])
@@ -71,14 +71,14 @@ class TestRelationSet(unittest.TestCase):
     # def test_algebra(self):
     #     self.fail()
 
-    def test_inverse(self):
-        self.assertEqual(self.relset_ABa.inverse, qr.RelationSet([self.aaa, self.bbb, self.AAA]))
+    def test_converse(self):
+        self.assertEqual(self.relset_ABa.converse, qr.RelationSet([self.aaa, self.bbb, self.AAA]))
 
     def test_names(self):
-        self.assertEqual(self.relset_ABa.names, ['A', 'B', 'a'])
+        self.assertEqual(self.relset_ABa.short_names, ['A', 'B', 'a'])
 
     def test_fullnames(self):
-        self.assertEqual(self.relset_ABa.fullnames, ['AAA', 'BBB', 'aaa'])
+        self.assertEqual(self.relset_ABa.long_names, ['AAA', 'BBB', 'aaa'])
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,104 +1,100 @@
 """
-Created on 3 Jan 2011
-
 @author: Alfred J. Reich, Ph.D.
 
 """
 
 import json
 import uuid
+from itertools import combinations, chain
 
 
 __author__ = 'Alfred J. Reich'
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
-# TODO: Use "from __future__ import print_function, division"
+
+### Some utilities:
+
+def flatten(listOfLists):
+    '''Flatten one level of nesting'''
+    return chain.from_iterable(listOfLists)
+
+# TODO: Make the function list_of_combinations produce an iterator, rather than a list
+def list_of_combinations(items, make_sequence):
+    '''Given a list of items, return a list of all possible combinations of the items.
+    Each combination is expressed in the form of whatever sequence building function
+    is passed in for make_sequence (e.g., list, set, tuple).  The empty combination is not
+    included in the returned result.  If there are n items in the input list, then
+    the number of combinations in the result will be 2^n - 1, so becareful not too include
+    too many items in the input list of items.
+
+    Example:
+    > n = 4
+    > items = list(range(4))
+    > list_of_combinations(items, set)
+     [{0}, {1}, {2}, {3}, {0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3}, {0, 1, 2},
+      {0, 1, 3}, {0, 2, 3}, {1, 2, 3}, {0, 1, 2, 3}]
+
+    '''
+    x = []
+    for i in items[1:]:
+        c = combinations(items, i)
+        x.append(list(c))
+    combos = list(map(make_sequence, list(flatten(x))))
+    combos.append(make_sequence(items))
+    return combos
 
 
 class Relation(object):
     """A Relation object represents a relationship between elements of
     one set (domain) and another set (range).  The Relation object
-    stores information about the relationship, such as its inverse,
-    its names (normal & abbreviated), whether it is reflexive,
-    symmetric, etc., and so on.  It is important that Relation objects
-    be immutable.  All of their properties are carefully defined by
-    the Relation Algebra that they belong to.  Relations are defined
-    as part of an algebra in a JSON file.
+    stores information about the relationship, such as its converse,
+    its names (long & short), whether it is reflexive, symmetric, etc.,
+    and so on.  It is important that Relation objects be immutable.
+    All of their properties are carefully defined by the Relation
+    Algebra that they belong to.  Relations are defined as part of
+    an algebra in a JSON file.
 
     """
 
-    def __init__(self, relation_name, abbreviated_name, inverse_name, relation_domain,
+    def __init__(self, long_name, short_name, converse_name, relation_domain,
                  relation_range, is_reflexive=False, is_symmetric=False, is_transitive=False):
         # Once set, none of these attributes should be changed.  For this reason they are hidden
         # and only accessed (read-only) via the property decorator.
-        self.__fullname = relation_name
-        self.__abbrev_name = abbreviated_name
-        self.__inv_name = inverse_name
-        self.__inv = None  # Will be automatically set below
-        self.__domain = relation_domain
-        self.__range = relation_range
-        self.__is_reflexive = is_reflexive
-        self.__is_symmetric = is_symmetric
-        self.__is_transitive = is_transitive
-        self.__is_equality = is_reflexive & is_symmetric & is_transitive
+        self.long_name = long_name
+        self.short_name = short_name
+        self.converse_name = converse_name
+        self.converse = None  # Will be automatically set below
+        self.domain = relation_domain
+        self.range = relation_range
+        self.is_reflexive = is_reflexive
+        self.is_symmetric = is_symmetric
+        self.is_transitive = is_transitive
 
-    # This method violates the convention that __repr__ return a string that could be used to
+    # This method intentionally violates the convention that __repr__ return a string that could be used to
     # recreate the Relation object.  One reason for this is for readability in sets of relations.
     # Another reason is that there should only be one copy of any Relation.  Once created, all
     # references to the Relation should (and hopefully do) refer to that copy.
     def __repr__(self):
-        return "{}".format(self.__abbrev_name)
+        '''A relation is simply represented by its short_name.'''
+        return "{}".format(self.short_name)
 
     def __lt__(self, other):
+        '''Relations can be sorted, alphabetically according to their short_names.'''
         if isinstance(other, Relation):
-            return self.__abbrev_name < other.__abbrev_name
+            return self.short_name < other.short_name
         else:
             return False
 
-    @property
-    def inverse_name(self):
-        return self.__inv_name
-
-    @property
-    def inverse(self):
-        return self.__inv
-
     # This function should never be called by the user.  It is called automatically during
     # the loading and setup of an algebra.
-    def set_inverse(self, inv_relation):
-        self.__inv = inv_relation
-
-    @property
-    def short_name(self):
-        return self.__abbrev_name
-
-    @property
-    def full_name(self):
-        return self.__fullname
-
-    @property
-    def is_reflexive(self):
-        return self.__is_reflexive
-
-    @property
-    def is_symmetric(self):
-        return self.__is_symmetric
-
-    @property
-    def is_transitive(self):
-        return self.__is_transitive
+    def set_converse(self, conv_rel):
+        '''Called automatically so that each relation 'points' to its converse relation.'''
+        self.converse = conv_rel
 
     @property
     def is_equality(self):
-        return self.__is_equality
-
-    @property
-    def domain(self):
-        return self.__domain
-
-    @property
-    def range(self):
-        return self.__range
+        '''A relation is an equality relation if it is reflexive, symmetric, & transitive.'''
+        return self.is_reflexive & self.is_symmetric & self.is_transitive
 
 
 class RelationSet(object):
@@ -113,26 +109,26 @@ class RelationSet(object):
     """
     def __init__(self, elements, algebra=None):
         # TODO: If algebra is not None, then check that 'elements' are in its relations.
-        self.__elements = frozenset(sorted(elements))
-        self.__algebra = algebra
+        self.elements = frozenset(sorted(elements))
+        self.algebra = algebra
 
     def __contains__(self, element):
-        return self.__elements.__contains__(element)
+        return self.elements.__contains__(element)
 
     def __len__(self):
-        return self.__elements.__len__()
+        return self.elements.__len__()
 
     def __iter__(self):
-        return self.__elements.__iter__()
+        return self.elements.__iter__()
 
     def __eq__(self, other):
-        return (self.__elements == other.elements) and (self.__algebra == other.algebra)
+        return (self.elements == other.elements) and (self.algebra == other.algebra)
 
     def __ne__(self, other):
-        return self.__elements != other.elements
+        return self.elements != other.elements
 
     def __repr__(self):
-        return "<RelationSet" + self.__elements.__repr__()[9:] + ">"
+        return "<RelationSet" + self.elements.__repr__()[9:] + ">"
 
     def __add__(self, relset):
         """Addition for relation sets is equivalent to set intersection."""
@@ -143,6 +139,7 @@ class RelationSet(object):
             raise Exception("Algebra's must agree")
 
     def union(self, relset):
+        '''Returns a relation set that is a union of this relation set with relset.'''
         if self.algebra == relset.algebra:
             result = self.elements | relset.elements
             return RelationSet(result, relset.algebra)
@@ -158,40 +155,31 @@ class RelationSet(object):
         """
         if self.algebra == relset.algebra:
             result = RelationSet([], self.algebra)
-            tbl = relset.algebra.trans_table
             for rel1 in self:
                 for rel2 in relset:
-                    result = result.union(tbl[rel1.short_name][rel2.short_name])
+                    result = result.union( relset.algebra.transitivity_table[rel1.short_name][rel2.short_name] )
             return RelationSet(result, self.algebra)
         else:
             raise Exception("Mismatched algebras")
 
     def sorted_list(self):
-        """Sort the elements of the RelationSet by their short_name property.
-        :return: Sorted list of Relations
-
-        """
+        '''Returns a sorted list of the short_names of relations in the relation set.'''
         return sorted(self, key=lambda rel: rel.short_name)
 
     @property
-    def elements(self):
-        return self.__elements
+    def converse(self):
+        '''Returns a relation set of converses of the relations in this relation set.'''
+        return RelationSet([rel.converse for rel in self.elements], self.algebra)
 
     @property
-    def algebra(self):
-        return self.__algebra
+    def short_names(self):
+        '''Returns a sorted list of short_names of the relations in the relation set.'''
+        return sorted([rel.short_name for rel in self.elements])
 
     @property
-    def inverse(self):
-        return RelationSet([rel.inverse for rel in self.__elements], self.algebra)
-
-    @property
-    def names(self):
-        return sorted([rel.short_name for rel in self.__elements])
-
-    @property
-    def fullnames(self):
-        return sorted([rel.full_name for rel in self.__elements])
+    def long_names(self):
+        "Returns a sorted list of long_names of the relations in the relation set."
+        return sorted([rel.long_name for rel in self.elements])
 
 
 class Algebra(object):
@@ -203,88 +191,48 @@ class Algebra(object):
         """
 
         with open(filename, 'r') as f:
-            _alg = json.load(f)
-        self.__name = _alg["Name"]
-        self.__description = _alg["Description"]
-        self.__type = _alg["Type"]
-        self.__relation_dict = dict()  # Initialized below
-        self.__trans_table = dict()  # Initialized below
+            self.algebra_dict = json.load(f)
+        self.name = self.algebra_dict["Name"]
+        self.description = self.algebra_dict["Description"]
+        self.relations = dict()  # Initialized below
+        self.transitivity_table = dict()  # Initialized below
 
         # Create each relation and setup its properties
-        # for relname, reldict in _alg["Relations"].iteritems():
-        for (relname, reldict) in _alg["Relations"].items():
-            self.__relation_dict[relname] = Relation(reldict["Name"], relname, reldict["Inverse"],
-                                                     frozenset(reldict["Domain"]), frozenset(reldict["Range"]),
-                                                     reldict["Reflexive"], reldict["Symmetric"],
-                                                     reldict["Transitive"])
+        for (relname, reldict) in self.algebra_dict["Relations"].items():
+            self.relations[relname] = Relation(reldict["Name"], relname, reldict["Converse"],
+                                               frozenset(reldict["Domain"]), frozenset(reldict["Range"]),
+                                               reldict["Reflexive"], reldict["Symmetric"],
+                                               reldict["Transitive"])
 
-        # For each Relation, replace the short_name of its inverse with the actual inverse Relation object itself
-        for rel in self.__relation_dict.values():
-            rel.set_inverse(self.__relation_dict[rel.inverse_name])
+        # For each Relation, replace the short_name of its converse with the actual converse Relation object itself
+        for rel in self.relations.values():
+            rel.set_converse(self.relations[rel.converse_name])
 
         # The algebraic identity of an algebra is the RelationSet containing all relations
-        self.__identity = RelationSet(self.__relation_dict.values(), self)
+        self.identity = RelationSet(self.relations.values(), self)
 
         # The equality relations of the algebra
-        self.__equality_relations = [rel for rel in self.__identity if rel.is_equality]
+        self.equality_relations = [rel for rel in self.identity if rel.is_equality]
 
         # Populate a dictionary that allows equality relations to be looked-up based on their domain/range.
         self.equality_relation_dict = dict()
-        for eqrel in self.__equality_relations:
+        for eqrel in self.equality_relations:
             dom = list(eqrel.domain)[0]  # Get the single item out of the eqrel's domain set.
             self.equality_relation_dict[dom] = eqrel
 
         # Setup the transitivity table used by RelationSet multiplication
-        tabledefs = _alg["TransTable"]
+        tabledefs = self.algebra_dict["TransTable"]
         for rel1 in tabledefs:
-            self.__trans_table[rel1] = dict()
+            self.transitivity_table[rel1] = dict()
             for rel2 in tabledefs[rel1]:
-                self.__trans_table[rel1][rel2] = \
-                    RelationSet([self.__relation_dict[relname] for relname in tabledefs[rel1][rel2]], self)
-
-    @property
-    def identity_relset(self):
-        """Returns the algebra's identity element for addition (i.e., the set
-        of all elements in the algebra)
-
-        """
-        return self.__identity
-
-    @property
-    def name(self):
-        return self.__name
-
-    @property
-    def description(self):
-        return self.__description
-
-    @property
-    def type(self):
-        return self.__type
-
-    @property
-    def relations(self):
-        """A convenience function for looking up and returning a single
-        relation (e.g., alg.relations['B']).  Without any arguments
-        this function will return the relation lookup dictionary for
-        the algebra.
-
-        """
-        return self.__relation_dict
-
-    @property
-    def equality_relations(self):
-        return self.__equality_relations
+                self.transitivity_table[rel1][rel2] = \
+                    RelationSet([self.relations[relname] for relname in tabledefs[rel1][rel2]], self)
 
     def relset(self, relnames):
         """A convenience function for creating relation sets from an algebra.
 
         """
-        return RelationSet([self.__relation_dict[relname] for relname in relnames], self)
-
-    @property
-    def trans_table(self):
-        return self.__trans_table
+        return RelationSet([self.relations[relname] for relname in relnames], self)
 
     def check_multiplication_identity(self, verbose=False):
         """Check the validity of the multiplicative identity for every
@@ -301,7 +249,7 @@ class Algebra(object):
                 r_rs = RelationSet([r], self)
                 s_rs = RelationSet([s], self)
                 prod1 = r_rs * s_rs
-                prod2 = (s_rs.inverse * r_rs.inverse).inverse
+                prod2 = (s_rs.converse * r_rs.converse).converse
                 if prod1 != prod2:
                     if verbose:
                         print("FAIL:")
@@ -329,19 +277,19 @@ class Algebra(object):
                    }
         print("  Algebra Name: {}".format(self.name))
         print("   Description: {}".format(self.description))
-        print("          Type: {}".format(self.type))
+        # print("          Type: {}".format(self.type))
         print(" Equality Rels: {}".format(self.equality_relations))
         print("     Relations:")
         sorted_rels = sorted(self.relations.values(), key=lambda rel: rel.short_name)
-        print("{:>25s} {:>25s} {:>10s} {:>10s} {:>10s} {:>7s} {:>7s}".format("NAME (ABBREV)", "INVERSE (ABBREV)",
+        print("{:>25s} {:>25s} {:>10s} {:>10s} {:>10s} {:>7s} {:>7s}".format("NAME (ABBREV)", "CONVERSE (ABBREV)",
                                                                              "REFLEXIVE", "SYMMETRIC", "TRANSITIVE",
                                                                              "DOMAIN", "RANGE"))
         # TODO: Vary spacing between columns based on max word lengths
         for r in sorted_rels:
-            print("{:>19s} ({:>3s}) {:>19s} ({:>3s}) {:>8s} {:>10s} {:>10s} {:>8s} {:>7s}".format(r.full_name,
+            print("{:>19s} ({:>3s}) {:>19s} ({:>3s}) {:>8s} {:>10s} {:>10s} {:>8s} {:>7s}".format(r.long_name,
                                                                                                   r.short_name,
-                                                                                                  r.inverse.full_name,
-                                                                                                  r.inverse.short_name,
+                                                                                                  r.converse.long_name,
+                                                                                                  r.converse.short_name,
                                                                                                   str(r.is_reflexive),
                                                                                                   str(r.is_symmetric),
                                                                                                   str(r.is_transitive),
@@ -432,7 +380,7 @@ class Network(object):
                 self.__constraints[e1][e2].union(rs)
 
     def __set_unconstrained_values(self):
-        ident = self.__algebra.identity_relset
+        ident = self.__algebra.identity
         for ent1 in self.__entities:
             for ent2 in self.__entities:
                 if ent1 in self.__constraints:
@@ -464,10 +412,10 @@ class Network(object):
         if rels:
             relset = RelationSet(rels, self.__algebra)
         else:
-            relset = self.__algebra.identity_relset
+            relset = self.__algebra.identity
 
         self.__add_constraint(entity1, entity2, relset)
-        self.__add_constraint(entity2, entity1, relset.inverse)
+        self.__add_constraint(entity2, entity1, relset.converse)
 
         equality1 = [self.__algebra.equality_relation_dict[t] for t in entity1.gettype()]
         equality2 = [self.__algebra.equality_relation_dict[t] for t in entity2.gettype()]
@@ -488,7 +436,7 @@ class Network(object):
             loop_count += 1
             for ent1 in self.__entities:
                 for ent2 in self.__entities:
-                    prod = self.__algebra.identity_relset
+                    prod = self.__algebra.identity
                     c12 = self.__constraints[ent1][ent2]
                     for ent3 in self.__entities:
                         c13 = self.__constraints[ent1][ent3]
@@ -588,8 +536,8 @@ if __name__ == '__main__':
     r12 = alg[0].relations["B"]
     r23 = alg[0].relations["D"]
     print("\n")
-    print("Constraint: {} {} {}".format(entity_x.name, r12.full_name, entity_y.name))
-    print("Constraint: {} {} {}".format(entity_y.name, r23.full_name, entity_z.name))
+    print("Constraint: {} {} {}".format(entity_x.name, r12.long_name, entity_y.name))
+    print("Constraint: {} {} {}".format(entity_y.name, r23.long_name, entity_z.name))
     net0 = Network(alg[0], "Test0")
     net0.constraint(entity_x, entity_y, [r12])
     net0.constraint(entity_y, entity_z, [r23])
@@ -605,8 +553,8 @@ if __name__ == '__main__':
     s12 = alg[1].relations["B"]
     s23 = alg[1].relations["D"]
     print("\n")
-    print("Constraint: {} {} {}".format(entity_x1, s12.full_name, entity_y1))
-    print("Constraint: {} {} {}".format(entity_y1, s23.full_name, entity_z1))
+    print("Constraint: {} {} {}".format(entity_x1, s12.long_name, entity_y1))
+    print("Constraint: {} {} {}".format(entity_y1, s23.long_name, entity_z1))
     net1 = Network(alg[1], "Test1")
     net1.constraint(entity_x1, entity_y1, [s12])
     net1.constraint(entity_y1, entity_z1, [s23])

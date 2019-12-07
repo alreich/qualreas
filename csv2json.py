@@ -17,8 +17,8 @@ class SetEncoder(json.JSONEncoder):
         else:
             return json.JSONEncoder.default(self, obj)
 
-#def transTable2JsonString(trans_table):
-#    return json.dumps(trans_table, cls=SetEncoder, indent=4)
+#def transTable2JsonString(transitivity_table):
+#    return json.dumps(transitivity_table, cls=SetEncoder, indent=4)
 
 def dictDump(d, jsonFile):
     with open(jsonFile, 'wb') as jsonOut:
@@ -58,9 +58,9 @@ def csvRelations2Dict(filename):
     reader = csv.reader(f)
     reader.next() # Skip header line
     relations = {}
-    for name, rel, inv, dom, rng, ref, sym, trn in reader:
+    for name, rel, conv, dom, rng, ref, sym, trn in reader:
         relations[rel] = {"Name":name,
-                          "Inverse":inv,
+                          "Converse":conv,
                           "Domain":dom,
                           "Range":rng,
                           "Reflexive":trueOrFalse(ref),

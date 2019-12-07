@@ -19,34 +19,34 @@ class TestAlgebra(unittest.TestCase):
 
     # Interval Algebra
     def test_identity_relset0(self):
-        allrelsnames0 = map(lambda x: x.short_name, self.alg0.identity_relset)
+        allrelsnames0 = map(lambda x: x.short_name, self.alg0.identity)
         self.assertEqual(set(allrelsnames0),
                          {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI'})
 
     # Interval and Point Algebra
     def test_identity_relset1(self):
-        allrelsnames1 = map(lambda x: x.short_name, self.alg1.identity_relset)
+        allrelsnames1 = map(lambda x: x.short_name, self.alg1.identity)
         self.assertEqual(set(allrelsnames1),
                          {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI', 'PE', 'PF', 'PFI',
                           'PS', 'PSI'})
 
     # Left-Branching Interval and Point Algebra
     def test_identity_relset2(self):
-        allrelsnames2 = map(lambda x: x.short_name, self.alg2.identity_relset)
+        allrelsnames2 = map(lambda x: x.short_name, self.alg2.identity)
         self.assertEqual(set(allrelsnames2),
                          {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI', 'PE', 'PF', 'PFI',
                           'PS', 'PSI', 'LB', 'LBI', 'LF', 'LO', 'LOI', 'L~'})
 
     # Right-Branching Interval and Point Algebra
     def test_identity_relset3(self):
-        allrelsnames3 = map(lambda x: x.short_name, self.alg3.identity_relset)
+        allrelsnames3 = map(lambda x: x.short_name, self.alg3.identity)
         self.assertEqual(set(allrelsnames3),
                          {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI', 'PE', 'PF', 'PFI',
                           'PS', 'PSI', 'RB', 'RBI', 'RO', 'ROI', 'RS', 'R~'})
 
     # Region Connection Calculus 8
     def test_identity_relset4(self):
-        allrelsnames4 = map(lambda x: x.short_name, self.alg4.identity_relset)
+        allrelsnames4 = map(lambda x: x.short_name, self.alg4.identity)
         self.assertEqual(set(allrelsnames4),
                          {'DC', 'EC', 'EQ', 'NTPP', 'NTPPI', 'PO', 'TPP', 'TPPI'})
 
@@ -93,19 +93,19 @@ class TestAlgebra(unittest.TestCase):
         self.assertEqual(set(map(lambda x: x.short_name, self.alg4.relset(['DC', 'NTPP', 'TPPI']))), {'DC', 'NTPP', 'TPPI'})
 
     def test_trans_table0(self):
-        self.assertEqual(len(self.alg0.trans_table), 13)
+        self.assertEqual(len(self.alg0.transitivity_table), 13)
 
     def test_trans_table1(self):
-        self.assertEqual(len(self.alg1.trans_table), 18)
+        self.assertEqual(len(self.alg1.transitivity_table), 18)
 
     def test_trans_table2(self):
-        self.assertEqual(len(self.alg2.trans_table), 24)
+        self.assertEqual(len(self.alg2.transitivity_table), 24)
 
     def test_trans_table3(self):
-        self.assertEqual(len(self.alg3.trans_table), 24)
+        self.assertEqual(len(self.alg3.transitivity_table), 24)
 
     def test_trans_table4(self):
-        self.assertEqual(len(self.alg4.trans_table), 8)
+        self.assertEqual(len(self.alg4.transitivity_table), 8)
 
     def test_check_mult_identity0(self):
         self.assertEqual(self.alg0.check_multiplication_identity(), True)

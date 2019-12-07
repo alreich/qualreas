@@ -4,7 +4,7 @@
     "Relations": {
         "DC": {
             "Domain": ["Region"],
-            "Inverse": "DC", 
+            "Converse": "DC", 
             "Name": "Disconnected", 
             "Range": ["Region"],
             "Reflexive": false, 
@@ -13,7 +13,7 @@
         }, 
         "EC": {
             "Domain": ["Region"],
-            "Inverse": "EC", 
+            "Converse": "EC", 
             "Name": "ExternallyConnected", 
             "Range": ["Region"],
             "Reflexive": false, 
@@ -22,7 +22,7 @@
         }, 
         "EQ": {
             "Domain": ["Region"],
-            "Inverse": "EQ", 
+            "Converse": "EQ", 
             "Name": "Equal", 
             "Range": ["Region"],
             "Reflexive": true, 
@@ -31,7 +31,7 @@
         }, 
         "NTPP": {
             "Domain": ["Region"],
-            "Inverse": "NTPPI", 
+            "Converse": "NTPPI", 
             "Name": "NonTangentialProperPart", 
             "Range": ["Region"],
             "Reflexive": false, 
@@ -40,7 +40,7 @@
         }, 
         "NTPPI": {
             "Domain": ["Region"],
-            "Inverse": "NTPP", 
+            "Converse": "NTPP", 
             "Name": "NonTangentialProperPartInverse", 
             "Range": ["Region"],
             "Reflexive": false, 
@@ -49,7 +49,7 @@
         }, 
         "PO": {
             "Domain": ["Region"],
-            "Inverse": "PO", 
+            "Converse": "PO", 
             "Name": "PartiallyOverlapping", 
             "Range": ["Region"],
             "Reflexive": false, 
@@ -58,7 +58,7 @@
         }, 
         "TPP": {
             "Domain": ["Region"],
-            "Inverse": "TPPI", 
+            "Converse": "TPPI", 
             "Name": "TangentialProperPart", 
             "Range": ["Region"],
             "Reflexive": false, 
@@ -67,7 +67,7 @@
         }, 
         "TPPI": {
             "Domain": ["Region"],
-            "Inverse": "TPP", 
+            "Converse": "TPP", 
             "Name": "TangentialProperPartInverse", 
             "Range": ["Region"],
             "Reflexive": false, 

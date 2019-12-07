@@ -12,25 +12,25 @@ __author__ = 'Alfred J. Reich'
 class TestRelation(TestCase):
     def setUp(self):
         self.test_relation = qr.Relation('AAA', 'a', 'b', 'testDomain', 'testRange', is_transitive=True)
-        self.test_relation_inverse = qr.Relation('BBB', 'b', 'a', 'testRange', 'testDomain', is_transitive=True)
+        self.test_relation_converse = qr.Relation('BBB', 'b', 'a', 'testRange', 'testDomain', is_transitive=True)
         self.test_EQ_relation = qr.Relation("EEE", 'e', 'e', 'testDomain', 'testDomain', is_reflexive=True,
                                             is_symmetric=True, is_transitive=True)
-        self.test_relation.set_inverse(self.test_relation_inverse)
-        self.test_relation_inverse.set_inverse(self.test_relation)
-        self.test_EQ_relation.set_inverse(self.test_EQ_relation)
+        self.test_relation.set_converse(self.test_relation_converse)
+        self.test_relation_converse.set_converse(self.test_relation)
+        self.test_EQ_relation.set_converse(self.test_EQ_relation)
 
-    def test_inverse_name(self):
-        self.assertEqual(self.test_relation.inverse_name, 'b')
+    def test_converse_name(self):
+        self.assertEqual(self.test_relation.converse_name, 'b')
 
-    def test_inverse(self):
-        self.assertEqual(self.test_relation.inverse, self.test_relation_inverse)
-        self.assertEqual(self.test_relation_inverse.inverse, self.test_relation)
+    def test_converse(self):
+        self.assertEqual(self.test_relation.converse, self.test_relation_converse)
+        self.assertEqual(self.test_relation_converse.converse, self.test_relation)
 
     def test_name(self):
         self.assertEqual(self.test_relation.short_name, 'a')
 
     def test_fullname(self):
-        self.assertEqual(self.test_relation.full_name, 'AAA')
+        self.assertEqual(self.test_relation.long_name, 'AAA')
 
     def test_is_reflexive(self):
         self.assertEqual(self.test_relation.is_reflexive, False)
@@ -47,7 +47,7 @@ class TestRelation(TestCase):
 
     def test_domain(self):
         self.assertEqual(self.test_relation.domain, 'testDomain')
-        self.assertEqual(self.test_relation_inverse.domain, 'testRange')
+        self.assertEqual(self.test_relation_converse.domain, 'testRange')
 
     def test_range(self):
         self.assertEqual(self.test_relation.range, 'testRange')
@@ -60,10 +60,10 @@ class TestRelationSet(TestCase):
         self.aaa = qr.Relation('aaa', 'a', 'A', 'testDomain', 'testRange')
         self.bbb = qr.Relation('bbb', 'b', 'B', 'testRange', 'testDomain')
 
-        self.AAA.set_inverse(self.aaa)  # AAA & aaa are each others' inverses
-        self.BBB.set_inverse(self.bbb)  # BBB & bbb are each others' inverses
-        self.aaa.set_inverse(self.AAA)
-        self.bbb.set_inverse(self.BBB)
+        self.AAA.set_converse(self.aaa)  # AAA & aaa are each others' converses
+        self.BBB.set_converse(self.bbb)  # BBB & bbb are each others' converses
+        self.aaa.set_converse(self.AAA)
+        self.bbb.set_converse(self.BBB)
 
         self.relset_ABa = qr.RelationSet([self.BBB, self.AAA, self.aaa])
         self.relset_Bab = qr.RelationSet([self.aaa, self.bbb, self.BBB])
@@ -118,14 +118,14 @@ class TestRelationSet(TestCase):
     # def test_algebra(self):
     #     self.fail()
 
-    def test_inverse(self):
-        self.assertEqual(self.relset_ABa.inverse, qr.RelationSet([self.aaa, self.bbb, self.AAA]))
+    def test_converse(self):
+        self.assertEqual(self.relset_ABa.converse, qr.RelationSet([self.aaa, self.bbb, self.AAA]))
 
     def test_names(self):
-        self.assertEqual(self.relset_ABa.names, ['A', 'B', 'a'])
+        self.assertEqual(self.relset_ABa.short_names, ['A', 'B', 'a'])
 
     def test_fullnames(self):
-        self.assertEqual(self.relset_ABa.fullnames, ['AAA', 'BBB', 'aaa'])
+        self.assertEqual(self.relset_ABa.long_names, ['AAA', 'BBB', 'aaa'])
 
 
 class TestAlgebra(TestCase):
@@ -134,7 +134,7 @@ class TestAlgebra(TestCase):
         """
         Load all of the existing algebras
         """
-        path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+        path = os.path.join(os.getenv('GITREPO'), 'qualreas')
         self.alg0 = qr.Algebra(os.path.join(path, 'IntervalAlgebra.json'))
         self.alg1 = qr.Algebra(os.path.join(path, 'IntervalAndPointAlgebra.json'))
         self.alg2 = qr.Algebra(os.path.join(path, 'LeftBranchingIntervalAndPointAlgebra.json'))
@@ -143,34 +143,34 @@ class TestAlgebra(TestCase):
 
     # Interval Algebra
     def test_identity_relset0(self):
-        allrelsnames0 = map(lambda x: x.short_name, self.alg0.identity_relset)
+        allrelsnames0 = map(lambda x: x.short_name, self.alg0.identity)
         self.assertEqual(set(allrelsnames0),
                          {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI'})
 
     # Interval and Point Algebra
     def test_identity_relset1(self):
-        allrelsnames1 = map(lambda x: x.short_name, self.alg1.identity_relset)
+        allrelsnames1 = map(lambda x: x.short_name, self.alg1.identity)
         self.assertEqual(set(allrelsnames1),
                          {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI', 'PE', 'PF', 'PFI',
                           'PS', 'PSI'})
 
     # Left-Branching Interval and Point Algebra
     def test_identity_relset2(self):
-        allrelsnames2 = map(lambda x: x.short_name, self.alg2.identity_relset)
+        allrelsnames2 = map(lambda x: x.short_name, self.alg2.identity)
         self.assertEqual(set(allrelsnames2),
                          {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI', 'PE', 'PF', 'PFI',
                           'PS', 'PSI', 'LB', 'LBI', 'LF', 'LO', 'LOI', 'L~'})
 
     # Right-Branching Interval and Point Algebra
     def test_identity_relset3(self):
-        allrelsnames3 = map(lambda x: x.short_name, self.alg3.identity_relset)
+        allrelsnames3 = map(lambda x: x.short_name, self.alg3.identity)
         self.assertEqual(set(allrelsnames3),
                          {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI', 'PE', 'PF', 'PFI',
                           'PS', 'PSI', 'RB', 'RBI', 'RO', 'ROI', 'RS', 'R~'})
 
     # Region Connection Calculus 8
     def test_identity_relset4(self):
-        allrelsnames4 = map(lambda x: x.short_name, self.alg4.identity_relset)
+        allrelsnames4 = map(lambda x: x.short_name, self.alg4.identity)
         self.assertEqual(set(allrelsnames4),
                          {'DC', 'EC', 'EQ', 'NTPP', 'NTPPI', 'PO', 'TPP', 'TPPI'})
 
@@ -221,19 +221,19 @@ class TestAlgebra(TestCase):
                                  self.alg4.relset(['DC', 'NTPP', 'TPPI']))), {'DC', 'NTPP', 'TPPI'})
 
     def test_trans_table0(self):
-        self.assertEqual(len(self.alg0.trans_table), 13)
+        self.assertEqual(len(self.alg0.transitivity_table), 13)
 
     def test_trans_table1(self):
-        self.assertEqual(len(self.alg1.trans_table), 18)
+        self.assertEqual(len(self.alg1.transitivity_table), 18)
 
     def test_trans_table2(self):
-        self.assertEqual(len(self.alg2.trans_table), 24)
+        self.assertEqual(len(self.alg2.transitivity_table), 24)
 
     def test_trans_table3(self):
-        self.assertEqual(len(self.alg3.trans_table), 24)
+        self.assertEqual(len(self.alg3.transitivity_table), 24)
 
     def test_trans_table4(self):
-        self.assertEqual(len(self.alg4.trans_table), 8)
+        self.assertEqual(len(self.alg4.transitivity_table), 8)
 
     def test_check_mult_identity0(self):
         self.assertEqual(self.alg0.check_multiplication_identity(), True)
@@ -276,7 +276,7 @@ class TestNetwork(TestCase):
         """
         Load all of the existing algebras
         """
-        path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+        path = os.path.join(os.getenv('GITREPO'), 'qualreas')
 
         self.alg0 = qr.Algebra(os.path.join(path, 'IntervalAlgebra.json'))
         self.alg1 = qr.Algebra(os.path.join(path, 'IntervalAndPointAlgebra.json'))

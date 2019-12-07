@@ -4,7 +4,7 @@
     "Relations": {
         "B": {
             "Domain": ["Point", "ProperInterval"], 
-            "Inverse": "BI", 
+            "Converse": "BI", 
             "Name": "Before", 
             "Range": ["Point", "ProperInterval"], 
             "Reflexive": false, 
@@ -13,7 +13,7 @@
         }, 
         "BI": {
             "Domain": ["Point", "ProperInterval"], 
-            "Inverse": "B", 
+            "Converse": "B", 
             "Name": "After", 
             "Range": ["Point", "ProperInterval"], 
             "Reflexive": false, 
@@ -22,7 +22,7 @@
         }, 
         "D": {
             "Domain": ["Point", "ProperInterval"], 
-            "Inverse": "DI", 
+            "Converse": "DI", 
             "Name": "During", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -31,7 +31,7 @@
         }, 
         "DI": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "D", 
+            "Converse": "D", 
             "Name": "Contains", 
             "Range": ["Point", "ProperInterval"], 
             "Reflexive": false, 
@@ -40,7 +40,7 @@
         }, 
         "E": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "E", 
+            "Converse": "E", 
             "Name": "Equals", 
             "Range": ["ProperInterval"], 
             "Reflexive": true, 
@@ -49,7 +49,7 @@
         }, 
         "F": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "FI", 
+            "Converse": "FI", 
             "Name": "Finishes", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -58,7 +58,7 @@
         }, 
         "FI": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "F", 
+            "Converse": "F", 
             "Name": "Finished-by", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -67,7 +67,7 @@
         }, 
         "LB": {
             "Domain": ["Point", "ProperInterval"], 
-            "Inverse": "LBI", 
+            "Converse": "LBI", 
             "Name": "Left-Before", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -76,7 +76,7 @@
         }, 
         "LBI": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "LB", 
+            "Converse": "LB", 
             "Name": "Left-After", 
             "Range": ["Point", "ProperInterval"], 
             "Reflexive": false, 
@@ -85,7 +85,7 @@
         }, 
         "LF": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "LF", 
+            "Converse": "LF", 
             "Name": "Left-Finishes", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -94,7 +94,7 @@
         }, 
         "LO": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "LOI", 
+            "Converse": "LOI", 
             "Name": "Left-Overlaps", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -103,7 +103,7 @@
         }, 
         "LOI": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "LO", 
+            "Converse": "LO", 
             "Name": "Left-Overlapped-By", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -112,7 +112,7 @@
         }, 
         "L~": {
             "Domain": ["Point", "ProperInterval"], 
-            "Inverse": "L~", 
+            "Converse": "L~", 
             "Name": "Left-Incomparable", 
             "Range": ["Point", "ProperInterval"], 
             "Reflexive": false, 
@@ -121,7 +121,7 @@
         }, 
         "M": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "MI", 
+            "Converse": "MI", 
             "Name": "Meets", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -130,7 +130,7 @@
         }, 
         "MI": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "M", 
+            "Converse": "M", 
             "Name": "Met-By", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -139,7 +139,7 @@
         }, 
         "O": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "OI", 
+            "Converse": "OI", 
             "Name": "Overlaps", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -148,7 +148,7 @@
         }, 
         "OI": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "O", 
+            "Converse": "O", 
             "Name": "Overlapped-By", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -157,7 +157,7 @@
         }, 
         "PE": {
             "Domain": ["Point"], 
-            "Inverse": "PE", 
+            "Converse": "PE", 
             "Name": "Point-Equals", 
             "Range": ["Point"], 
             "Reflexive": true, 
@@ -166,7 +166,7 @@
         }, 
         "PF": {
             "Domain": ["Point"], 
-            "Inverse": "PFI", 
+            "Converse": "PFI", 
             "Name": "Point-Finishes", 
             "Range": ["ProperInterval"],
             "Reflexive": false, 
@@ -175,7 +175,7 @@
         }, 
         "PFI": {
             "Domain": ["ProperInterval"],
-            "Inverse": "PF", 
+            "Converse": "PF", 
             "Name": "Point-Finished-By", 
             "Range": ["Point"], 
             "Reflexive": false, 
@@ -184,7 +184,7 @@
         }, 
         "PS": {
             "Domain": ["Point"], 
-            "Inverse": "PSI", 
+            "Converse": "PSI", 
             "Name": "Point-Starts", 
             "Range": ["ProperInterval"],
             "Reflexive": false, 
@@ -193,7 +193,7 @@
         }, 
         "PSI": {
             "Domain": ["ProperInterval"],
-            "Inverse": "PS", 
+            "Converse": "PS", 
             "Name": "Point-Started-By", 
             "Range": ["Point"], 
             "Reflexive": false, 
@@ -202,7 +202,7 @@
         }, 
         "S": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "SI", 
+            "Converse": "SI", 
             "Name": "Starts", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
@@ -211,7 +211,7 @@
         }, 
         "SI": {
             "Domain": ["ProperInterval"], 
-            "Inverse": "S", 
+            "Converse": "S", 
             "Name": "Started-By", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 

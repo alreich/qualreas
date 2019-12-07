@@ -8,25 +8,25 @@ class TestRelation(unittest.TestCase):
 
     def setUp(self):
         self.test_relation = qr.Relation('AAA', 'a', 'b', 'testDomain', 'testRange', is_transitive=True)
-        self.test_relation_inverse = qr.Relation('BBB', 'b', 'a', 'testRange', 'testDomain', is_transitive=True)
+        self.test_relation_converse = qr.Relation('BBB', 'b', 'a', 'testRange', 'testDomain', is_transitive=True)
         self.test_EQ_relation = qr.Relation("EEE", 'e', 'e', 'testDomain', 'testDomain', is_reflexive=True,
                                             is_symmetric=True, is_transitive=True)
-        self.test_relation.set_inverse(self.test_relation_inverse)
-        self.test_relation_inverse.set_inverse(self.test_relation)
-        self.test_EQ_relation.set_inverse(self.test_EQ_relation)
+        self.test_relation.set_converse(self.test_relation_converse)
+        self.test_relation_converse.set_converse(self.test_relation)
+        self.test_EQ_relation.set_converse(self.test_EQ_relation)
 
-    def test_inverse_name(self):
-        self.assertEqual(self.test_relation.inverse_name, 'b')
+    def test_converse_name(self):
+        self.assertEqual(self.test_relation.converse_name, 'b')
 
-    def test_inverse(self):
-        self.assertEqual(self.test_relation.inverse, self.test_relation_inverse)
-        self.assertEqual(self.test_relation_inverse.inverse, self.test_relation)
+    def test_converse(self):
+        self.assertEqual(self.test_relation.converse, self.test_relation_converse)
+        self.assertEqual(self.test_relation_converse.converse, self.test_relation)
 
     def test_short_name(self):
         self.assertEqual(self.test_relation.short_name, 'a')
 
     def test_fullname(self):
-        self.assertEqual(self.test_relation.full_name, 'AAA')
+        self.assertEqual(self.test_relation.long_name, 'AAA')
 
     def test_is_reflexive(self):
         self.assertEqual(self.test_relation.is_reflexive, False)
@@ -43,7 +43,7 @@ class TestRelation(unittest.TestCase):
 
     def test_domain(self):
         self.assertEqual(self.test_relation.domain, 'testDomain')
-        self.assertEqual(self.test_relation_inverse.domain, 'testRange')
+        self.assertEqual(self.test_relation_converse.domain, 'testRange')
 
     def test_range(self):
         self.assertEqual(self.test_relation.range, 'testRange')

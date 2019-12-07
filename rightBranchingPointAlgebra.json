@@ -4,7 +4,7 @@
     "Relations": {
         "<": {
             "Domain": ["Point"], 
-            "Inverse": ">", 
+            "Converse": ">", 
             "Name": "LessThan", 
             "Range": ["Point"], 
             "Reflexive": false, 
@@ -13,7 +13,7 @@
         }, 
         "=": {
             "Domain": ["Point"], 
-            "Inverse": "=", 
+            "Converse": "=", 
             "Name": "Equals", 
             "Range": ["Point"], 
             "Reflexive": true, 
@@ -22,7 +22,7 @@
         }, 
         ">": {
             "Domain": ["Point"], 
-            "Inverse": "<", 
+            "Converse": "<", 
             "Name": "GreaterThan", 
             "Range": ["Point"], 
             "Reflexive": false, 
@@ -31,7 +31,7 @@
         }, 
         "r~": {
             "Domain": ["Point"], 
-            "Inverse": "r~", 
+            "Converse": "r~", 
             "Name": "Incomparable", 
             "Range": ["Point"], 
             "Reflexive": false, 

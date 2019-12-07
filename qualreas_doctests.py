@@ -37,7 +37,7 @@ The following computations illustrate an identity involving relation set multipl
 if X & Y are two relation sets and 'inv()' inverts a relation set, then:  X * Y = inv(inv(Y) * inv(X))
 
 inv( inv(Met-By) * inv(Before) ):
->>> sorted( (mi0.inverse * b0.inverse).inverse , key=lambda rel: rel.short_name)
+>>> sorted( (mi0.converse * b0.converse).converse , key=lambda rel: rel.short_name)
 [B, D, M, O, S]
 
 Met-By * Before:
@@ -45,7 +45,7 @@ Met-By * Before:
 [B, DI, FI, M, O]
 
 inv( inv(Before) * inv(Met-By) ):
->>> sorted( (b0.inverse * mi0.inverse).inverse , key=lambda rel: rel.short_name)
+>>> sorted( (b0.converse * mi0.converse).converse , key=lambda rel: rel.short_name)
 [B, DI, FI, M, O]
 
 Relation sets can also be 'added' together. 'Addition' here is actually set intersection:
@@ -78,7 +78,7 @@ Before * Met-By:
 [B, D, M, O, PS, S]
 
 inv( inv(Met-By) * inv(Before) ):
->>> sorted( (mi1.inverse * b1.inverse).inverse , key=lambda rel: rel.short_name)
+>>> sorted( (mi1.converse * b1.converse).converse , key=lambda rel: rel.short_name)
 [B, D, M, O, PS, S]
 
 Met-By * Before:
@@ -86,7 +86,7 @@ Met-By * Before:
 [B, DI, FI, M, O, PFI]
 
 inv( inv(Before) * inv(Met-By) ):
->>> sorted( (b1.inverse * mi1.inverse).inverse , key=lambda rel: rel.short_name)
+>>> sorted( (b1.converse * mi1.converse).converse , key=lambda rel: rel.short_name)
 [B, DI, FI, M, O, PFI]
 
 (Before * Met-By) + (Met-By * Before):
@@ -113,7 +113,7 @@ Before * Met-By:
 [B, D, LB, LO, M, O, PS, S]
 
 inv( inv(Met-By) * inv(Before) ):
->>> sorted( (mi2.inverse * b2.inverse).inverse , key=lambda rel: rel.short_name)
+>>> sorted( (mi2.converse * b2.converse).converse , key=lambda rel: rel.short_name)
 [B, D, LB, LO, M, O, PS, S]
 
 Met-By * Before:
@@ -121,7 +121,7 @@ Met-By * Before:
 [B, DI, FI, M, O, PFI]
 
 inv( inv(Before) * inv(Met-By) ):
->>> sorted( (b2.inverse * mi2.inverse).inverse , key=lambda rel: rel.short_name)
+>>> sorted( (b2.converse * mi2.converse).converse , key=lambda rel: rel.short_name)
 [B, DI, FI, M, O, PFI]
 
 (Before * Met-By) + (Met-By * Before):
@@ -148,7 +148,7 @@ Before * Met-By:
 [B, D, M, O, PS, S]
 
 inv( inv(Met-By) * inv(Before) ):
->>> sorted( (mi3.inverse * b3.inverse).inverse , key=lambda rel: rel.short_name)
+>>> sorted( (mi3.converse * b3.converse).converse , key=lambda rel: rel.short_name)
 [B, D, M, O, PS, S]
 
 Met-By * Before:
@@ -156,7 +156,7 @@ Met-By * Before:
 [B, DI, FI, M, O, PFI, RB, RO]
 
 inv( inv(Before) * inv(Met-By) ):
->>> sorted( (b3.inverse * mi3.inverse).inverse , key=lambda rel: rel.short_name)
+>>> sorted( (b3.converse * mi3.converse).converse , key=lambda rel: rel.short_name)
 [B, DI, FI, M, O, PFI, RB, RO]
 
 (Before * Met-By) + (Met-By * Before):

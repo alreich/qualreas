@@ -1,4 +1,4 @@
-RELATION,ABBREVIATION,INVERSE,DOMAIN,RANGE,REFLEXIVE,SYMMETRIC,TRANSITIVE
+RELATION,ABBREVIATION,CONVERSE,DOMAIN,RANGE,REFLEXIVE,SYMMETRIC,TRANSITIVE
 Left-Incomparable,L~,L~,Interval,Interval,False,True,False
 Left-Before,LB,LBI,Interval,ProperInterval,False,False,True
 Left-After,LBI,LB,ProperInterval,Interval,False,False,True

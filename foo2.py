@@ -2,63 +2,63 @@
     "Relations": {
         "B": {
             "short_name": "Before",
-            "inverse": "Bi",
+            "converse": "Bi",
             "is_transitive": "True"
             },
         "Bi": {
             "short_name": "After",
-            "inverse": "B",
+            "converse": "B",
             "is_transitive": "True"
             },
         "D": {
             "short_name": "During",
-            "inverse": "Di",
+            "converse": "Di",
             "is_transitive": "True"
             },
         "Di": {
             "short_name": "Contains",
-            "inverse": "D",
+            "converse": "D",
             "is_transitive": "True"
             },
         "E": {
             "short_name": "Equals",
-            "inverse": "E",
+            "converse": "E",
             "is_equality": "True"
             },
         "F": {
             "short_name": "Finishes",
-            "inverse": "Fi",
+            "converse": "Fi",
             "is_transitive": "True"
             },
         "Fi": {
             "short_name": "FinishedBy",
-            "inverse": "F",
+            "converse": "F",
             "is_transitive": "True"
             },
         "M": {
             "short_name": "Meets",
-            "inverse": "Mi"
+            "converse": "Mi"
             },
         "Mi": {
             "short_name": "MetBy",
-            "inverse": "M"
+            "converse": "M"
             },
         "O": {
             "short_name": "Overlaps",
-            "inverse": "Oi"
+            "converse": "Oi"
             },
         "Oi": {
             "short_name": "OverlappedBy",
-            "inverse": "O"
+            "converse": "O"
             },
         "S": {
             "short_name": "Starts",
-            "inverse": "Si",
+            "converse": "Si",
             "is_transitive": "True"
             },
         "Si": {
             "short_name": "StartedBy",
-            "inverse": "S",
+            "converse": "S",
             "is_transitive": "True"
             }
         },
