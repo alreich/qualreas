@@ -171,6 +171,10 @@ class RelationSet(object):
         '''Returns a relation set of converses of the relations in this relation set.'''
         return RelationSet([rel.converse for rel in self.elements], self.algebra)
 
+    def complement(self):
+        '''Returns all Algebra relations not in this relation set.'''
+        return self.algebra.identity.elements.difference(self.elements)
+
     @property
     def short_names(self):
         '''Returns a sorted list of short_names of the relations in the relation set.'''
