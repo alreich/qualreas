@@ -1,6 +1,6 @@
 {
     "Description": "Allen's algebra of proper time intervals", 
-    "Name": "Linear Time Interval Algebra", 
+    "Name": "LinearTimeIntervalAlgebra",
     "Relations": {
         "B": {
             "Domain": ["ProperInterval"],
