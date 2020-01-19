@@ -10,7 +10,7 @@ class TestAlgebra(unittest.TestCase):
         """
         Load all of the existing algebras
         """
-        path = os.path.join( os.getenv('PYPROJ'), 'qualreas' )
+        path = os.path.join( os.getenv('PYPROJ'), 'qualreas/Algebras' )
         self.alg0 = qr.Algebra(os.path.join(path, 'IntervalAlgebra.json'))
         self.alg1 = qr.Algebra(os.path.join(path, 'IntervalAndPointAlgebra.json'))
         self.alg2 = qr.Algebra(os.path.join(path, 'LeftBranchingIntervalAndPointAlgebra.json'))
@@ -57,7 +57,7 @@ class TestAlgebra(unittest.TestCase):
     #     self.fail()
 
     def test_name(self):
-        self.assertEqual(self.alg0.name, 'Linear Time Interval Algebra')
+        self.assertEqual(self.alg0.name, 'LinearTimeIntervalAlgebra')
 
     def test_relations(self):
         self.assertEqual(self.alg0.relations['B'].short_name, 'B')

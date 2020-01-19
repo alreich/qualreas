@@ -1,6 +1,6 @@
 {
     "Description": "Reich's point extension to Allen's time interval algebra (see TIME-94 paper)", 
-    "Name": "Linear Time Interval & Point Algebra",
+    "Name": "LinearTimeIntervalAndPointAlgebra",
     "Relations": {
         "B": {
             "Domain": ["Point", "ProperInterval"], 

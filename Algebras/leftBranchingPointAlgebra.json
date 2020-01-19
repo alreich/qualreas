@@ -1,6 +1,6 @@
 {
     "Description": "Left-Branching Point Algebra", 
-    "Name": "Left-Branching Point Algebra", 
+    "Name": "LeftBranchingPointAlgebra",
     "Relations": {
         "<": {
             "Domain": ["Point"], 

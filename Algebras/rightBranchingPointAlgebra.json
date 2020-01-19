@@ -1,6 +1,6 @@
 {
     "Description": "Right-Branching Point Algebra", 
-    "Name": "Right-Branching Point Algebra", 
+    "Name": "RightBranchingPointAlgebra",
     "Relations": {
         "<": {
             "Domain": ["Point"], 

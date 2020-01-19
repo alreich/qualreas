@@ -1,6 +1,6 @@
 {
     "Description": "Linear Point Algebra", 
-    "Name": "Linear Point Algebra", 
+    "Name": "LinearPointAlgebra",
     "Relations": {
         "<": {
             "Domain": ["Point"], 
