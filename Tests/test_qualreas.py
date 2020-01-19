@@ -1,4 +1,5 @@
-from unittest import TestCase
+#from unittest import TestCase
+import unittest
 import qualreas as qr
 import os
 
@@ -9,7 +10,7 @@ __author__ = 'Alfred J. Reich'
 #    def test_something(self):
 #        self.assertEqual(True, False)
 
-class TestRelation(TestCase):
+class TestRelation(unittest.TestCase):
     def setUp(self):
         self.test_relation = qr.Relation('AAA', 'a', 'b', 'testDomain', 'testRange', is_transitive=True)
         self.test_relation_converse = qr.Relation('BBB', 'b', 'a', 'testRange', 'testDomain', is_transitive=True)
@@ -53,7 +54,7 @@ class TestRelation(TestCase):
         self.assertEqual(self.test_relation.range, 'testRange')
 
 
-class TestRelationSet(TestCase):
+class TestRelationSet(unittest.TestCase):
     def setUp(self):
         self.AAA = qr.Relation('AAA', 'A', 'a', 'testDomain', 'testRange', is_transitive=True)
         self.BBB = qr.Relation('BBB', 'B', 'b', 'testRange', 'testDomain', is_transitive=True)
@@ -128,13 +129,13 @@ class TestRelationSet(TestCase):
         self.assertEqual(self.relset_ABa.long_names, ['AAA', 'BBB', 'aaa'])
 
 
-class TestAlgebra(TestCase):
+class TestAlgebra(unittest.TestCase):
 
     def setUp(self):
         """
         Load all of the existing algebras
         """
-        path = os.path.join(os.getenv('GITREPO'), 'qualreas')
+        path = os.path.join(os.getenv('GITREPO'), 'qualreas/Algebras')
         self.alg0 = qr.Algebra(os.path.join(path, 'IntervalAlgebra.json'))
         self.alg1 = qr.Algebra(os.path.join(path, 'IntervalAndPointAlgebra.json'))
         self.alg2 = qr.Algebra(os.path.join(path, 'LeftBranchingIntervalAndPointAlgebra.json'))
@@ -181,7 +182,7 @@ class TestAlgebra(TestCase):
     #     self.fail()
 
     def test_name(self):
-        self.assertEqual(self.alg0.name, 'Linear Time Interval Algebra')
+        self.assertEqual(self.alg0.name, 'LinearTimeIntervalAlgebra')
 
     def test_relations(self):
         self.assertEqual(self.alg0.relations['B'].short_name, 'B')
@@ -266,7 +267,7 @@ class TestAlgebra(TestCase):
     #     self.assertEqual(self.alg4.is_associative(), True)
 
 
-class TestNetwork(TestCase):
+class TestNetwork(unittest.TestCase):
 
     # def __init__(self, methodName='runTest'):
     #     super().__init__(methodName='runTest')
@@ -276,7 +277,7 @@ class TestNetwork(TestCase):
         """
         Load all of the existing algebras
         """
-        path = os.path.join(os.getenv('GITREPO'), 'qualreas')
+        path = os.path.join(os.getenv('GITREPO'), 'qualreas/Algebras')
 
         self.alg0 = qr.Algebra(os.path.join(path, 'IntervalAlgebra.json'))
         self.alg1 = qr.Algebra(os.path.join(path, 'IntervalAndPointAlgebra.json'))
@@ -334,5 +335,5 @@ class TestNetwork(TestCase):
     #     print(self.net0.print_constraints())
 
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    unittest.main()
