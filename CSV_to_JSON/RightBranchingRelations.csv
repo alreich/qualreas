@@ -1,0 +1,7 @@
+RELATION,ABBREVIATION,CONVERSE,DOMAIN,RANGE,REFLEXIVE,SYMMETRIC,TRANSITIVE
+Right-Incomparable,R~,R~,Interval,Interval,False,True,False
+Right-Before,RB,RBI,ProperInterval,Interval,False,False,True
+Right-After,RBI,RB,Interval,ProperInterval,False,False,True
+Right-Overlaps,RO,ROI,ProperInterval,ProperInterval,False,False,False
+Right-Overlapped-By,ROI,RO,ProperInterval,ProperInterval,False,False,False
+Right-Starts,RS,RS,ProperInterval,ProperInterval,False,False,False
