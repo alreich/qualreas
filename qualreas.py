@@ -515,14 +515,14 @@ if __name__ == '__main__':
 
     path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
 
-    alg = [Algebra(os.path.join(path, "IntervalAlgebra.json")),
-           Algebra(os.path.join(path, "IntervalAndPointAlgebra.json")),
-           Algebra(os.path.join(path, "LeftBranchingIntervalAndPointAlgebra.json")),
-           Algebra(os.path.join(path, "RightBranchingIntervalAndPointAlgebra.json")),
-           Algebra(os.path.join(path, "rcc8Algebra.json")),
-           Algebra(os.path.join(path, "linearPointAlgebra.json")),
-           Algebra(os.path.join(path, "rightBranchingPointAlgebra.json")),
-           Algebra(os.path.join(path, "leftBranchingPointAlgebra.json"))
+    alg = [Algebra(os.path.join(path, "Algebras/IntervalAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/IntervalAndPointAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/LeftBranchingIntervalAndPointAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/RightBranchingIntervalAndPointAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/rcc8Algebra.json")),
+           Algebra(os.path.join(path, "Algebras/linearPointAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/rightBranchingPointAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/leftBranchingPointAlgebra.json"))
            ]
 
     for a in alg:
@@ -640,7 +640,7 @@ if __name__ == '__main__':
     # Region Connection Calculus 8:
 
     # Example from http://en.wikipedia.org/wiki/RCC8
-    alg4 = Algebra(os.path.join(path, "rcc8Algebra.json"))
+    alg4 = Algebra(os.path.join(path, "Algebras/rcc8Algebra.json"))
 
     DC = alg4.relations['DC']
     EC = alg4.relations['EC']
