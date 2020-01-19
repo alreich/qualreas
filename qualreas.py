@@ -7,20 +7,18 @@ import json
 import uuid
 from itertools import combinations, chain
 
-
 __author__ = 'Alfred J. Reich'
 __version__ = '0.2.0'
 
-
-### Some utilities:
+# Some utilities:
 
 def flatten(listOfLists):
-    '''Flatten one level of nesting'''
+    """Flatten one level of nesting"""
     return chain.from_iterable(listOfLists)
 
 # TODO: Make the function list_of_combinations produce an iterator, rather than a list
 def list_of_combinations(items, make_sequence):
-    '''Given a list of items, return a list of all possible combinations of the items.
+    """Given a list of items, return a list of all possible combinations of the items.
     Each combination is expressed in the form of whatever sequence building function
     is passed in for make_sequence (e.g., list, set, tuple).  The empty combination is not
     included in the returned result.  If there are n items in the input list, then
@@ -34,7 +32,7 @@ def list_of_combinations(items, make_sequence):
      [{0}, {1}, {2}, {3}, {0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3}, {0, 1, 2},
       {0, 1, 3}, {0, 2, 3}, {1, 2, 3}, {0, 1, 2, 3}]
 
-    '''
+    """
     x = []
     for i in items[1:]:
         c = combinations(items, i)
@@ -75,11 +73,11 @@ class Relation(object):
     # Another reason is that there should only be one copy of any Relation.  Once created, all
     # references to the Relation should (and hopefully do) refer to that copy.
     def __repr__(self):
-        '''A relation is simply represented by its short_name.'''
+        """A relation is simply represented by its short_name."""
         return "{}".format(self.short_name)
 
     def __lt__(self, other):
-        '''Relations can be sorted, alphabetically according to their short_names.'''
+        """Relations can be sorted, alphabetically according to their short_names."""
         if isinstance(other, Relation):
             return self.short_name < other.short_name
         else:
@@ -88,12 +86,12 @@ class Relation(object):
     # This function should never be called by the user.  It is called automatically during
     # the loading and setup of an algebra.
     def set_converse(self, conv_rel):
-        '''Called automatically so that each relation 'points' to its converse relation.'''
+        """Called automatically so that each relation 'points' to its converse relation."""
         self.converse = conv_rel
 
     @property
     def is_equality(self):
-        '''A relation is an equality relation if it is reflexive, symmetric, & transitive.'''
+        """A relation is an equality relation if it is reflexive, symmetric, & transitive."""
         return self.is_reflexive & self.is_symmetric & self.is_transitive
 
 
@@ -139,7 +137,7 @@ class RelationSet(object):
             raise Exception("Algebra's must agree")
 
     def union(self, relset):
-        '''Returns a relation set that is a union of this relation set with relset.'''
+        """Returns a relation set that is a union of this relation set with relset."""
         if self.algebra == relset.algebra:
             result = self.elements | relset.elements
             return RelationSet(result, relset.algebra)
@@ -157,32 +155,32 @@ class RelationSet(object):
             result = RelationSet([], self.algebra)
             for rel1 in self:
                 for rel2 in relset:
-                    result = result.union( relset.algebra.transitivity_table[rel1.short_name][rel2.short_name] )
+                    result = result.union(relset.algebra.transitivity_table[rel1.short_name][rel2.short_name])
             return RelationSet(result, self.algebra)
         else:
             raise Exception("Mismatched algebras")
 
     def sorted_list(self):
-        '''Returns a sorted list of the short_names of relations in the relation set.'''
+        """Returns a sorted list of the short_names of relations in the relation set."""
         return sorted(self, key=lambda rel: rel.short_name)
 
     @property
     def converse(self):
-        '''Returns a relation set of converses of the relations in this relation set.'''
+        """Returns a relation set of converses of the relations in this relation set."""
         return RelationSet([rel.converse for rel in self.elements], self.algebra)
 
     def complement(self):
-        '''Returns all Algebra relations not in this relation set.'''
+        """Returns all Algebra relations not in this relation set."""
         return self.algebra.identity.elements.difference(self.elements)
 
     @property
     def short_names(self):
-        '''Returns a sorted list of short_names of the relations in the relation set.'''
+        """Returns a sorted list of short_names of the relations in the relation set."""
         return sorted([rel.short_name for rel in self.elements])
 
     @property
     def long_names(self):
-        "Returns a sorted list of long_names of the relations in the relation set."
+        """Returns a sorted list of long_names of the relations in the relation set."""
         return sorted([rel.long_name for rel in self.elements])
 
 
