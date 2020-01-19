@@ -350,6 +350,10 @@ class Algebra(object):
 
 
 class Network(object):
+    """A network of entities (e.g., events) with relationships between the entities.
+    The relationships must be defined by a single, specific algebra.
+    """
+
     def __init__(self, algebra, network_name=None):
         self.__algebra = algebra
         self.__constraints = dict()
@@ -367,7 +371,7 @@ class Network(object):
         return str(self.__name)
 
     def __repr__(self):
-        return "<Network: {}, {} entities>".format(self.name, len(self.__entities))
+        return f"<Network: {self.name}, {self.__entities} entities>"
 
     def __add_constraint(self, e1, e2, rs):
         """
@@ -451,7 +455,7 @@ class Network(object):
             print("Number of propagation loops: %d".format(loop_count))
 
     def print_constraints(self):
-        print("\n{}\nConstraints: (Source, Target, RelationSet)".format(self))
+        print(f"\n{self}\nConstraints: (Source, Target, RelationSet)")
         for x in self.__constraints:
             for y in self.__constraints[x]:
                 rels = self.__constraints[x][y]
