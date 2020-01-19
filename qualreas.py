@@ -74,7 +74,7 @@ class Relation(object):
     # references to the Relation should (and hopefully do) refer to that copy.
     def __repr__(self):
         """A relation is simply represented by its short_name."""
-        return "{}".format(self.short_name)
+        return f"{self.short_name}"
 
     def __lt__(self, other):
         """Relations can be sorted, alphabetically according to their short_names."""
@@ -255,17 +255,17 @@ class Algebra(object):
                 if prod1 != prod2:
                     if verbose:
                         print("FAIL:")
-                        print("      r    = {}".format(r_rs))
-                        print("      s    = {}".format(s_rs))
-                        print("( r *  s)  = {}".format(prod1))
-                        print("(si * ri)i = {}".format(prod2))
-                        print("{} != {}".format(prod1, prod2))
+                        print(f"      r    = {r_rs}")
+                        print(f"      s    = {s_rs}")
+                        print(f"( r *  s)  = {prod1}")
+                        print(f"(si * ri)i = {prod2}")
+                        print(f"{prod1} != {prod2}")
                     result = False
         if verbose:
-            print("\n{} -- Multiplication Identity Check:".format(self.name))
+            print(f"\n{self.name} -- Multiplication Identity Check:")
         if result:
             if verbose:
-                print("PASSED . {} products tested.".format(count))
+                print(f"PASSED . {count} products tested.")
         else:
             if verbose:
                 print("FAILED. See FAILURE output above.")
@@ -277,10 +277,10 @@ class Algebra(object):
                    frozenset([u'ProperInterval']): "PInt",
                    frozenset([u'Region']): "Region"
                    }
-        print("  Algebra Name: {}".format(self.name))
-        print("   Description: {}".format(self.description))
-        # print("          Type: {}".format(self.type))
-        print(" Equality Rels: {}".format(self.equality_relations))
+        print(f"  Algebra Name: {self.name}")
+        print(f"   Description: {self.description}")
+        #print(f"          Type: {self.type}")
+        print(f" Equality Rels: {self.equality_relations}")
         print("     Relations:")
         sorted_rels = sorted(self.relations.values(), key=lambda rel: rel.short_name)
         print("{:>25s} {:>25s} {:>10s} {:>10s} {:>10s} {:>7s} {:>7s}".format("NAME (ABBREV)", "CONVERSE (ABBREV)",
@@ -309,7 +309,7 @@ class Algebra(object):
             for _b in rels.values():
                 for _c in rels.values():
                     if verbose:
-                        print("{} x {} x {} :".format(_a, _b, _c))
+                        print(f"{_a} x {_b} x {_c} :")
                     if (set(_a.range) & set(_b.domain)) & (set(_b.range) & set(_c.domain)):
                         a_rs = RelationSet([_a], self)
                         b_rs = RelationSet([_b], self)
@@ -320,11 +320,10 @@ class Algebra(object):
                         prod_a_bc = a_rs * prod_bc
                         if not (prod_ab_c == prod_a_bc):
                             if verbose:
-                                print("  Associativity fails for a = {}, b = {}, c = {}".format(a_rs, b_rs, c_rs))
-                                print("    associativity check: {}::{} {}::{}".format(_a.range, _b.domain,
-                                                                                      _b.range, _c.domain))
-                                print("    (a * b) * c = {}".format(prod_ab_c))
-                                print("    a * (b * c) = {}".format(prod_a_bc))
+                                print(f"  Associativity fails for a = {a_rs}, b = {b_rs}, c = {c_rs}")
+                                print(f"    associativity check: {_a.range}::{_b.domain} {_b.range}::{_c.domain}")
+                                print(f"    (a * b) * c = {prod_ab_c}")
+                                print(f"    a * (b * c) = {prod_a_bc}")
                             countfailed += 1
                             counttotal += 1
                             result = False
@@ -335,17 +334,15 @@ class Algebra(object):
                             counttotal += 1
                     else:
                         if verbose:
-                            print("  Skipping associativity check: {}::{} {}::{}".format(
-                                _a.range, _b.domain, _b.range, _c.domain))
+                            print(f"  Skipping associativity check: {_a.range}::{_b.domain} {_b.range}::{_c.domain}")
                         countskipped += 1
                         counttotal += 1
         if verbose:
-            print("\nTEST SUMMARY: {} OK, {} Skipped, {} Failed ({} Total)".format(
-                countok, countskipped, countfailed, counttotal))
+            print(f"\nTEST SUMMARY: {countok} OK, {countskipped} Skipped, {countfailed} Failed ({counttotal} Total)")
         numrels = len(rels)
         totaltests = numrels * numrels * numrels
         if (counttotal != totaltests) and verbose:
-            print("Test counts do not add up; Total should be {}".format(totaltests))
+            print(f"Test counts do not add up; Total should be {totaltests}")
         return result
 
 
@@ -452,14 +449,14 @@ class Network(object):
                         something_changed = True  # Need to continue top-level propagation loop
                     self.__constraints[ent1][ent2] = prod
         if verbose:
-            print("Number of propagation loops: %d".format(loop_count))
+            print(f"Number of propagation loops: {loop_count}")
 
     def print_constraints(self):
         print(f"\n{self}\nConstraints: (Source, Target, RelationSet)")
         for x in self.__constraints:
             for y in self.__constraints[x]:
                 rels = self.__constraints[x][y]
-                print("  {}, {}, {}".format(x.name, y.name, sorted(list(rels))))
+                print(f"  {x.name}, {y.name}, {sorted(list(rels))}")
 
 
 class TemporalObject(object):
@@ -483,9 +480,9 @@ class TemporalObject(object):
 
     def __repr__(self):
         if self.__name:
-            return "<TemporalObject {} {}>".format(self.__name, self.__type)
+            return f"<TemporalObject {self.__name} {self.__type}>"
         else:
-            return "<TemporalObject {}>".format(self.__type)
+            return f"<TemporalObject {self.__type}>"
 
 
 class SpatialObject(object):
@@ -506,9 +503,9 @@ class SpatialObject(object):
 
     def __repr__(self):
         if self.__name:
-            return "<SpatialObject {} {}>".format(self.__name, self.__type)
+            return f"<SpatialObject {self.__name} {self.__type}>"
         else:
-            return "<SpatialObject {}>".format(self.__type)
+            return f"<SpatialObject {self.__type}>"
 
 
 if __name__ == '__main__':
