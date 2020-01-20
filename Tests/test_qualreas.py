@@ -135,7 +135,7 @@ class TestAlgebra(unittest.TestCase):
         """
         Load all of the existing algebras
         """
-        path = os.path.join(os.getenv('GITREPO'), 'qualreas/Algebras')
+        path = os.path.join(os.getenv('PYPROJ'), 'qualreas/Algebras')
         self.alg0 = qr.Algebra(os.path.join(path, 'IntervalAlgebra.json'))
         self.alg1 = qr.Algebra(os.path.join(path, 'IntervalAndPointAlgebra.json'))
         self.alg2 = qr.Algebra(os.path.join(path, 'LeftBranchingIntervalAndPointAlgebra.json'))
@@ -277,7 +277,7 @@ class TestNetwork(unittest.TestCase):
         """
         Load all of the existing algebras
         """
-        path = os.path.join(os.getenv('GITREPO'), 'qualreas/Algebras')
+        path = os.path.join(os.getenv('PYPROJ'), 'qualreas/Algebras')
 
         self.alg0 = qr.Algebra(os.path.join(path, 'IntervalAlgebra.json'))
         self.alg1 = qr.Algebra(os.path.join(path, 'IntervalAndPointAlgebra.json'))
