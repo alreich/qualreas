@@ -10,11 +10,13 @@ from itertools import combinations, chain
 __author__ = 'Alfred J. Reich'
 __version__ = '0.2.0'
 
+
 # Some utilities:
 
 def flatten(listOfLists):
     """Flatten one level of nesting"""
     return chain.from_iterable(listOfLists)
+
 
 # TODO: Make the function list_of_combinations produce an iterator, rather than a list
 def list_of_combinations(items, make_sequence):
@@ -105,6 +107,7 @@ class RelationSet(object):
     {D} = {B,D,M,O,S}
 
     """
+
     def __init__(self, elements, algebra=None):
         # TODO: If algebra is not None, then check that 'elements' are in its relations.
         self.elements = frozenset(sorted(elements))
@@ -631,10 +634,10 @@ if __name__ == '__main__':
     net3.print_constraints()
 
     print("\n{} is associative? {}\n".format(alg[0].name, str(alg[0].is_associative())))
-#    print "\n{} is associative? {}\n" % (alg[1].short_name, str(alg[1].is_associative(verbose=True)))
-#    print "\n{} is associative? {}" % (alg2.short_name, str(alg2.is_associative()))
-#    print "\n{} is associative? {}" % (alg3.short_name, str(alg3.is_associative()))
-#    print "\n{} is associative? {}" % (alg4.short_name, str(alg4.is_associative()))
+    #    print "\n{} is associative? {}\n" % (alg[1].short_name, str(alg[1].is_associative(verbose=True)))
+    #    print "\n{} is associative? {}" % (alg2.short_name, str(alg2.is_associative()))
+    #    print "\n{} is associative? {}" % (alg3.short_name, str(alg3.is_associative()))
+    #    print "\n{} is associative? {}" % (alg4.short_name, str(alg4.is_associative()))
 
     # Region Connection Calculus 8:
 
