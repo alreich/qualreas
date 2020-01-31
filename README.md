@@ -7,7 +7,8 @@ copy of the paper can also be found [here](http://www.google.com/url?sa=t&rct=j&
 
 ### To Be Done
 
-* Create API docs
+* Change the name "Point" to "Instant" (to match https://www.w3.org/TR/owl-time/)
+* Shorten the Algebra names (e.g., "RightBranchingTimeIntervalAndPointAlgebra" --> "RightBranchingTimeAlgebra")
 * Create Sphinx docs
 * Update this Readme
 * Create functionality for Algebra generation
