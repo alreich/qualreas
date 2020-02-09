@@ -182,7 +182,7 @@ class TestAlgebra(unittest.TestCase):
     #     self.fail()
 
     def test_name(self):
-        self.assertEqual(self.alg0.name, 'LinearTimeIntervalAlgebra')
+        self.assertEqual(self.alg0.name, 'LinearTimeAlgebra')
 
     def test_relations(self):
         self.assertEqual(self.alg0.relations['B'].short_name, 'B')
