@@ -273,6 +273,49 @@ class Network(nx.DiGraph):
     def entities(self):
         return self.nodes
 
+    def __set_unconstrained_values(self):
+        ident = self.algebra.elements
+        for ent1 in self.nodes:
+            for ent2 in self.nodes:
+                if ent1 in self.__constraints:
+                    if ent2 in self.__constraints[ent1]:
+                        pass
+                    else:
+                        self.constraint(ent1, ent2, ident)
+                else:
+                    if ent2 in self.__constraints:
+                        if ent1 in self.__constraints[ent2]:
+                            pass
+                        else:
+                            self.constraint(ent1, ent2, ident)
+                    else:
+                        self.constraint(ent1, ent2, ident)
+
+    def propagate(self, verbose=False):
+        """Propagate constraints in the network.
+        @param verbose: Print number of loops as constraints are propagated.
+
+        """
+        loop_count = 0
+        self.__set_unconstrained_values()
+        something_changed = True  # Start off with this True so we'll loop at least once
+        while something_changed:
+            something_changed = False  # Immediately set to False; if nothing changes, we'll only loop once
+            loop_count += 1
+            for ent1 in self.__entities:
+                for ent2 in self.__entities:
+                    prod = self.__algebra.identity_relset
+                    c12 = self.__constraints[ent1][ent2]
+                    for ent3 in self.__entities:
+                        c13 = self.__constraints[ent1][ent3]
+                        c32 = self.__constraints[ent3][ent2]
+                        prod = prod + (c13 * c32)
+                    if prod != c12:
+                        something_changed = True  # Need to continue top-level propagation loop
+                    self.__constraints[ent1][ent2] = prod
+        if verbose:
+            print("Number of propagation loops: %d".format(loop_count))
+
     def summary(self):
         """Print out a summary of this network and its nodes, edges, and constraints."""
         print(f"{self.name}: {len(self.nodes)} nodes, {len(self.edges)} edges")
