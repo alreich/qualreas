@@ -80,6 +80,16 @@ class Algebra(object):
         # TODO: Rename 'identity' to 'elements'
         self.elements = self.elements_bitset.supremum
 
+        # The equality relations of the algebra
+        self.__equality_relations = [rel for rel in self.elements if self.rel_equality(rel)]
+
+        # Populate a dictionary that allows equality relations to be looked-up based on their domain/range.
+        self.equality_relations_dict = dict()
+        for eqrel in self.__equality_relations:
+            dom = self.rel_domain(eqrel)[0]  # Get the single item out of the eqrel's domain set.
+            self.equality_relations_dict[dom] = eqrel
+
+
         # Setup the transitivity table used by Relation Set multiplication
         self.transitivity_table = dict()
         tabledefs = self.algebra_dict["TransTable"]
@@ -108,6 +118,9 @@ class Algebra(object):
     def rel_transitive(self, rel):
         return self.relations_dict[rel]["Transitive"]
 
+    def rel_equality(self, rel):
+        return self.rel_reflexive(rel) & self.rel_symmetric(rel) & self.rel_transitive(rel)
+
     def converse(self, rel_or_relset):
         """Return the converse of a relation (str) or relation set (bitset)."""
         if isinstance(rel_or_relset, str):
@@ -118,6 +131,13 @@ class Algebra(object):
     def __str__(self):
         """Return a string representation of the Algebra."""
         return f"<{self.name}: {self.description}>"
+
+    @property
+    def equality_relations(self):
+        return self.__equality_relations
+
+    def equality_relation(self, domain_or_range):
+        return self.equality_relations_dict[domain_or_range]
 
     def relset(self, relations):
         """Return a relation set (bitset) for the given relations."""
@@ -174,7 +194,7 @@ class Algebra(object):
         """Print out a summary of this algebra and its elements."""
         print(f"  Algebra Name: {self.name}")
         print(f"   Description: {self.description}")
-        # print(f" Equality Rels: {self.equality_relations}")
+        print(f" Equality Rels: {self.equality_relations}")
         print("     Relations:")
         print("{:>25s} {:>25s} {:>10s} {:>10s} {:>10s} {:>8s} {:>12s}".format("NAME (ABBREV)", "CONVERSE (ABBREV)",
                                                                               "REFLEXIVE", "SYMMETRIC", "TRANSITIVE",
@@ -256,8 +276,32 @@ class Network(nx.DiGraph):
     def __str__(self):
         return f"<Network--{self.name}--{self.algebra.name}>"
 
+    def remove_constraint(self, entity1, entity2):
+        # Remove edges in both directions
+        if self.has_edge(entity1, entity2):
+            self.remove_edge(entity1, entity2)
+        if self.has_edge(entity2, entity1):
+            self.remove_edge(entity2, entity1)
+
+    def set_equality_constraint(self, entity, equality_rels):
+        # Override any previous setting on this entity
+        self.remove_constraint(entity, entity)
+        self.add_edge(entity, entity, constraint=equality_rels)
+
     def add_constraint(self, entity1, entity2, relation_set=None):
         """Same as add_edge, except that two edges are added with converse constraints."""
+
+        # Get the proper equality relation(s) for each of the two entities
+        eq_rels1 = list(map(lambda x: self.algebra.equality_relation(x), entity1.types))
+        eq_rels2 = list(map(lambda x: self.algebra.equality_relation(x), entity2.types))
+
+        # Each entity must equal itself
+        self.set_equality_constraint(entity1, eq_rels1)
+        self.set_equality_constraint(entity2, eq_rels2)
+
+        # Override any previously set constraints on this pair of entities
+        self.remove_constraint(entity1, entity2)
+
         if relation_set:
             self.add_edge(entity1, entity2, constraint=relation_set)
             self.add_edge(entity2, entity1, constraint=self.algebra.converse(relation_set))
@@ -273,31 +317,18 @@ class Network(nx.DiGraph):
     def entities(self):
         return self.nodes
 
-    def __set_unconstrained_values(self):
-        ident = self.algebra.elements
-        for ent1 in self.nodes:
-            for ent2 in self.nodes:
-                if ent1 in self.__constraints:
-                    if ent2 in self.__constraints[ent1]:
-                        pass
-                    else:
-                        self.constraint(ent1, ent2, ident)
-                else:
-                    if ent2 in self.__constraints:
-                        if ent1 in self.__constraints[ent2]:
-                            pass
-                        else:
-                            self.constraint(ent1, ent2, ident)
-                    else:
-                        self.constraint(ent1, ent2, ident)
+    def set_unconstrained_values(self):
+        for ent1 in self.nodes():
+            for ent2 in self.nodes():
+                if not self.has_edge(ent1, ent2):
+                    self.add_constraint(ent1, ent2, self.algebra.elements)
 
     def propagate(self, verbose=False):
         """Propagate constraints in the network.
         @param verbose: Print number of loops as constraints are propagated.
-
         """
         loop_count = 0
-        self.__set_unconstrained_values()
+        self.set_unconstrained_values()
         something_changed = True  # Start off with this True so we'll loop at least once
         while something_changed:
             something_changed = False  # Immediately set to False; if nothing changes, we'll only loop once
@@ -328,31 +359,21 @@ class Network(nx.DiGraph):
 
 
 # See https://www.w3.org/TR/owl-time/
+# types: "Point", "ProperInterval", "Duration"
 class TemporalEntity(object):
-    types = ["Point", "ProperInterval", "Duration"]
 
     def __init__(self, types, name=None, start=None, end=None, dur=None):
-        self.__type = types
-        self.__name = name
-        self.__start = start
-        self.__end = end
-        self.__duration = dur
-
-    @property
-    def name(self):
-        return self.__name
-
-    def gettype(self):
-        return self.__type
-
-    def settype(self, typ):
-        self.__type = typ
+        self.types = types
+        self.name = name
+        self.start = start
+        self.end = end
+        self.duration = dur
 
     def __repr__(self):
-        if self.__name:
-            return f"<TemporalEntity {self.__name} {self.__type}>"
+        if self.name:
+            return f"<TemporalEntity {self.name} {self.types}>"
         else:
-            return f"<TemporalEntity {self.__type}>"
+            return f"<TemporalEntity {self.types}>"
 
 
 # Don't have a good source yet for a spatial vocabulary,
@@ -360,24 +381,14 @@ class TemporalEntity(object):
 class SpatialEntity(object):
 
     def __init__(self, types, name=None):
-        self.__type = types
-        self.__name = name
-
-    @property
-    def name(self):
-        return self.__name
-
-    def gettype(self):
-        return self.__type
-
-    def settype(self, typ):
-        self.__type = typ
+        self.types = types
+        self.name = name
 
     def __repr__(self):
-        if self.__name:
-            return f"<SpatialObject {self.__name} {self.__type}>"
+        if self.name:
+            return f"<SpatialObject {self.name} {self.types}>"
         else:
-            return f"<SpatialObject {self.__type}>"
+            return f"<SpatialObject {self.types}>"
 
 
 if __name__ == '__main__':
