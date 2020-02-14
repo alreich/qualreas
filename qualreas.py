@@ -3,19 +3,59 @@
 
 """
 
+from bitsets import bitset, bases
 import json
-from bitsets import bitset
 import networkx as nx
+from functools import reduce
+
 
 __author__ = 'Alfred J. Reich'
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 
-# def add(relset1, relset2):
-#     """Addition for relation sets is equivalent to set intersection."""
-#     return relset1.intersection(relset2)
+class RelSet(bases.BitSet):
+
+    def __str__(self):
+        return "|".join(self.members())
+
+    def __add__(self, rs):
+        return self.intersection(rs)
 
 
+# See https://www.w3.org/TR/owl-time/
+# types: "Point", "ProperInterval", "Duration"
+class TemporalEntity(object):
+
+    def __init__(self, types, name=None, start=None, end=None, dur=None):
+        self.types = types
+        self.name = name
+        self.start = start
+        self.end = end
+        self.duration = dur
+
+    def __repr__(self):
+        if self.name:
+            return f"<TemporalEntity {self.name} {self.types}>"
+        else:
+            return f"<TemporalEntity {self.types}>"
+
+
+# Don't have a good source yet for a spatial vocabulary,
+# but see https://www.w3.org/2017/sdwig/bp/
+class SpatialEntity(object):
+
+    def __init__(self, types, name=None):
+        self.types = types
+        self.name = name
+
+    def __repr__(self):
+        if self.name:
+            return f"<SpatialObject {self.name} {self.types}>"
+        else:
+            return f"<SpatialObject {self.types}>"
+
+
+# Abbreviations for Algebra Summary
 # TODO: Don't embed the abbreviation dictionary in code; create a file for it
 def abbrev(term_list):
     abbrev_dict = {"Point": "Pt",
@@ -40,20 +80,20 @@ class Algebra(object):
         # TODO: For consistency, rename relations_dict to rel_dict
         self.relations_dict = self.algebra_dict["Relations"]
 
-        self.elements_bitset = bitset(self.name, tuple(self.relations_dict.keys()))  # A class object
+        # self.elements_bitset = bitset(self.name, tuple(self.relations_dict.keys()))  # A class object
+        self.elements_bitset = bitset('relset', tuple(self.relations_dict.keys()), base=RelSet)
 
         # TODO: Rename 'identity' to 'elements'
         self.elements = self.elements_bitset.supremum
 
         # The equality relations of the algebra
-        self.__equality_relations = [rel for rel in self.elements if self.rel_equality(rel)]
+        self.__equality_relations = self.relset([rel for rel in self.elements if self.rel_equality(rel)])
 
         # Populate a dictionary that allows equality relations to be looked-up based on their domain/range.
         self.equality_relations_dict = dict()
         for eqrel in self.__equality_relations:
             dom = self.rel_domain(eqrel)[0]  # Get the single item out of the eqrel's domain set.
-            self.equality_relations_dict[dom] = eqrel
-
+            self.equality_relations_dict[dom] = self.relset([eqrel])
 
         # Setup the transitivity table used by Relation Set multiplication
         self.transitivity_table = dict()
@@ -107,6 +147,10 @@ class Algebra(object):
     def relset(self, relations):
         """Return a relation set (bitset) for the given relations."""
         return self.elements_bitset(relations)
+
+    def string_to_relset(self, string, delimiter='|'):
+        """Take a string like 'B|M|O' and turn it into a relation set."""
+        return self.relset(string.split(delimiter))
 
     def mult(self, relset1, relset2):
         """Multiplication is done, element-by-element, on the cross-product
@@ -257,14 +301,18 @@ class Network(nx.DiGraph):
         """Same as add_edge, except that two edges are added with converse constraints."""
 
         # Get the proper equality relation(s) for each of the two entities
-        eq_rels1 = list(map(lambda x: self.algebra.equality_relation(x), entity1.types))
-        eq_rels2 = list(map(lambda x: self.algebra.equality_relation(x), entity2.types))
+        eq_rels1 = reduce(lambda r1, s1: r1.union(s1),
+                          (map(lambda t1: self.algebra.equality_relation(t1),
+                               entity1.types)))
+        eq_rels2 = reduce(lambda r2, s2: r2.union(s2),
+                          (map(lambda t2: self.algebra.equality_relation(t2),
+                               entity2.types)))
 
         # Each entity must equal itself
         self.set_equality_constraint(entity1, eq_rels1)
         self.set_equality_constraint(entity2, eq_rels2)
 
-        # Override any previously set constraints on this pair of entities
+        # Override any previously set constraint on this pair of entities
         self.remove_constraint(entity1, entity2)
 
         if relation_set:
@@ -288,29 +336,31 @@ class Network(nx.DiGraph):
                 if not self.has_edge(ent1, ent2):
                     self.add_constraint(ent1, ent2, self.algebra.elements)
 
-    def propagate(self, verbose=False):
-        """Propagate constraints in the network.
-        @param verbose: Print number of loops as constraints are propagated.
+    def propagate(self, verbose=True):
+        """Propagate constraints in the network. Constraint propagation is a fixed-point iteration of a square
+        constraint matrix.  Or, in plain English, we treat the network as if it's a matrix, multiplying it by
+        itself, repeatedly, until it stops changing.
+        @param verbose: Print number of iterations required to propagate constraints.
         """
         loop_count = 0
         self.set_unconstrained_values()
-        something_changed = True  # Start off with this True so we'll loop at least once
+        something_changed = True  # We'll iterate at least once
         while something_changed:
-            something_changed = False  # Immediately set to False; if nothing changes, we'll only loop once
+            something_changed = False  # If nothing changes, we'll only iterate once
             loop_count += 1
-            for ent1 in self.__entities:
-                for ent2 in self.__entities:
-                    prod = self.__algebra.identity_relset
-                    c12 = self.__constraints[ent1][ent2]
-                    for ent3 in self.__entities:
-                        c13 = self.__constraints[ent1][ent3]
-                        c32 = self.__constraints[ent3][ent2]
-                        prod = prod + (c13 * c32)
+            for ent1 in self.nodes():
+                for ent2 in self.nodes():
+                    prod = self.algebra.elements
+                    c12 = self.edges[ent1, ent2]['constraint']
+                    for ent3 in self.nodes():
+                        c13 = self.edges[ent1, ent3]['constraint']
+                        c32 = self.edges[ent3, ent2]['constraint']
+                        prod += self.algebra.mult(c13, c32)
                     if prod != c12:
-                        something_changed = True  # Need to continue top-level propagation loop
-                    self.__constraints[ent1][ent2] = prod
+                        something_changed = True  # Continue iterating
+                    self.edges[ent1, ent2]['constraint'] = prod
         if verbose:
-            print("Number of propagation loops: %d".format(loop_count))
+            print(f"Number of iterations: {loop_count}")
 
     def summary(self):
         """Print out a summary of this network and its nodes, edges, and constraints."""
@@ -320,40 +370,7 @@ class Network(nx.DiGraph):
         for head in self.nodes:
             print(f"  {head.name}:")
             for tail in self.neighbors(head):
-                print(f"    => {tail.name}: {list(self.edges[head, tail]['constraint'].members())}")
-
-
-# See https://www.w3.org/TR/owl-time/
-# types: "Point", "ProperInterval", "Duration"
-class TemporalEntity(object):
-
-    def __init__(self, types, name=None, start=None, end=None, dur=None):
-        self.types = types
-        self.name = name
-        self.start = start
-        self.end = end
-        self.duration = dur
-
-    def __repr__(self):
-        if self.name:
-            return f"<TemporalEntity {self.name} {self.types}>"
-        else:
-            return f"<TemporalEntity {self.types}>"
-
-
-# Don't have a good source yet for a spatial vocabulary,
-# but see https://www.w3.org/2017/sdwig/bp/
-class SpatialEntity(object):
-
-    def __init__(self, types, name=None):
-        self.types = types
-        self.name = name
-
-    def __repr__(self):
-        if self.name:
-            return f"<SpatialObject {self.name} {self.types}>"
-        else:
-            return f"<SpatialObject {self.types}>"
+                print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
 
 
 if __name__ == '__main__':
@@ -389,12 +406,12 @@ if __name__ == '__main__':
     print("\n")
     print(f"Constraint: {entity_x.name} {list(r12.members())} {entity_y.name}")
     print(f"Constraint: {entity_y.name} {list(r23.members())} {entity_z.name}")
-    net0 = Network(alg[0], "Test0")
+    net0 = Network(alg[0], "Net0")
     net0.add_constraint(entity_x, entity_y, r12)
     net0.add_constraint(entity_y, entity_z, r23)
     net0.summary()
-    #net0.propagate(verbose=True)
-    #net0.print_constraints()
+    net0.propagate()
+    net0.summary()
     print("\n")
 
     # print("{}:".format(alg[1].name))
