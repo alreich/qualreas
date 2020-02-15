@@ -15,7 +15,7 @@ Interval Algebra:
 
 Algebras are created by reading their definition from a JSON file:
 
->>> alg0 = Algebra(os.path.join(path, "IntervalAlgebra.json"))
+>>> alg0 = Algebra(os.path.join(path, "LinearIntervalAlgebra.json"))
 
 Use the 'relations' property to obtain the full set of relations in the algebra:
 
@@ -65,7 +65,7 @@ relation sets (i.e., point, left-branching, and right-branching relations get pu
 Interval & Point Algebra:
 -------------------------
 
->>> alg1 = Algebra(os.path.join(path, "IntervalAndPointAlgebra.json"))
+>>> alg1 = Algebra(os.path.join(path, "ExtendedLinearIntervalAlgebra.json"))
 
 >>> rels1 = alg1.relations
 
@@ -100,7 +100,7 @@ inv( inv(Before) * inv(Met-By) ):
 Left-Branching Interval & Point Algebra:
 ----------------------------------------
 
->>> alg2 = Algebra(os.path.join(path, "LeftBranchingIntervalAndPointAlgebra.json"))
+>>> alg2 = Algebra(os.path.join(path, "LeftBranchingIntervalAlgebra.json"))
 
 >>> rels2 = alg2.relations
 
@@ -135,7 +135,7 @@ inv( inv(Before) * inv(Met-By) ):
 Right-Branching Interval & Point Algebra:
 -----------------------------------------
 
->>> alg3 = Algebra(os.path.join(path, "RightBranchingIntervalAndPointAlgebra.json"))
+>>> alg3 = Algebra(os.path.join(path, "RightBranchingIntervalAlgebra.json"))
 
 >>> rels3 = alg3.relations
 
@@ -170,7 +170,7 @@ inv( inv(Before) * inv(Met-By) ):
 Region Connection Calculus 8:
 -----------------------------
 
->>> alg4 = Algebra(os.path.join(path, "rcc8Algebra.json"))
+>>> alg4 = Algebra(os.path.join(path, "RCC8Algebra.json"))
 
 >>> rels4 = alg4.relations
 

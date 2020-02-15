@@ -1,6 +1,6 @@
 {
     "Description": "Region Connection Calculus 8 Algebra", 
-    "Name": "RCC8", 
+    "Name": "RCC8Algebra",
     "Relations": {
         "DC": {
             "Domain": ["Region"],

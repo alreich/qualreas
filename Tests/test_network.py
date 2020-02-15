@@ -13,11 +13,11 @@ class TestNetwork(unittest.TestCase):
         """
         path = os.path.join( os.getenv('PYPROJ'), 'qualreas' )
 
-        self.alg0 = qr.Algebra(os.path.join(path, 'IntervalAlgebra.json'))
-        self.alg1 = qr.Algebra(os.path.join(path, 'IntervalAndPointAlgebra.json'))
-        self.alg2 = qr.Algebra(os.path.join(path, 'LeftBranchingIntervalAndPointAlgebra.json'))
-        self.alg3 = qr.Algebra(os.path.join(path, 'RightBranchingIntervalAndPointAlgebra.json'))
-        self.alg4 = qr.Algebra(os.path.join(path, 'rcc8Algebra.json'))
+        self.alg0 = qr.Algebra(os.path.join(path, 'LinearIntervalAlgebra.json'))
+        self.alg1 = qr.Algebra(os.path.join(path, 'ExtendedLinearIntervalAlgebra.json'))
+        self.alg2 = qr.Algebra(os.path.join(path, 'LeftBranchingIntervalAlgebra.json'))
+        self.alg3 = qr.Algebra(os.path.join(path, 'RightBranchingIntervalAlgebra.json'))
+        self.alg4 = qr.Algebra(os.path.join(path, 'RCC8Algebra.json'))
 
         self.e1 = qr.TemporalObject(["ProperInterval"], "X")
         self.e2 = qr.TemporalObject(["ProperInterval"], "Y")

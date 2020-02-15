@@ -1,6 +1,6 @@
 {
-    "Description": "Reich's left-branching extension to Allen's time interval algebra (see TIME-94 paper)", 
-    "Name": "LeftBranchingTimeAlgebra",
+    "Description": "Extension of Allen's algebra to include Instants",
+    "Name": "ExtendedLinearIntervalAlgebra",
     "Relations": {
         "B": {
             "Domain": ["Point", "ProperInterval"], 
@@ -64,60 +64,6 @@
             "Reflexive": false, 
             "Symmetric": false, 
             "Transitive": true
-        }, 
-        "LB": {
-            "Domain": ["Point", "ProperInterval"], 
-            "Converse": "LBI", 
-            "Name": "Left-Before", 
-            "Range": ["ProperInterval"], 
-            "Reflexive": false, 
-            "Symmetric": false, 
-            "Transitive": true
-        }, 
-        "LBI": {
-            "Domain": ["ProperInterval"], 
-            "Converse": "LB", 
-            "Name": "Left-After", 
-            "Range": ["Point", "ProperInterval"], 
-            "Reflexive": false, 
-            "Symmetric": false, 
-            "Transitive": true
-        }, 
-        "LF": {
-            "Domain": ["ProperInterval"], 
-            "Converse": "LF", 
-            "Name": "Left-Finishes", 
-            "Range": ["ProperInterval"], 
-            "Reflexive": false, 
-            "Symmetric": false, 
-            "Transitive": false
-        }, 
-        "LO": {
-            "Domain": ["ProperInterval"], 
-            "Converse": "LOI", 
-            "Name": "Left-Overlaps", 
-            "Range": ["ProperInterval"], 
-            "Reflexive": false, 
-            "Symmetric": false, 
-            "Transitive": false
-        }, 
-        "LOI": {
-            "Domain": ["ProperInterval"], 
-            "Converse": "LO", 
-            "Name": "Left-Overlapped-By", 
-            "Range": ["ProperInterval"], 
-            "Reflexive": false, 
-            "Symmetric": false, 
-            "Transitive": false
-        }, 
-        "L~": {
-            "Domain": ["Point", "ProperInterval"], 
-            "Converse": "L~", 
-            "Name": "Left-Incomparable", 
-            "Range": ["Point", "ProperInterval"], 
-            "Reflexive": false, 
-            "Symmetric": true, 
-            "Transitive": false
         }, 
         "M": {
             "Domain": ["ProperInterval"], 
@@ -232,12 +178,6 @@
                 "E", 
                 "F", 
                 "FI", 
-                "LB", 
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "L~", 
                 "M", 
                 "MI", 
                 "O", 
@@ -253,8 +193,6 @@
             "D": [
                 "B", 
                 "D", 
-                "LB", 
-                "LO", 
                 "M", 
                 "O", 
                 "PS", 
@@ -269,8 +207,6 @@
             "F": [
                 "B", 
                 "D", 
-                "LB", 
-                "LO", 
                 "M", 
                 "O", 
                 "PS", 
@@ -279,32 +215,12 @@
             "FI": [
                 "B"
             ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "L~"
-            ], 
-            "LF": [
-                "LB"
-            ], 
-            "LO": [
-                "LB"
-            ], 
-            "LOI": [
-                "LB"
-            ], 
-            "L~": [
-                "L~"
-            ], 
             "M": [
                 "B"
             ], 
             "MI": [
                 "B", 
                 "D", 
-                "LB", 
-                "LO", 
                 "M", 
                 "O", 
                 "PS", 
@@ -316,8 +232,6 @@
             "OI": [
                 "B", 
                 "D", 
-                "LB", 
-                "LO", 
                 "M", 
                 "O", 
                 "PS", 
@@ -329,8 +243,6 @@
             "PF": [
                 "B", 
                 "D", 
-                "LB", 
-                "LO", 
                 "M", 
                 "O", 
                 "PS", 
@@ -395,40 +307,6 @@
             ], 
             "FI": [
                 "BI"
-            ], 
-            "LB": [
-                "BI", 
-                "D", 
-                "F", 
-                "LB", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "MI", 
-                "OI", 
-                "PF"
-            ], 
-            "LBI": [
-                "BI"
-            ], 
-            "LF": [
-                "BI"
-            ], 
-            "LO": [
-                "BI", 
-                "D", 
-                "F", 
-                "MI", 
-                "OI", 
-                "PF"
-            ], 
-            "LOI": [
-                "BI"
-            ], 
-            "L~": [
-                "BI", 
-                "LBI", 
-                "L~"
             ], 
             "M": [
                 "BI", 
@@ -528,39 +406,6 @@
                 "PS", 
                 "S"
             ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "BI", 
-                "LBI", 
-                "L~"
-            ], 
-            "LF": [
-                "D", 
-                "LB", 
-                "LO"
-            ], 
-            "LO": [
-                "D", 
-                "LB", 
-                "LO"
-            ], 
-            "LOI": [
-                "BI", 
-                "D", 
-                "F", 
-                "LB", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "MI", 
-                "OI", 
-                "PF"
-            ], 
-            "L~": [
-                "L~"
-            ], 
             "M": [
                 "B"
             ], 
@@ -616,8 +461,6 @@
             "BI": [
                 "BI", 
                 "DI", 
-                "LBI", 
-                "LOI", 
                 "MI", 
                 "OI", 
                 "PSI", 
@@ -629,9 +472,6 @@
                 "E", 
                 "F", 
                 "FI", 
-                "LF", 
-                "LO", 
-                "LOI", 
                 "O", 
                 "OI", 
                 "S", 
@@ -645,36 +485,11 @@
             ], 
             "F": [
                 "DI", 
-                "LOI", 
                 "OI", 
                 "SI"
             ], 
             "FI": [
                 "DI"
-            ], 
-            "LB": [
-                "LB", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "LBI": [
-                "LBI"
-            ], 
-            "LF": [
-                "LOI"
-            ], 
-            "LO": [
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "LOI": [
-                "LOI"
-            ], 
-            "L~": [
-                "LBI", 
-                "L~"
             ], 
             "M": [
                 "DI", 
@@ -683,7 +498,6 @@
             ], 
             "MI": [
                 "DI", 
-                "LOI", 
                 "OI", 
                 "SI"
             ], 
@@ -694,7 +508,6 @@
             ], 
             "OI": [
                 "DI", 
-                "LOI", 
                 "OI", 
                 "SI"
             ], 
@@ -703,7 +516,6 @@
             ], 
             "PF": [
                 "DI", 
-                "LOI", 
                 "OI", 
                 "SI"
             ], 
@@ -748,24 +560,6 @@
             ], 
             "FI": [
                 "FI"
-            ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "LBI"
-            ], 
-            "LF": [
-                "LF"
-            ], 
-            "LO": [
-                "LO"
-            ], 
-            "LOI": [
-                "LOI"
-            ], 
-            "L~": [
-                "L~"
             ], 
             "M": [
                 "M"
@@ -824,30 +618,6 @@
                 "F", 
                 "FI"
             ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "BI", 
-                "LBI"
-            ], 
-            "LF": [
-                "F", 
-                "LF"
-            ], 
-            "LO": [
-                "D", 
-                "LO"
-            ], 
-            "LOI": [
-                "BI", 
-                "LOI", 
-                "MI", 
-                "OI"
-            ], 
-            "L~": [
-                "L~"
-            ], 
             "M": [
                 "M"
             ], 
@@ -889,8 +659,6 @@
             "BI": [
                 "BI", 
                 "DI", 
-                "LBI", 
-                "LOI", 
                 "MI", 
                 "OI", 
                 "PSI", 
@@ -898,7 +666,6 @@
             ], 
             "D": [
                 "D", 
-                "LO", 
                 "O", 
                 "S"
             ], 
@@ -911,36 +678,16 @@
             "F": [
                 "E", 
                 "F", 
-                "FI", 
-                "LF"
+                "FI"
             ], 
             "FI": [
                 "FI"
             ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "LBI"
-            ], 
-            "LF": [
-                "LF"
-            ], 
-            "LO": [
-                "LO"
-            ], 
-            "LOI": [
-                "LOI"
-            ], 
-            "L~": [
-                "L~"
-            ], 
             "M": [
                 "M"
             ], 
             "MI": [
                 "DI", 
-                "LOI", 
                 "OI", 
                 "SI"
             ], 
@@ -949,7 +696,6 @@
             ], 
             "OI": [
                 "DI", 
-                "LOI", 
                 "OI", 
                 "SI"
             ], 
@@ -967,687 +713,6 @@
             ], 
             "SI": [
                 "DI"
-            ]
-        }, 
-        "LB": {
-            "B": [
-                "B"
-            ], 
-            "BI": [
-                "L~"
-            ], 
-            "D": [
-                "LB"
-            ], 
-            "DI": [
-                "B", 
-                "LB", 
-                "L~"
-            ], 
-            "E": [
-                "LB"
-            ], 
-            "F": [
-                "LB"
-            ], 
-            "FI": [
-                "B", 
-                "LB"
-            ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "B", 
-                "BI", 
-                "D", 
-                "DI", 
-                "E", 
-                "F", 
-                "FI", 
-                "LB", 
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "L~", 
-                "M", 
-                "MI", 
-                "O", 
-                "OI", 
-                "PE", 
-                "PF", 
-                "PFI", 
-                "PS", 
-                "PSI", 
-                "S", 
-                "SI"
-            ], 
-            "LF": [
-                "B", 
-                "D", 
-                "LB", 
-                "LO", 
-                "M", 
-                "O", 
-                "PS", 
-                "S"
-            ], 
-            "LO": [
-                "B", 
-                "D", 
-                "LB", 
-                "LO", 
-                "M", 
-                "O", 
-                "PS", 
-                "S"
-            ], 
-            "LOI": [
-                "B", 
-                "D", 
-                "LB", 
-                "LO", 
-                "L~", 
-                "M", 
-                "O", 
-                "PS", 
-                "S"
-            ], 
-            "L~": [
-                "L~"
-            ], 
-            "M": [
-                "B"
-            ], 
-            "MI": [
-                "L~"
-            ], 
-            "O": [
-                "B", 
-                "LB"
-            ], 
-            "OI": [
-                "LB", 
-                "L~"
-            ], 
-            "PE": [], 
-            "PF": [], 
-            "PFI": [
-                "B"
-            ], 
-            "PS": [], 
-            "PSI": [
-                "L~"
-            ], 
-            "S": [
-                "LB"
-            ], 
-            "SI": [
-                "LB", 
-                "L~"
-            ]
-        }, 
-        "LBI": {
-            "B": [
-                "B", 
-                "DI", 
-                "FI", 
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "M", 
-                "O", 
-                "PFI"
-            ], 
-            "BI": [
-                "LBI"
-            ], 
-            "D": [
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "DI": [
-                "LBI"
-            ], 
-            "E": [
-                "LBI"
-            ], 
-            "F": [
-                "LBI"
-            ], 
-            "FI": [
-                "LBI"
-            ], 
-            "LB": [
-                "D", 
-                "DI", 
-                "E", 
-                "F", 
-                "FI", 
-                "LB", 
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "O", 
-                "OI", 
-                "S", 
-                "SI"
-            ], 
-            "LBI": [
-                "LBI"
-            ], 
-            "LF": [
-                "LBI"
-            ], 
-            "LO": [
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "LOI": [
-                "LBI"
-            ], 
-            "L~": [
-                "BI", 
-                "DI", 
-                "LBI", 
-                "LOI", 
-                "L~", 
-                "MI", 
-                "OI", 
-                "PSI", 
-                "SI"
-            ], 
-            "M": [
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "MI": [
-                "LBI"
-            ], 
-            "O": [
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "OI": [
-                "LBI"
-            ], 
-            "PE": [
-                "LBI"
-            ], 
-            "PF": [
-                "LBI"
-            ], 
-            "PFI": [
-                "LBI"
-            ], 
-            "PS": [
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "PSI": [
-                "LBI"
-            ], 
-            "S": [
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "SI": [
-                "LBI"
-            ]
-        }, 
-        "LF": {
-            "B": [
-                "B"
-            ], 
-            "BI": [
-                "LBI"
-            ], 
-            "D": [
-                "LO"
-            ], 
-            "DI": [
-                "DI", 
-                "LBI", 
-                "LOI"
-            ], 
-            "E": [
-                "LF"
-            ], 
-            "F": [
-                "LF"
-            ], 
-            "FI": [
-                "FI", 
-                "LF"
-            ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "BI", 
-                "DI", 
-                "LBI", 
-                "LOI", 
-                "MI", 
-                "OI", 
-                "PSI", 
-                "SI"
-            ], 
-            "LF": [
-                "E", 
-                "F", 
-                "FI", 
-                "LF"
-            ], 
-            "LO": [
-                "D", 
-                "LO", 
-                "O", 
-                "S"
-            ], 
-            "LOI": [
-                "DI", 
-                "LBI", 
-                "LOI", 
-                "OI", 
-                "SI"
-            ], 
-            "L~": [
-                "L~"
-            ], 
-            "M": [
-                "M"
-            ], 
-            "MI": [
-                "LBI"
-            ], 
-            "O": [
-                "LO", 
-                "O"
-            ], 
-            "OI": [
-                "LBI", 
-                "LOI"
-            ], 
-            "PE": [], 
-            "PF": [], 
-            "PFI": [
-                "PFI"
-            ], 
-            "PS": [], 
-            "PSI": [
-                "LBI"
-            ], 
-            "S": [
-                "LO"
-            ], 
-            "SI": [
-                "LBI", 
-                "LOI"
-            ]
-        }, 
-        "LO": {
-            "B": [
-                "B"
-            ], 
-            "BI": [
-                "LBI"
-            ], 
-            "D": [
-                "LO"
-            ], 
-            "DI": [
-                "B", 
-                "DI", 
-                "FI", 
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "M", 
-                "O", 
-                "PFI"
-            ], 
-            "E": [
-                "LO"
-            ], 
-            "F": [
-                "LO"
-            ], 
-            "FI": [
-                "B", 
-                "LO", 
-                "M", 
-                "O"
-            ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "BI", 
-                "DI", 
-                "LBI", 
-                "LOI", 
-                "L~", 
-                "MI", 
-                "OI", 
-                "PSI", 
-                "SI"
-            ], 
-            "LF": [
-                "D", 
-                "LB", 
-                "LO", 
-                "O", 
-                "S"
-            ], 
-            "LO": [
-                "D", 
-                "LB", 
-                "LO", 
-                "O", 
-                "S"
-            ], 
-            "LOI": [
-                "D", 
-                "DI", 
-                "E", 
-                "F", 
-                "FI", 
-                "LB", 
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "O", 
-                "OI", 
-                "S", 
-                "SI"
-            ], 
-            "L~": [
-                "L~"
-            ], 
-            "M": [
-                "B"
-            ], 
-            "MI": [
-                "LBI"
-            ], 
-            "O": [
-                "B", 
-                "LO", 
-                "M", 
-                "O"
-            ], 
-            "OI": [
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "PE": [], 
-            "PF": [], 
-            "PFI": [
-                "B"
-            ], 
-            "PS": [], 
-            "PSI": [
-                "LBI"
-            ], 
-            "S": [
-                "LO"
-            ], 
-            "SI": [
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ]
-        }, 
-        "LOI": {
-            "B": [
-                "B", 
-                "DI", 
-                "FI", 
-                "M", 
-                "O", 
-                "PFI"
-            ], 
-            "BI": [
-                "LBI"
-            ], 
-            "D": [
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "DI": [
-                "DI", 
-                "LBI", 
-                "LOI"
-            ], 
-            "E": [
-                "LOI"
-            ], 
-            "F": [
-                "LOI"
-            ], 
-            "FI": [
-                "DI", 
-                "LOI"
-            ], 
-            "LB": [
-                "LB", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "LBI": [
-                "BI", 
-                "DI", 
-                "LBI", 
-                "LOI", 
-                "MI", 
-                "OI", 
-                "PSI", 
-                "SI"
-            ], 
-            "LF": [
-                "DI", 
-                "LOI", 
-                "OI", 
-                "SI"
-            ], 
-            "LO": [
-                "D", 
-                "DI", 
-                "E", 
-                "F", 
-                "FI", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "O", 
-                "OI", 
-                "S", 
-                "SI"
-            ], 
-            "LOI": [
-                "DI", 
-                "LBI", 
-                "LOI", 
-                "OI", 
-                "SI"
-            ], 
-            "L~": [
-                "LBI", 
-                "L~"
-            ], 
-            "M": [
-                "DI", 
-                "FI", 
-                "O"
-            ], 
-            "MI": [
-                "LBI"
-            ], 
-            "O": [
-                "DI", 
-                "FI", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "O"
-            ], 
-            "OI": [
-                "LBI", 
-                "LOI"
-            ], 
-            "PE": [], 
-            "PF": [], 
-            "PFI": [
-                "DI"
-            ], 
-            "PS": [], 
-            "PSI": [
-                "LBI"
-            ], 
-            "S": [
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "SI": [
-                "LBI", 
-                "LOI"
-            ]
-        }, 
-        "L~": {
-            "B": [
-                "B", 
-                "LB", 
-                "L~"
-            ], 
-            "BI": [
-                "L~"
-            ], 
-            "D": [
-                "LB", 
-                "L~"
-            ], 
-            "DI": [
-                "L~"
-            ], 
-            "E": [
-                "L~"
-            ], 
-            "F": [
-                "L~"
-            ], 
-            "FI": [
-                "L~"
-            ], 
-            "LB": [
-                "B", 
-                "D", 
-                "LB", 
-                "LO", 
-                "L~", 
-                "M", 
-                "O", 
-                "PS", 
-                "S"
-            ], 
-            "LBI": [
-                "L~"
-            ], 
-            "LF": [
-                "L~"
-            ], 
-            "LO": [
-                "LB", 
-                "L~"
-            ], 
-            "LOI": [
-                "L~"
-            ], 
-            "L~": [
-                "B", 
-                "BI", 
-                "D", 
-                "DI", 
-                "E", 
-                "F", 
-                "FI", 
-                "LB", 
-                "LBI", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "L~", 
-                "M", 
-                "MI", 
-                "O", 
-                "OI", 
-                "PE", 
-                "PF", 
-                "PFI", 
-                "PS", 
-                "PSI", 
-                "S", 
-                "SI"
-            ], 
-            "M": [
-                "LB", 
-                "L~"
-            ], 
-            "MI": [
-                "L~"
-            ], 
-            "O": [
-                "LB", 
-                "L~"
-            ], 
-            "OI": [
-                "L~"
-            ], 
-            "PE": [
-                "L~"
-            ], 
-            "PF": [
-                "L~"
-            ], 
-            "PFI": [
-                "L~"
-            ], 
-            "PS": [
-                "LB", 
-                "L~"
-            ], 
-            "PSI": [
-                "L~"
-            ], 
-            "S": [
-                "LB", 
-                "L~"
-            ], 
-            "SI": [
-                "L~"
             ]
         }, 
         "M": {
@@ -1657,8 +722,6 @@
             "BI": [
                 "BI", 
                 "DI", 
-                "LBI", 
-                "LOI", 
                 "MI", 
                 "OI", 
                 "PSI", 
@@ -1666,7 +729,6 @@
             ], 
             "D": [
                 "D", 
-                "LO", 
                 "O", 
                 "S"
             ], 
@@ -1678,30 +740,11 @@
             ], 
             "F": [
                 "D", 
-                "LO", 
                 "O", 
                 "S"
             ], 
             "FI": [
                 "B"
-            ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "L~"
-            ], 
-            "LF": [
-                "LB"
-            ], 
-            "LO": [
-                "LB"
-            ], 
-            "LOI": [
-                "LB"
-            ], 
-            "L~": [
-                "L~"
             ], 
             "M": [
                 "B"
@@ -1709,15 +752,13 @@
             "MI": [
                 "E", 
                 "F", 
-                "FI", 
-                "LF"
+                "FI"
             ], 
             "O": [
                 "B"
             ], 
             "OI": [
                 "D", 
-                "LO", 
                 "O", 
                 "S"
             ], 
@@ -1766,30 +807,6 @@
             "FI": [
                 "MI"
             ], 
-            "LB": [
-                "LB", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "LBI": [
-                "BI"
-            ], 
-            "LF": [
-                "MI"
-            ], 
-            "LO": [
-                "D", 
-                "F", 
-                "OI"
-            ], 
-            "LOI": [
-                "BI"
-            ], 
-            "L~": [
-                "LBI", 
-                "L~"
-            ], 
             "M": [
                 "E", 
                 "S", 
@@ -1831,8 +848,6 @@
             "BI": [
                 "BI", 
                 "DI", 
-                "LBI", 
-                "LOI", 
                 "MI", 
                 "OI", 
                 "PSI", 
@@ -1840,7 +855,6 @@
             ], 
             "D": [
                 "D", 
-                "LO", 
                 "O", 
                 "S"
             ], 
@@ -1857,7 +871,6 @@
             ], 
             "F": [
                 "D", 
-                "LO", 
                 "O", 
                 "S"
             ], 
@@ -1866,36 +879,11 @@
                 "M", 
                 "O"
             ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "LBI", 
-                "L~"
-            ], 
-            "LF": [
-                "LB", 
-                "LO"
-            ], 
-            "LO": [
-                "LB", 
-                "LO"
-            ], 
-            "LOI": [
-                "LB", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "L~": [
-                "L~"
-            ], 
             "M": [
                 "B"
             ], 
             "MI": [
                 "DI", 
-                "LOI", 
                 "OI", 
                 "SI"
             ], 
@@ -1910,9 +898,6 @@
                 "E", 
                 "F", 
                 "FI", 
-                "LF", 
-                "LO", 
-                "LOI", 
                 "O", 
                 "OI", 
                 "S", 
@@ -1972,38 +957,6 @@
                 "OI", 
                 "SI"
             ], 
-            "LB": [
-                "LB", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "LBI": [
-                "BI", 
-                "LBI"
-            ], 
-            "LF": [
-                "LOI", 
-                "OI"
-            ], 
-            "LO": [
-                "D", 
-                "F", 
-                "LF", 
-                "LO", 
-                "LOI", 
-                "OI"
-            ], 
-            "LOI": [
-                "BI", 
-                "LOI", 
-                "MI", 
-                "OI"
-            ], 
-            "L~": [
-                "LBI", 
-                "L~"
-            ], 
             "M": [
                 "DI", 
                 "FI", 
@@ -2062,16 +1015,6 @@
             "E": [], 
             "F": [], 
             "FI": [], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [], 
-            "LF": [], 
-            "LO": [], 
-            "LOI": [], 
-            "L~": [
-                "L~"
-            ], 
             "M": [], 
             "MI": [], 
             "O": [], 
@@ -2112,24 +1055,6 @@
             "FI": [
                 "PF"
             ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "BI"
-            ], 
-            "LF": [
-                "PF"
-            ], 
-            "LO": [
-                "D"
-            ], 
-            "LOI": [
-                "BI"
-            ], 
-            "L~": [
-                "L~"
-            ], 
             "M": [
                 "PS"
             ], 
@@ -2165,8 +1090,6 @@
             "BI": [
                 "BI", 
                 "DI", 
-                "LBI", 
-                "LOI", 
                 "MI", 
                 "OI", 
                 "PSI", 
@@ -2174,7 +1097,6 @@
             ], 
             "D": [
                 "D", 
-                "LO", 
                 "O", 
                 "S"
             ], 
@@ -2182,16 +1104,6 @@
             "E": [], 
             "F": [], 
             "FI": [], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [], 
-            "LF": [], 
-            "LO": [], 
-            "LOI": [], 
-            "L~": [
-                "L~"
-            ], 
             "M": [], 
             "MI": [], 
             "O": [], 
@@ -2202,8 +1114,7 @@
             "PF": [
                 "E", 
                 "F", 
-                "FI", 
-                "LF"
+                "FI"
             ], 
             "PFI": [], 
             "PS": [
@@ -2234,24 +1145,6 @@
             ], 
             "FI": [
                 "B"
-            ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "L~"
-            ], 
-            "LF": [
-                "LB"
-            ], 
-            "LO": [
-                "LB"
-            ], 
-            "LOI": [
-                "LB"
-            ], 
-            "L~": [
-                "L~"
             ], 
             "M": [
                 "B"
@@ -2302,20 +1195,6 @@
             "E": [], 
             "F": [], 
             "FI": [], 
-            "LB": [
-                "LB", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "LBI": [], 
-            "LF": [], 
-            "LO": [], 
-            "LOI": [], 
-            "L~": [
-                "LBI", 
-                "L~"
-            ], 
             "M": [], 
             "MI": [], 
             "O": [], 
@@ -2364,30 +1243,6 @@
                 "B", 
                 "M", 
                 "O"
-            ], 
-            "LB": [
-                "LB"
-            ], 
-            "LBI": [
-                "LBI", 
-                "L~"
-            ], 
-            "LF": [
-                "LB", 
-                "LO"
-            ], 
-            "LO": [
-                "LB", 
-                "LO"
-            ], 
-            "LOI": [
-                "LB", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "L~": [
-                "L~"
             ], 
             "M": [
                 "B"
@@ -2451,30 +1306,6 @@
             ], 
             "FI": [
                 "DI"
-            ], 
-            "LB": [
-                "LB", 
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "LBI": [
-                "LBI"
-            ], 
-            "LF": [
-                "LOI"
-            ], 
-            "LO": [
-                "LF", 
-                "LO", 
-                "LOI"
-            ], 
-            "LOI": [
-                "LOI"
-            ], 
-            "L~": [
-                "LBI", 
-                "L~"
             ], 
             "M": [
                 "DI", 

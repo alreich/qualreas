@@ -364,7 +364,7 @@ class Network(nx.DiGraph):
 
     def summary(self):
         """Print out a summary of this network and its nodes, edges, and constraints."""
-        print(f"{self.name}: {len(self.nodes)} nodes, {len(self.edges)} edges")
+        print(f"\n{self.name}: {len(self.nodes)} nodes, {len(self.edges)} edges")
         # print("  Head")
         # print("    Tail: (Constraints)")
         for head in self.nodes:
@@ -375,63 +375,98 @@ class Network(nx.DiGraph):
 
 if __name__ == '__main__':
 
+    print("\n=======================================================================")
+
     import os
 
     path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
 
-    alg = [Algebra(os.path.join(path, "Algebras/IntervalAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/IntervalAndPointAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/LeftBranchingIntervalAndPointAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/RightBranchingIntervalAndPointAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/rcc8Algebra.json")),
-           Algebra(os.path.join(path, "Algebras/linearPointAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/rightBranchingPointAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/leftBranchingPointAlgebra.json"))
+    alg = [Algebra(os.path.join(path, "Algebras/LinearIntervalAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/ExtendedLinearIntervalAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/LeftBranchingIntervalAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/RightBranchingIntervalAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/RCC8Algebra.json")),
+           Algebra(os.path.join(path, "Algebras/LinearPointAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/RightBranchingPointAlgebra.json")),
+           Algebra(os.path.join(path, "Algebras/LeftBranchingPointAlgebra.json"))
            ]
 
-    for a in alg:
-        print("\n{}:".format(a.name))
-        print("Relations {}: ".format(a.elements))
-        if a.check_multiplication_identity():
-            print("Multiplication Identity OK for {}.".format(a.name))
-        else:
-            print("Multiplication Identity Failed for {}.".format(a.name))
+    print("\n-------------------------------------")
+    print("Check algebra multiplication identity")
+    print("-------------------------------------")
 
-    print("{}:".format(alg[0].name))
+    for a in alg:
+        print(f"\n{a.name}:")
+        print(f"Relations: {a.elements}")
+        if a.check_multiplication_identity():
+            print("Multiplication Identity OK")
+        else:
+            print("Multiplication Identity Failed")
+
+    print("\n-----------------------------------------------")
+    print("Check network propagation for interval algebras")
+    print("-----------------------------------------------")
+
+    # Interval Algebras
+
     entity_x = TemporalEntity(["ProperInterval"], "X")
     entity_y = TemporalEntity(["ProperInterval"], "Y")
     entity_z = TemporalEntity(["ProperInterval"], "Z")
-    r12 = alg[0].relset(["B"])
-    r23 = alg[0].relset(["D"])
-    print("\n")
-    print(f"Constraint: {entity_x.name} {list(r12.members())} {entity_y.name}")
-    print(f"Constraint: {entity_y.name} {list(r23.members())} {entity_z.name}")
-    net0 = Network(alg[0], "Net0")
-    net0.add_constraint(entity_x, entity_y, r12)
-    net0.add_constraint(entity_y, entity_z, r23)
-    net0.summary()
-    net0.propagate()
-    net0.summary()
-    print("\n")
 
-    # print("{}:".format(alg[1].name))
-    # entity_x1 = TemporalObject(["Point", "ProperInterval"], "X1")
-    # entity_y1 = TemporalObject(["Point", "ProperInterval"], "Y1")
-    # entity_z1 = TemporalObject(["Point", "ProperInterval"], "Z1")
-    # s12 = alg[1].relations["B"]
-    # s23 = alg[1].relations["D"]
-    # print("\n")
-    # print("Constraint: {} {} {}".format(entity_x1, s12.long_name, entity_y1))
-    # print("Constraint: {} {} {}".format(entity_y1, s23.long_name, entity_z1))
-    # net1 = Network(alg[1], "Test1")
-    # net1.constraint(entity_x1, entity_y1, [s12])
-    # net1.constraint(entity_y1, entity_z1, [s23])
-    # # net1.constraint(entity_x1, entity_z1)
-    # net1.print_constraints()
-    # net1.propagate(verbose=True)
-    # net1.print_constraints()
-    # print("\n")
-    #
+    for a in alg[0:4]:
+        print("\n--------------------------------------------------")
+        print(f"Algebra: {a.name}")
+        rs1 = a.relset(["B"])
+        rs2 = a.relset(["D"])
+        print(f"Constraint: {entity_x.name} {list(rs1.members())} {entity_y.name}")
+        print(f"Constraint: {entity_y.name} {list(rs2.members())} {entity_z.name}")
+        net = Network(a, f"Network-{a.name}")
+        net.add_constraint(entity_x, entity_y, rs1)
+        net.add_constraint(entity_y, entity_z, rs2)
+        net.summary()
+        net.propagate()
+        net.summary()
+
+    # Point Algebras
+
+    entity_x = TemporalEntity(["Point"], "X")
+    entity_y = TemporalEntity(["Point"], "Y")
+    entity_z = TemporalEntity(["Point"], "Z")
+
+    for a in alg[5:]:
+        print("\n--------------------------------------------------")
+        print(f"Algebra: {a.name}")
+        rs1 = a.relset(["<"])
+        rs2 = a.relset(["<"])
+        print(f"Constraint: {entity_x.name} {list(rs1.members())} {entity_y.name}")
+        print(f"Constraint: {entity_y.name} {list(rs2.members())} {entity_z.name}")
+        net = Network(a, f"Network-{a.name}")
+        net.add_constraint(entity_x, entity_y, rs1)
+        net.add_constraint(entity_y, entity_z, rs2)
+        net.summary()
+        net.propagate()
+        net.summary()
+
+    # RCC8 Algebra
+
+    entity_x = SpatialEntity(["Region"], "X")
+    entity_y = SpatialEntity(["Region"], "Y")
+    entity_z = SpatialEntity(["Region"], "Z")
+
+    a = alg[4]
+    print("\n--------------------------------------------------")
+    print(f"Algebra: {a.name}")
+    rs1 = a.relset(["NTPP"])
+    rs2 = a.relset(["NTPP"])
+    print(f"Constraint: {entity_x.name} {list(rs1.members())} {entity_y.name}")
+    print(f"Constraint: {entity_y.name} {list(rs2.members())} {entity_z.name}")
+    net = Network(a, f"Network-{a.name}")
+    net.add_constraint(entity_x, entity_y, rs1)
+    net.add_constraint(entity_y, entity_z, rs2)
+    net.summary()
+    net.propagate()
+    net.summary()
+
     # # Example in book on constraint processing for temporal reasoning
     # pint_I = TemporalObject(["ProperInterval"], "I")
     # pint_J = TemporalObject(["ProperInterval"], "J")
@@ -504,7 +539,7 @@ if __name__ == '__main__':
     # # Region Connection Calculus 8:
     #
     # # Example from http://en.wikipedia.org/wiki/RCC8
-    # alg4 = Algebra(os.path.join(path, "Algebras/rcc8Algebra.json"))
+    # alg4 = Algebra(os.path.join(path, "Algebras/RCC8Algebra.json"))
     #
     # DC = alg4.relations['DC']
     # EC = alg4.relations['EC']

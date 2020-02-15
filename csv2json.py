@@ -102,35 +102,35 @@ if __name__ == '__main__':
     csvAlgebra2Json("Left-Branching Point Algebra", "Relation System",
         "Left-Branching Point Algebra",
         leftBranchingPointRels, leftBranchingPointTransTbl,
-        os.path.join(path, "leftBranchingPointAlgebra.json"))
+        os.path.join(path, "LeftBranchingPointAlgebra.json"))
 
     rightBranchingPointRels = csvRelations2Dict(os.path.join(path, 'rightBranchingPointRelations.csv'))
     rightBranchingPointTransTbl = csvTransTable2Dict(os.path.join(path, 'rightBranchingPointTransTable.csv'))
     csvAlgebra2Json("Right-Branching Point Algebra", "Relation System",
         "Right-Branching Point Algebra",
         rightBranchingPointRels, rightBranchingPointTransTbl,
-        os.path.join(path, "rightBranchingPointAlgebra.json"))
+        os.path.join(path, "RightBranchingPointAlgebra.json"))
 
     linearPointRels = csvRelations2Dict(os.path.join(path, 'linearPointRelations.csv'))
     linearPointTransTbl = csvTransTable2Dict(os.path.join(path, 'linearPointTransTable.csv'))
     csvAlgebra2Json("Linear Point Algebra", "Relation System",
         "Linear Point Algebra",
         linearPointRels, linearPointTransTbl,
-        os.path.join(path, "linearPointAlgebra.json"))
+        os.path.join(path, "LinearPointAlgebra.json"))
 
     # rcc8Rels = csvRelations2Dict(os.path.join(path, 'rcc8Relations.csv'))
     # rcc8TransTbl = csvTransTable2Dict(os.path.join(path, 'rcc8TransTable.csv'))
     # csvAlgebra2Json("RCC8", "Relation System",
     #     "Region Connection Calculus 8 Algebra",
     #     rcc8Rels, rcc8TransTbl,
-    #     os.path.join(path, "rcc8Algebra.json"))
+    #     os.path.join(path, "RCC8Algebra.json"))
 
 #    intRels = csvRelations2Dict(os.path.join(path, 'intervalRelations.csv'))
 #    intTransTbl = csvTransTable2Dict(os.path.join(path, 'intervalTransTable.csv'))
 #    csvAlgebra2Json("Linear Time Interval Algebra", "Relation System",
 #        "Allen's algebra of proper time intervals",
 #        intRels, intTransTbl,
-#        os.path.join(path, "IntervalAlgebra.json"))
+#        os.path.join(path, "LinearIntervalAlgebra.json"))
 #
 #    ptRels = csvRelations2Dict(os.path.join(path, 'PointRelations.csv'))
 #    intPtRels = intRels.copy() # Make a copy of the interval-only relations
@@ -139,7 +139,7 @@ if __name__ == '__main__':
 #    csvAlgebra2Json("Linear Time Interval & Point Algebra", "Relation System",
 #        "Reich's point extension to Allen's time interval algebra (see TIME-94 paper)",
 #        intPtRels, intPtTransTbl,
-#        os.path.join(path, "IntervalAndPointAlgebra.json"))
+#        os.path.join(path, "ExtendedLinearIntervalAlgebra.json"))
 #
 #    rbRels = csvRelations2Dict(os.path.join(path, 'RightBranchingRelations.csv'))
 #    intPtRbRels = intPtRels.copy() # Make a copy of the interval & point relations
@@ -148,7 +148,7 @@ if __name__ == '__main__':
 #    csvAlgebra2Json("Right-Branching Time Interval & Point Algebra", "Relation System",
 #        "Reich's right-branching extension to Allen's time interval algebra (see TIME-94 paper)",
 #        intPtRbRels, rbTransTbl,
-#        os.path.join(path, "RightBranchingIntervalAndPointAlgebra.json"))
+#        os.path.join(path, "RightBranchingIntervalAlgebra.json"))
 #
 #    lbRels = csvRelations2Dict(os.path.join(path, 'LeftBranchingRelations.csv'))
 #    intPtLbRels = intPtRels.copy() # Make a copy of the interval & point relations
@@ -157,6 +157,6 @@ if __name__ == '__main__':
 #    csvAlgebra2Json("Left-Branching Time Interval & Point Algebra", "Relation System",
 #        "Reich's left-branching extension to Allen's time interval algebra (see TIME-94 paper)",
 #        intPtLbRels, lbTransTbl,
-#        os.path.join(path, "LeftBranchingIntervalAndPointAlgebra.json"))
+#        os.path.join(path, "LeftBranchingIntervalAlgebra.json"))
 
 # EOF

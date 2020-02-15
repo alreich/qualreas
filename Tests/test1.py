@@ -10,7 +10,7 @@ if __name__ == '__main__':
 
     import os
     path = os.path.join( os.getenv('PYPROJ'), 'qualreas' )
-    rcc8_alg = Algebra(os.path.join(path, "rcc8Algebra.json"))
+    rcc8_alg = Algebra(os.path.join(path, "RCC8Algebra.json"))
     rcc8 = rcc8_alg.relations
     #rcc8.check_multiplication_identity()
 
