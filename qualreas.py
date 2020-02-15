@@ -292,12 +292,14 @@ class Network(nx.DiGraph):
         if self.has_edge(entity2, entity1):
             self.remove_edge(entity2, entity1)
 
-    def set_equality_constraint(self, entity, equality_rels):
+    def set_equality_constraint(self, entity, equality_rels, verbose):
         # Override any previous setting on this entity
         self.remove_constraint(entity, entity)
         self.add_edge(entity, entity, constraint=equality_rels)
+        if verbose:
+            print(f"Constraint Added: {entity.name} {list(equality_rels.members())} {entity.name}")
 
-    def add_constraint(self, entity1, entity2, relation_set=None):
+    def add_constraint(self, entity1, entity2, relation_set=None, verbose=False):
         """Same as add_edge, except that two edges are added with converse constraints."""
 
         # Get the proper equality relation(s) for each of the two entities
@@ -309,18 +311,24 @@ class Network(nx.DiGraph):
                                entity2.types)))
 
         # Each entity must equal itself
-        self.set_equality_constraint(entity1, eq_rels1)
-        self.set_equality_constraint(entity2, eq_rels2)
+        self.set_equality_constraint(entity1, eq_rels1, verbose)
+        self.set_equality_constraint(entity2, eq_rels2, verbose)
 
         # Override any previously set constraint on this pair of entities
         self.remove_constraint(entity1, entity2)
 
-        if relation_set:
-            self.add_edge(entity1, entity2, constraint=relation_set)
-            self.add_edge(entity2, entity1, constraint=self.algebra.converse(relation_set))
-        else:
-            self.add_edge(entity1, entity2, constraint=self.algebra.elements)
-            self.add_edge(entity2, entity1, constraint=self.algebra.elements)
+        # If no constraint entered, then use all relations (elements) as constraint
+        if not relation_set:
+            relation_set = self.algebra.elements
+
+        # Add the constraint and it's converse
+        relation_set_converse = self.algebra.converse(relation_set)
+        self.add_edge(entity1, entity2, constraint=relation_set)
+        self.add_edge(entity2, entity1, constraint=relation_set_converse)
+
+        if verbose:
+            print(f"Constraint Added: {entity1.name} {list(relation_set.members())} {entity2.name}")
+            print(f"Constraint Added: {entity2.name} {list(relation_set_converse.members())} {entity1.name}")
 
     @property
     def constraints(self):
@@ -330,20 +338,20 @@ class Network(nx.DiGraph):
     def entities(self):
         return self.nodes
 
-    def set_unconstrained_values(self):
+    def set_unconstrained_values(self, verbose):
         for ent1 in self.nodes():
             for ent2 in self.nodes():
                 if not self.has_edge(ent1, ent2):
-                    self.add_constraint(ent1, ent2, self.algebra.elements)
+                    self.add_constraint(ent1, ent2, self.algebra.elements, verbose)
 
-    def propagate(self, verbose=True):
+    def propagate(self, verbose=False):
         """Propagate constraints in the network. Constraint propagation is a fixed-point iteration of a square
         constraint matrix.  Or, in plain English, we treat the network as if it's a matrix, multiplying it by
         itself, repeatedly, until it stops changing.
         @param verbose: Print number of iterations required to propagate constraints.
         """
         loop_count = 0
-        self.set_unconstrained_values()
+        self.set_unconstrained_values(verbose)
         something_changed = True  # We'll iterate at least once
         while something_changed:
             something_changed = False  # If nothing changes, we'll only iterate once
@@ -418,13 +426,11 @@ if __name__ == '__main__':
         print(f"Algebra: {a.name}")
         rs1 = a.relset(["B"])
         rs2 = a.relset(["D"])
-        print(f"Constraint: {entity_x.name} {list(rs1.members())} {entity_y.name}")
-        print(f"Constraint: {entity_y.name} {list(rs2.members())} {entity_z.name}")
         net = Network(a, f"Network-{a.name}")
-        net.add_constraint(entity_x, entity_y, rs1)
-        net.add_constraint(entity_y, entity_z, rs2)
+        net.add_constraint(entity_x, entity_y, rs1, True)
+        net.add_constraint(entity_y, entity_z, rs2, True)
         net.summary()
-        net.propagate()
+        net.propagate(True)
         net.summary()
 
     # Point Algebras
@@ -438,8 +444,6 @@ if __name__ == '__main__':
         print(f"Algebra: {a.name}")
         rs1 = a.relset(["<"])
         rs2 = a.relset(["<"])
-        print(f"Constraint: {entity_x.name} {list(rs1.members())} {entity_y.name}")
-        print(f"Constraint: {entity_y.name} {list(rs2.members())} {entity_z.name}")
         net = Network(a, f"Network-{a.name}")
         net.add_constraint(entity_x, entity_y, rs1)
         net.add_constraint(entity_y, entity_z, rs2)
@@ -458,8 +462,6 @@ if __name__ == '__main__':
     print(f"Algebra: {a.name}")
     rs1 = a.relset(["NTPP"])
     rs2 = a.relset(["NTPP"])
-    print(f"Constraint: {entity_x.name} {list(rs1.members())} {entity_y.name}")
-    print(f"Constraint: {entity_y.name} {list(rs2.members())} {entity_z.name}")
     net = Network(a, f"Network-{a.name}")
     net.add_constraint(entity_x, entity_y, rs1)
     net.add_constraint(entity_y, entity_z, rs2)
