@@ -467,29 +467,31 @@ if __name__ == '__main__':
     net.propagate()
     net.summary()
 
-    # # Example in book on constraint processing for temporal reasoning
-    # pint_I = TemporalObject(["ProperInterval"], "I")
-    # pint_J = TemporalObject(["ProperInterval"], "J")
-    # pint_K = TemporalObject(["ProperInterval"], "K")
-    # pint_L = TemporalObject(["ProperInterval"], "L")
-    # D0 = alg[0].relations["D"]
-    # DI0 = alg[0].relations["DI"]
-    # F0 = alg[0].relations["F"]
-    # FI0 = alg[0].relations["FI"]
-    # M0 = alg[0].relations["M"]
-    # O0 = alg[0].relations["O"]
-    # S0 = alg[0].relations["S"]
-    # net2 = Network(alg[0], "Book Example")
-    # net2.constraint(pint_I, pint_J, [F0, FI0])
-    # net2.constraint(pint_I, pint_L, [S0, M0])
-    # net2.constraint(pint_L, pint_J, [S0, M0])
-    # net2.constraint(pint_K, pint_I, [D0, DI0])
-    # net2.constraint(pint_K, pint_J, [D0, DI0])
-    # net2.constraint(pint_L, pint_K, [O0])
-    # net2.print_constraints()
-    # net2.propagate(verbose=True)
-    # net2.print_constraints()
-    #
+    print("\n---------------------------------------------------------------")
+    print("Example in book on constraint processing for temporal reasoning")
+    print("---------------------------------------------------------------")
+    pint_I = TemporalEntity(["ProperInterval"], "I")
+    pint_J = TemporalEntity(["ProperInterval"], "J")
+    pint_K = TemporalEntity(["ProperInterval"], "K")
+    pint_L = TemporalEntity(["ProperInterval"], "L")
+    D0 = alg[0].relset(["D"])
+    DI0 = alg[0].relset(["DI"])
+    F0 = alg[0].relset(["F"])
+    FI0 = alg[0].relset(["FI"])
+    M0 = alg[0].relset(["M"])
+    O0 = alg[0].relset(["O"])
+    S0 = alg[0].relset(["S"])
+    net2 = Network(alg[0], "Book Example")
+    net2.add_constraint(pint_I, pint_J, F0.union(FI0))
+    net2.add_constraint(pint_I, pint_L, S0.union(M0))
+    net2.add_constraint(pint_L, pint_J, S0.union(M0))
+    net2.add_constraint(pint_K, pint_I, D0.union(DI0))
+    net2.add_constraint(pint_K, pint_J, D0.union(DI0))
+    net2.add_constraint(pint_L, pint_K, O0)
+    net2.summary()
+    net2.propagate()
+    net2.summary()
+
     # # Example in book on constraint processing for temporal reasoning
     # # (extended to intervals & points)
     # pint_I = TemporalObject(["Point", "ProperInterval"], "I")
@@ -536,41 +538,34 @@ if __name__ == '__main__':
     # #    print "\n{} is associative? {}" % (alg3.short_name, str(alg3.is_associative()))
     # #    print "\n{} is associative? {}" % (alg4.short_name, str(alg4.is_associative()))
     #
-    # # Region Connection Calculus 8:
-    #
-    # # Example from http://en.wikipedia.org/wiki/RCC8
-    # alg4 = Algebra(os.path.join(path, "Algebras/RCC8Algebra.json"))
-    #
-    # DC = alg4.relations['DC']
-    # EC = alg4.relations['EC']
-    # PO = alg4.relations['PO']
-    # TPP = alg4.relations['TPP']
-    # NTPP = alg4.relations['NTPP']
-    # TPPI = alg4.relations['TPPI']
-    # NTPPI = alg4.relations['NTPPI']
-    # EQ = alg4.relations['EQ']
-    #
-    # house1 = SpatialObject(["Region"], "house1")
-    # house2 = SpatialObject(["Region"], "house2")
-    # property1 = SpatialObject(["Region"], "property1")
-    # property2 = SpatialObject(["Region"], "property2")
-    # road = SpatialObject(["Region"], "road")
-    # net4 = Network(alg4, "Wikipedia RCC8 Example")
-    #
-    # net4.constraint(house1, house2, [DC])
-    # net4.constraint(house1, property1, [TPP, NTPP])
-    # net4.constraint(house1, property2, [DC, EC])
-    # net4.constraint(house1, road, [EC])
-    # net4.constraint(house2, property1, [DC, EC])
-    # net4.constraint(house2, property2, [NTPP])
-    # net4.constraint(house2, road, [EC])
-    # net4.constraint(property1, property2, [DC, EC])
-    # net4.constraint(road, property1, [DC, EC, TPP, TPPI, PO, EQ, NTPP, NTPPI])
-    # net4.constraint(road, property2, [DC, EC, TPP, TPPI, PO, EQ, NTPP, NTPPI])
-    #
-    # net4.print_constraints()
-    # net4.propagate(verbose=True)
-    # net4.print_constraints()
+
+    print("\n----------------------------------------------")
+    print("Region Connection Calculus 8")
+    print("Example from http://en.wikipedia.org/wiki/RCC8")
+    print("----------------------------------------------")
+
+    alg4 = Algebra(os.path.join(path, "Algebras/RCC8Algebra.json"))
+
+    house1 = SpatialEntity(["Region"], "house1")
+    house2 = SpatialEntity(["Region"], "house2")
+    property1 = SpatialEntity(["Region"], "property1")
+    property2 = SpatialEntity(["Region"], "property2")
+    road = SpatialEntity(["Region"], "road")
+
+    net4 = Network(alg4, "Wikipedia RCC8 Example")
+
+    net4.add_constraint(house1, house2, alg4.relset(["DC"]))
+    net4.add_constraint(house1, property1, alg4.relset(["TPP", "NTPP"]))
+    net4.add_constraint(house1, property2, alg4.relset(["DC", "EC"]))
+    net4.add_constraint(house1, road, alg4.relset(["EC"]))
+    net4.add_constraint(house2, property1, alg4.relset(["DC", "EC"]))
+    net4.add_constraint(house2, property2, alg4.relset(["NTPP"]))
+    net4.add_constraint(house2, road, alg4.relset(["EC"]))
+    net4.add_constraint(property1, property2, alg4.relset(["DC", "EC"]))
+
+    net4.summary()
+    net4.propagate()
+    net4.summary()
 
     # Note: According to Wikipedia, the correct constraints
     # between 'road' and 'property1', and
