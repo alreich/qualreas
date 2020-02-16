@@ -7,6 +7,7 @@ from bitsets import bitset, bases
 import json
 import networkx as nx
 from functools import reduce
+from collections import abc
 
 
 __author__ = 'Alfred J. Reich'
@@ -146,7 +147,12 @@ class Algebra(object):
 
     def relset(self, relations):
         """Return a relation set (bitset) for the given relations."""
-        return self.elements_bitset(relations)
+        if isinstance(relations, str):  # Assumed to be something like 'B|M|O'
+            return self.string_to_relset(relations)
+        elif isinstance(relations, abc.Iterable):  # e.g., ['B','M','O'] or ('B',)
+            return self.elements_bitset(relations)
+        else:
+            raise TypeError("Input must be a string, list, tuple, or set.")
 
     def string_to_relset(self, string, delimiter='|'):
         """Take a string like 'B|M|O' and turn it into a relation set."""
