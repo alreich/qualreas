@@ -294,10 +294,11 @@ class Network(nx.DiGraph):
 
     def set_equality_constraint(self, entity, equality_rels, verbose):
         # Override any previous setting on this entity
-        self.remove_constraint(entity, entity)
-        self.add_edge(entity, entity, constraint=equality_rels)
-        if verbose:
-            print(f"Constraint Added: {entity.name} {list(equality_rels.members())} {entity.name}")
+        # self.remove_constraint(entity, entity)
+        if not self.has_edge(entity, entity):
+            self.add_edge(entity, entity, constraint=equality_rels)
+            if verbose:
+                print(f"Equality Constraint Added: {entity.name} {list(equality_rels.members())}")
 
     def add_constraint(self, entity1, entity2, relation_set=None, verbose=False):
         """Same as add_edge, except that two edges are added with converse constraints."""
@@ -317,18 +318,28 @@ class Network(nx.DiGraph):
         # Override any previously set constraint on this pair of entities
         self.remove_constraint(entity1, entity2)
 
-        # If no constraint entered, then use all relations (elements) as constraint
+        # Handle different expressions for a relation set:
+        # If None, then use all relations (elements) as constraint
         if not relation_set:
-            relation_set = self.algebra.elements
+            rel_set = self.algebra.elements
+        # If it's a string, assume it's in the form 'a' or 'a|b|c'
+        elif isinstance(relation_set, str):
+            rel_set = self.algebra.string_to_relset(relation_set)
+        # Or maybe it's actually a RelSet
+        elif isinstance(relation_set, RelSet):
+            rel_set = relation_set
+        # Otherwise, throw an exception
+        else:
+            raise TypeError("relation_set must be None, a String, or a RelSet")
 
         # Add the constraint and it's converse
-        relation_set_converse = self.algebra.converse(relation_set)
-        self.add_edge(entity1, entity2, constraint=relation_set)
-        self.add_edge(entity2, entity1, constraint=relation_set_converse)
+        rel_set_converse = self.algebra.converse(rel_set)
+        self.add_edge(entity1, entity2, constraint=rel_set)
+        self.add_edge(entity2, entity1, constraint=rel_set_converse)
 
         if verbose:
-            print(f"Constraint Added: {entity1.name} {list(relation_set.members())} {entity2.name}")
-            print(f"Constraint Added: {entity2.name} {list(relation_set_converse.members())} {entity1.name}")
+            print(f"Constraint Added: {entity1.name} {entity2.name} {list(rel_set.members())}")
+            print(f"Constraint Added: {entity2.name} {entity1.name} {list(rel_set_converse.members())}")
 
     @property
     def constraints(self):
@@ -339,9 +350,12 @@ class Network(nx.DiGraph):
         return self.nodes
 
     def set_unconstrained_values(self, verbose):
+        '''Find all pairs of nodes (not the same) that don't have a constraint set
+        between them, and set the constraint to be all algebra elements.  Meaning that,
+        any constraint between them is possible.'''
         for ent1 in self.nodes():
             for ent2 in self.nodes():
-                if not self.has_edge(ent1, ent2):
+                if (ent1 != ent2) and not self.has_edge(ent1, ent2):
                     self.add_constraint(ent1, ent2, self.algebra.elements, verbose)
 
     def propagate(self, verbose=False):
@@ -403,6 +417,8 @@ if __name__ == '__main__':
     print("Check algebra multiplication identity")
     print("-------------------------------------")
 
+    verbosity = False
+
     for a in alg:
         print(f"\n{a.name}:")
         print(f"Relations: {a.elements}")
@@ -424,11 +440,9 @@ if __name__ == '__main__':
     for a in alg[0:4]:
         print("\n--------------------------------------------------")
         print(f"Algebra: {a.name}")
-        rs1 = a.relset(["B"])
-        rs2 = a.relset(["D"])
         net = Network(a, f"Network-{a.name}")
-        net.add_constraint(entity_x, entity_y, rs1, True)
-        net.add_constraint(entity_y, entity_z, rs2, True)
+        net.add_constraint(entity_x, entity_y, "B", verbosity)
+        net.add_constraint(entity_y, entity_z, "D", verbosity)
         net.summary()
         net.propagate(True)
         net.summary()
@@ -442,11 +456,9 @@ if __name__ == '__main__':
     for a in alg[5:]:
         print("\n--------------------------------------------------")
         print(f"Algebra: {a.name}")
-        rs1 = a.relset(["<"])
-        rs2 = a.relset(["<"])
         net = Network(a, f"Network-{a.name}")
-        net.add_constraint(entity_x, entity_y, rs1)
-        net.add_constraint(entity_y, entity_z, rs2)
+        net.add_constraint(entity_x, entity_y, "<", verbosity)
+        net.add_constraint(entity_y, entity_z, "<", verbosity)
         net.summary()
         net.propagate()
         net.summary()
@@ -460,11 +472,9 @@ if __name__ == '__main__':
     a = alg[4]
     print("\n--------------------------------------------------")
     print(f"Algebra: {a.name}")
-    rs1 = a.relset(["NTPP"])
-    rs2 = a.relset(["NTPP"])
     net = Network(a, f"Network-{a.name}")
-    net.add_constraint(entity_x, entity_y, rs1)
-    net.add_constraint(entity_y, entity_z, rs2)
+    net.add_constraint(entity_x, entity_y, "NTPP", verbosity)
+    net.add_constraint(entity_y, entity_z, "NTPP", verbosity)
     net.summary()
     net.propagate()
     net.summary()
@@ -476,20 +486,13 @@ if __name__ == '__main__':
     pint_J = TemporalEntity(["ProperInterval"], "J")
     pint_K = TemporalEntity(["ProperInterval"], "K")
     pint_L = TemporalEntity(["ProperInterval"], "L")
-    D0 = alg[0].relset(["D"])
-    DI0 = alg[0].relset(["DI"])
-    F0 = alg[0].relset(["F"])
-    FI0 = alg[0].relset(["FI"])
-    M0 = alg[0].relset(["M"])
-    O0 = alg[0].relset(["O"])
-    S0 = alg[0].relset(["S"])
     net2 = Network(alg[0], "Book Example")
-    net2.add_constraint(pint_I, pint_J, F0.union(FI0))
-    net2.add_constraint(pint_I, pint_L, S0.union(M0))
-    net2.add_constraint(pint_L, pint_J, S0.union(M0))
-    net2.add_constraint(pint_K, pint_I, D0.union(DI0))
-    net2.add_constraint(pint_K, pint_J, D0.union(DI0))
-    net2.add_constraint(pint_L, pint_K, O0)
+    net2.add_constraint(pint_I, pint_J, "F|FI", verbosity)
+    net2.add_constraint(pint_I, pint_L, "S|M", verbosity)
+    net2.add_constraint(pint_L, pint_J, "S|M", verbosity)
+    net2.add_constraint(pint_K, pint_I, "D|DI", verbosity)
+    net2.add_constraint(pint_K, pint_J, "D|DI", verbosity)
+    net2.add_constraint(pint_L, pint_K, "O", verbosity)
     net2.summary()
     net2.propagate()
     net2.summary()
@@ -556,14 +559,14 @@ if __name__ == '__main__':
 
     net4 = Network(alg4, "Wikipedia RCC8 Example")
 
-    net4.add_constraint(house1, house2, alg4.relset(["DC"]))
-    net4.add_constraint(house1, property1, alg4.relset(["TPP", "NTPP"]))
-    net4.add_constraint(house1, property2, alg4.relset(["DC", "EC"]))
-    net4.add_constraint(house1, road, alg4.relset(["EC"]))
-    net4.add_constraint(house2, property1, alg4.relset(["DC", "EC"]))
-    net4.add_constraint(house2, property2, alg4.relset(["NTPP"]))
-    net4.add_constraint(house2, road, alg4.relset(["EC"]))
-    net4.add_constraint(property1, property2, alg4.relset(["DC", "EC"]))
+    net4.add_constraint(house1, house2, "DC", verbosity)
+    net4.add_constraint(house1, property1, "TPP|NTPP", verbosity)
+    net4.add_constraint(house1, property2, "DC|EC", verbosity)
+    net4.add_constraint(house1, road, "EC", verbosity)
+    net4.add_constraint(house2, property1, "DC|EC", verbosity)
+    net4.add_constraint(house2, property2, "NTPP", verbosity)
+    net4.add_constraint(house2, road, "EC", verbosity)
+    net4.add_constraint(property1, property2, "DC|EC", verbosity)
 
     net4.summary()
     net4.propagate()
@@ -572,7 +575,7 @@ if __name__ == '__main__':
     # Note: According to Wikipedia, the correct constraints
     # between 'road' and 'property1', and
     # between 'road' and 'property2' are:
-    #   road { PO, EC } property1
-    #   road { PO, TPP } property2
+    #   road property1 EC|PO
+    #   road property2 PO|TPP
 
     # End of File
