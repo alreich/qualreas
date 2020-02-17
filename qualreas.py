@@ -393,8 +393,7 @@ class Network(nx.DiGraph):
     def summary(self):
         """Print out a summary of this network and its nodes, edges, and constraints."""
         print(f"\n{self.name}: {len(self.nodes)} nodes, {len(self.edges)} edges")
-        # print("  Head")
-        # print("    Tail: (Constraints)")
+        print(f"  Algebra: {self.algebra.name}")
         for head in self.nodes:
             print(f"  {head.name}:")
             for tail in self.neighbors(head):
