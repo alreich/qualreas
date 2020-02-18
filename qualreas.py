@@ -283,7 +283,7 @@ class Algebra(object):
 
 
 # Used to break out of Network propagation if it is found to be inconsistent
-class BreakOut(Exception):
+class InconsistentNetwork(Exception):
     pass
 
 
@@ -395,11 +395,13 @@ class Network(nx.DiGraph):
                         self.edges[ent1, ent2]['constraint'] = prod
                         # If any product is empty then the Network is inconsistent
                         if not prod.any():
-                            raise BreakOut
+                            raise InconsistentNetwork
             if verbose:
                 print(f"Number of iterations: {loop_count}")
             return True
-        except BreakOut:
+        except InconsistentNetwork:
+            if verbose:
+                print(f"Propagation suspended; the network is inconsistent.")
             return False
 
     def summary(self):
