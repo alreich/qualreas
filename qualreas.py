@@ -282,6 +282,11 @@ class Algebra(object):
         return result
 
 
+# Used to break out of Network propagation if it is found to be inconsistent
+class BreakOut(Exception):
+    pass
+
+
 class Network(nx.DiGraph):
 
     def __init__(self, algebra, name=None):
@@ -373,22 +378,29 @@ class Network(nx.DiGraph):
         loop_count = 0
         self.set_unconstrained_values(verbose)
         something_changed = True  # We'll iterate at least once
-        while something_changed:
-            something_changed = False  # If nothing changes, we'll only iterate once
-            loop_count += 1
-            for ent1 in self.nodes():
-                for ent2 in self.nodes():
-                    prod = self.algebra.elements
-                    c12 = self.edges[ent1, ent2]['constraint']
-                    for ent3 in self.nodes():
-                        c13 = self.edges[ent1, ent3]['constraint']
-                        c32 = self.edges[ent3, ent2]['constraint']
-                        prod += self.algebra.mult(c13, c32)
-                    if prod != c12:
-                        something_changed = True  # Continue iterating
-                    self.edges[ent1, ent2]['constraint'] = prod
-        if verbose:
-            print(f"Number of iterations: {loop_count}")
+        try:
+            while something_changed:
+                something_changed = False  # If nothing changes, we'll only iterate once
+                loop_count += 1
+                for ent1 in self.nodes():
+                    for ent2 in self.nodes():
+                        prod = self.algebra.elements
+                        c12 = self.edges[ent1, ent2]['constraint']
+                        for ent3 in self.nodes():
+                            c13 = self.edges[ent1, ent3]['constraint']
+                            c32 = self.edges[ent3, ent2]['constraint']
+                            prod += self.algebra.mult(c13, c32)
+                        if prod != c12:
+                            something_changed = True  # Continue iterating
+                        self.edges[ent1, ent2]['constraint'] = prod
+                        # If any product is empty then the Network is inconsistent
+                        if not prod.any():
+                            raise BreakOut
+            if verbose:
+                print(f"Number of iterations: {loop_count}")
+            return True
+        except BreakOut:
+            return False
 
     def summary(self):
         """Print out a summary of this network and its nodes, edges, and constraints."""
