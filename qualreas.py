@@ -360,6 +360,14 @@ class Network(nx.DiGraph):
     def entities(self):
         return self.nodes
 
+    def get_entity_by_name(self, name):
+        result = None
+        for node in self.nodes:
+            if node.name == name:
+                result = node
+                break
+        return result
+
     def set_unconstrained_values(self, verbose):
         '''Find all pairs of nodes (not the same) that don't have a constraint set
         between them, and set the constraint to be all algebra elements.  Meaning that,
