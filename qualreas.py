@@ -6,6 +6,7 @@
 from bitsets import bitset, bases
 import json
 import networkx as nx
+from copy import deepcopy
 from functools import reduce
 from collections import abc
 
@@ -352,6 +353,25 @@ class Network(nx.DiGraph):
             print(f"Constraint Added: {entity1.name} {entity2.name} {list(rel_set.members())}")
             print(f"Constraint Added: {entity2.name} {entity1.name} {list(rel_set_converse.members())}")
 
+    # TODO: Write transpose method for networks
+    # def transpose(self, other):
+    #     """Viewing this network as a matrix, return a copy that is its transpose."""
+    #     pass
+
+    # TODO: Write converse method for networks
+    # def converse(self):
+    #     """Return a copy of this network where all of the elements are converses of the original."""
+    #     net_copy = deepcopy(self)
+    #     for node1 in net_copy:
+    #         for node2 in net_copy:
+    #             constraint12 = net_copy.edges(node1, node2)['constraint']
+    #             net_copy.edges(node1, node2)['constraint'] = self.algebra.converse(constraint12)
+    #     return net_copy
+
+    def copy(self):
+        """Return a deep copy of this network."""
+        return deepcopy(self)
+
     @property
     def constraints(self):
         return self.edges
@@ -367,6 +387,16 @@ class Network(nx.DiGraph):
                 result = node
                 break
         return result
+
+    def print_as_matrix(self):
+        nodes_list = list(self.nodes)
+        node_names = list(map(lambda x: x.name, nodes_list))
+        print(node_names)
+        for a in nodes_list:
+            row = ""
+            for b in nodes_list:
+                row += "  " + str(self.edges[a, b]['constraint'])
+            print(row)
 
     def set_unconstrained_values(self, verbose):
         '''Find all pairs of nodes (not the same) that don't have a constraint set
