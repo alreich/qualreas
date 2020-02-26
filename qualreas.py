@@ -25,11 +25,11 @@ class RelSet(bases.BitSet):
 
 
 # See https://www.w3.org/TR/owl-time/
-# types: "Point", "ProperInterval", "Duration"
+# classes: "Point", "ProperInterval", "Duration"
 class TemporalEntity(object):
 
-    def __init__(self, types, name=None, start=None, end=None, dur=None):
-        self.types = types
+    def __init__(self, classes, name=None, start=None, end=None, dur=None):
+        self.classes = classes  # Ontological, not OOP
         self.name = name
         self.start = start
         self.end = end
@@ -37,24 +37,24 @@ class TemporalEntity(object):
 
     def __repr__(self):
         if self.name:
-            return f"<TemporalEntity {self.name} {self.types}>"
+            return f"<TemporalEntity {self.name} {self.classes}>"
         else:
-            return f"<TemporalEntity {self.types}>"
+            return f"<TemporalEntity {self.classes}>"
 
 
 # Don't have a good source yet for a spatial vocabulary,
 # but see https://www.w3.org/2017/sdwig/bp/
 class SpatialEntity(object):
 
-    def __init__(self, types, name=None):
-        self.types = types
+    def __init__(self, classes, name=None):
+        self.classes = classes  # Ontological, not OOP
         self.name = name
 
     def __repr__(self):
         if self.name:
-            return f"<SpatialObject {self.name} {self.types}>"
+            return f"<SpatialObject {self.name} {self.classes}>"
         else:
-            return f"<SpatialObject {self.types}>"
+            return f"<SpatialObject {self.classes}>"
 
 
 # Abbreviations for Algebra Summary
@@ -318,10 +318,10 @@ class Network(nx.DiGraph):
         # Get the proper equality relation(s) for each of the two entities
         eq_rels1 = reduce(lambda r1, s1: r1.union(s1),
                           (map(lambda t1: self.algebra.equality_relation(t1),
-                               entity1.types)))
+                               entity1.classes)))
         eq_rels2 = reduce(lambda r2, s2: r2.union(s2),
                           (map(lambda t2: self.algebra.equality_relation(t2),
-                               entity2.types)))
+                               entity2.classes)))
 
         # Each entity must equal itself
         self.set_equality_constraint(entity1, eq_rels1, verbose)
