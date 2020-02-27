@@ -1,0 +1,43 @@
+1982 Vilain - System for Reasoning about Time.pdf*
+1983 Allen - Maintaining Knowledge about Temporal Intervals.pdf
+1986a Vilain - Constraint Propagation Algorithms for Temporal Reasoning.pdf
+1986b Vilain - Constraint Propagation Algorithms for Temporal Reasoning Revised Report.pdf
+1987 Tsang - Consistent Labeling Problem in Temporal Reasoning.pdf*
+1989 Koomen - TIMELOGIC Temporal Reasoning System.pdf
+1989 van Beek - Approx Algorithms for Temporal Reasoning.pdf
+1990 van Beek - Exact and approximate reasoning about temporal relations.pdf
+1991 Dechter - Temporal Constraint Networks.pdf
+1991 Freksa - Conceptual Neighborhood.pdf
+1992 Freksa - Temporal Reasoning Based on Semi-Intervals.pdf
+1992 Randell - Spatial Logic based on Regions and Connection.pdf
+1992 Schwalb - Processing Temporal Constraint Networks.pdf
+1992 van Beek - Reasoning about Qualitative Temporal Information.pdf
+1993 Hrycej - Temporal Extension of Prolog.pdf
+1994 Bennett - Some Observations and Puzzles.pdf
+1994 Reich - Intervals Points and Branching Time.pdf
+1994 Vila - Survey on Temporal Reasoning in AI.pdf
+1995 Nebel - Reasoning about Temporal Relations.pdf
+1996 Hayes - Catalog of Temporal Theories.pdf
+1996 Hirsch - Relation Algebras of Intervals.pdf
+1999 Knauff - Cognitive Adequacy of Allens Interval Calc.pdf
+2001 Cohn - Qualitative Spatial Representation and Reasoning.pdf
+2001 Tsamardinos - Temporal Reasoning for Planning.pdf
+2004 Cukierman - Theory of Convex Interval Relations - Flairs04.pdf
+2004 Hobbs - Ontology of Time for the Semantic Web.pdf*
+2005 Alspaugh - SW for Allens Interval Algebra.pdf
+2005 Duntsch - Relation Algebras cs0501.pdf
+2005 Moldovan - Temporal Context Rep and Reasoning.pdf*
+2006 Frommberger - SparQ Toolbox.pdf
+2006 Moerchen - better tool than Allen’s relations.pdf
+2007 Bodirsky - Qual Temporal and Spatial Reasoning Revisited.pdf
+2007 Gagne - Formal Temporal Semantics for Microsoft Project.pdf
+2008 Gantner - GQR Fast Reasoner Qualitative Constraint Calc.pdf
+2009 Wolter - SparQ Spatial Reasoning Toolbox.pdf
+2011 Gruninger - Verification of the OWL-Time Ontology.pdf
+2013 Crowley - Allens Temporal Logic.pdf
+2013 Endelin - Allens Interval Logic with Semantic Web.pdf
+2016 Georgala - Efficient Generation of Allen Relations.pdf
+2017 Gruninger - Time Ontology of Allen's Interval Algebra.pdf
+2019 Janhunen - Allens Algebra Makes the Diff SLIDES.pdf
+2019 Janhunen - Allens Algebra Makes the Diff.pdf
+
