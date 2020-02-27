@@ -1,0 +1,64 @@
+NOTES
+
+------------------------------------------------------------------------------------------------
+[van Beek 1990]
+
+AAAI90-109.pdf
+"Reasoning about Qualitative Temporal Information"
+Peter van Beek
+
+References
+
+Allen, J. F. 1983. Maintaining Knowledge about Temporal Intervals. Comm. ACM 20, 832-843.
+
+Allen, J. F. 1984. Towards a General Theory of Action and Time. Artificial Intelligence 23, 123-154.
+
+Allen, J. F., and H. Kautz. 1985. A Model of Naive Temporal Reasoning. In Formal Theories of the Commonsense World, J. Hobbs and R. Moore (eds.), Ablex, 251-268.
+
+Allen, J. F., and J. A. Koomen. 1983. Planning Using a Temporal World Model. Proc. of the 8th IJCAI, 741-747.
+
+Dean, T., and D. V. McDermott. 1987. Temporal Data Base Management. Artificial Intelligence 32, l-55.
+
+Dechter, R., and I. Meiri. 1989. Experimental Evaluation of Preprocessing Techniques in Constraint Satisfaction Problems. Proc. of the 11th IJCAI, 271-277.
+
+Dechter, R., I. Meiri, and J. Pearl. 1989. Temporal Constraint Networks. Proc. of the 1st Int. Con f. on Principles of Knowledge
+
+Representation and Reasoning, 83-93. Ghallab, M., and A. Mounir Alaoui. 1989.
+
+Managing Efficiently Temporal Relations Through Indexed Spanning Trees. Proc. of the 11th IJCAI, 1297-1303.
+
+Knuth, D. E. 1973. Sorting and Searching. Addison-Wesley, 258-265.
+
+Koubarakis, M., J. Mylopoulos, M. Stanley, and A. Borgida. 1989. Telos: Features and Formalization. Technical Report KRR-TR-89-4, Dept. of Computer Science, University of Toronto.
+
+Ladkin, P. B. 1989. Metric Constraint Satisfaction with Intervals. Technical Report TR-89-038, International Computer Science Institute, Berkeley, Calif.
+
+Ladkin, P. B., and R. Maddux. 1988. The Algebra of Constraint Satisfaction Problems and Temporal Reasoning. Technical Report, Kestrel Institute, Palo Alto, Calif.
+
+Mackworth, A. K. 1977. Consistency in Networks of Relations. Artificial Intelligence 8, 99-118.
+
+Mackworth, A. K., and E. C. Freuder. 1985. The Complexity of Some Polynomial Network Consistency Algorithms for Constraint Satisfaction Problems. Artificial Intelligence 25, 65-74.
+
+Montanari, U. 1974. Networks of Constraints: Fundamental Properties and Applications to Picture Processing. Inform. Sci. 7, 95-132.
+
+Tarjan, R. 1972. Depth-First Search and Linear Graph Algorithms. SIAM J. Comput. 1, 146-160.
+
+ValdCs-Perez, R. E. 1987. The Satisfiability of Temporal Constraint Networks. A-oc. of the 6th National Conf. on AI, 256-260.
+
+van Beek, P. 1989. Approximation Algorithms for Temporal Reasoning. Proc. of the 11th IJCAI, 1291-1296.
+
+van Beek, P., and R. Cohen. 1990. Exact and Approximate Reasoning about Temporal Relations. Computational Intelligence. To appear.
+
+Vilain, M., and H. Kautz. 1986. Constraint Propagation Algorithms for Temporal Reasoning. Proc. of the 5th National Conf. on AI, 377-382.
+
+Vilain, M., H. Kautz, and P. van Beek. 1989. Constraint Propagation Algorithms for Temporal Reasoning: A Revised Report. In Readings in Qualitative Reasoning about Physical Systems, D. S. Weld and J. de Kleer (eds.), Morgan-Kaufman, 373-381.
+
+---------
+
+1994 Vila Survey on Temporal Reasoning in AI
+http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.43.2788&rank=1
+
+2017 Time Ontology of Allen's Interval Algebra
+Li, Zhuojun and Grüninger, M. (2017) The Time Ontology of Allen's Interval Algebra, 24th International Symposium on Temporal Representation and Reasoning (TIME 2017), Mons, Belgium.
+http://stl.mie.utoronto.ca/publications/p16-Gruninger.pdf
+
