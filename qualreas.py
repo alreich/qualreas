@@ -400,7 +400,7 @@ class Network(nx.DiGraph):
                 break
         return result
 
-   def print_as_matrix(self, node_names=None):
+    def print_as_matrix(self, node_names=None):
         """Print the Network constraints in matrix form using the ordering of entities
         as given by their names in node_names or, if that's None, then by the ordering
         returned by the method self.nodes."""
