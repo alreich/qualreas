@@ -29,7 +29,7 @@ class RelSet(bases.BitSet):
 class TemporalEntity(object):
 
     def __init__(self, classes, name=None, start=None, end=None, dur=None):
-        self.classes = classes  # Ontological, not OOP
+        self.classes = classes  # Ontological, not OOP; e.g., Point, ProperInterval
         self.name = name
         self.start = start
         self.end = end
@@ -126,6 +126,8 @@ class Algebra(object):
         return self.relations_dict[rel]["Transitive"]
 
     def rel_equality(self, rel):
+        """If a relation is reflexive, symmetric, and transitive, then it is an
+        equivalence relation, called equality here."""
         return self.rel_reflexive(rel) & self.rel_symmetric(rel) & self.rel_transitive(rel)
 
     def converse(self, rel_or_relset):
@@ -141,6 +143,7 @@ class Algebra(object):
 
     @property
     def equality_relations(self):
+        """Return all of the algebra's equality relations."""
         return self.__equality_relations
 
     def equality_relation(self, domain_or_range):
