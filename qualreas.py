@@ -314,9 +314,9 @@ class Network(nx.DiGraph):
                 print(f"Equality Constraint Added: {entity.name} {list(equality_rels.members())}")
 
     def __set_unconstrained_values(self, verbose):
-        '''Find all pairs of nodes (not the same) that don't have a constraint set
+        """Find all pairs of nodes (not the same) that don't have a constraint set
         between them, and set the constraint to be all algebra elements.  Meaning that,
-        any constraint between them is possible.'''
+        any constraint between them is possible."""
         for ent1 in self.nodes():
             for ent2 in self.nodes():
                 if (ent1 != ent2) and not self.has_edge(ent1, ent2):
@@ -378,9 +378,9 @@ class Network(nx.DiGraph):
     #             net_copy.edges(node1, node2)['constraint'] = self.algebra.converse(constraint12)
     #     return net_copy
 
-    def copy(self):
-        """Return a deep copy of this network."""
-        return deepcopy(self)
+    # def copy(self):
+    #     """Return a deep copy of this network."""
+    #     return deepcopy(self)
 
     @property
     def constraints(self):
@@ -400,21 +400,21 @@ class Network(nx.DiGraph):
                 break
         return result
 
-    def print_as_matrix(self, node_names=None):
-        """Print the Network constraints in matrix form using the ordering of entities
-        as given by their names in node_names or, if that's None, then by the ordering
-        returned by the method self.nodes."""
-        if not node_names:
-            nodes_list = list(self.nodes)
-            node_names = list(map(lambda x: x.name, nodes_list))
-        else:
-            nodes_list = list(map(lambda nm: self.get_entity_by_name(nm), node_names))
-        print(node_names)
-        for a in nodes_list:
-            row = ""
-            for b in nodes_list:
-                row += "  " + str(self.edges[a, b]['constraint'])
-            print(row)
+    # def print_as_matrix(self, node_names=None):
+    #     """Print the Network constraints in matrix form using the ordering of entities
+    #     as given by their names in node_names or, if that's None, then by the ordering
+    #     returned by the method self.nodes."""
+    #     if not node_names:
+    #         nodes_list = list(self.nodes)
+    #         node_names = list(map(lambda x: x.name, nodes_list))
+    #     else:
+    #         nodes_list = list(map(lambda nm: self.get_entity_by_name(nm), node_names))
+    #     print(node_names)
+    #     for row_node in nodes_list:
+    #         row = ""
+    #         for col_node in nodes_list:
+    #             row += "  " + str(self.edges[row_node, col_node]['constraint'])
+    #         print(row)
 
     def propagate(self, verbose=False):
         """Propagate constraints in the network. Constraint propagation is a fixed-point iteration of a square
