@@ -304,13 +304,20 @@ class Network(nx.DiGraph):
         if self.has_edge(entity2, entity1):
             self.remove_edge(entity2, entity1)
 
-    def set_equality_constraint(self, entity, equality_rels, verbose):
-        # Override any previous setting on this entity
-        # self.remove_constraint(entity, entity)
+    def __set_equality_constraint(self, entity, equality_rels, verbose):
         if not self.has_edge(entity, entity):
             self.add_edge(entity, entity, constraint=equality_rels)
             if verbose:
                 print(f"Equality Constraint Added: {entity.name} {list(equality_rels.members())}")
+
+    def __set_unconstrained_values(self, verbose):
+        '''Find all pairs of nodes (not the same) that don't have a constraint set
+        between them, and set the constraint to be all algebra elements.  Meaning that,
+        any constraint between them is possible.'''
+        for ent1 in self.nodes():
+            for ent2 in self.nodes():
+                if (ent1 != ent2) and not self.has_edge(ent1, ent2):
+                    self.add_constraint(ent1, ent2, self.algebra.elements, verbose)
 
     def add_constraint(self, entity1, entity2, relation_set=None, verbose=False):
         """Same as add_edge, except that two edges are added with converse constraints."""
@@ -324,8 +331,8 @@ class Network(nx.DiGraph):
                                entity2.classes)))
 
         # Each entity must equal itself
-        self.set_equality_constraint(entity1, eq_rels1, verbose)
-        self.set_equality_constraint(entity2, eq_rels2, verbose)
+        self.__set_equality_constraint(entity1, eq_rels1, verbose)
+        self.__set_equality_constraint(entity2, eq_rels2, verbose)
 
         # Override any previously set constraint on this pair of entities
         self.remove_constraint(entity1, entity2)
@@ -381,6 +388,8 @@ class Network(nx.DiGraph):
         return self.nodes
 
     def get_entity_by_name(self, name):
+        """Return the node (entity) with the input name. If more than one have the same name,
+        then the first one found is returned.  So, try to give entities different names."""
         result = None
         for node in self.nodes:
             if node.name == name:
@@ -388,24 +397,21 @@ class Network(nx.DiGraph):
                 break
         return result
 
-    def print_as_matrix(self):
-        nodes_list = list(self.nodes)
-        node_names = list(map(lambda x: x.name, nodes_list))
+   def print_as_matrix(self, node_names=None):
+        """Print the Network constraints in matrix form using the ordering of entities
+        as given by their names in node_names or, if that's None, then by the ordering
+        returned by the method self.nodes."""
+        if not node_names:
+            nodes_list = list(self.nodes)
+            node_names = list(map(lambda x: x.name, nodes_list))
+        else:
+            nodes_list = list(map(lambda nm: self.get_entity_by_name(nm), node_names))
         print(node_names)
         for a in nodes_list:
             row = ""
             for b in nodes_list:
                 row += "  " + str(self.edges[a, b]['constraint'])
             print(row)
-
-    def set_unconstrained_values(self, verbose):
-        '''Find all pairs of nodes (not the same) that don't have a constraint set
-        between them, and set the constraint to be all algebra elements.  Meaning that,
-        any constraint between them is possible.'''
-        for ent1 in self.nodes():
-            for ent2 in self.nodes():
-                if (ent1 != ent2) and not self.has_edge(ent1, ent2):
-                    self.add_constraint(ent1, ent2, self.algebra.elements, verbose)
 
     def propagate(self, verbose=False):
         """Propagate constraints in the network. Constraint propagation is a fixed-point iteration of a square
@@ -414,7 +420,7 @@ class Network(nx.DiGraph):
         @param verbose: Print number of iterations required to propagate constraints.
         """
         loop_count = 0
-        self.set_unconstrained_values(verbose)
+        self.__set_unconstrained_values(verbose)
         something_changed = True  # We'll iterate at least once
         try:
             while something_changed:
