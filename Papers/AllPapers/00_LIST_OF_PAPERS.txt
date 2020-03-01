@@ -14,6 +14,8 @@
 1992 van Beek - Reasoning about Qualitative Temporal Information.pdf
 1993 Hrycej - Temporal Extension of Prolog.pdf
 1994 Bennett - Some Observations and Puzzles.pdf
+1994 Reich - Algebra Transitivity Tables.txt
+1994 Reich - Intervals Points and Branching Time.pdf
 1994 Vila - Survey on Temporal Reasoning in AI.pdf
 1995 Nebel - Reasoning about Temporal Relations.pdf
 1996 Hayes - Catalog of Temporal Theories.pdf
@@ -39,4 +41,3 @@
 2017 Gruninger - Time Ontology of Allen's Interval Algebra.pdf
 2019 Janhunen - Allens Algebra Makes the Diff SLIDES.pdf
 2019 Janhunen - Allens Algebra Makes the Diff.pdf
-
