@@ -6,13 +6,32 @@
 from bitsets import bitset, bases
 import json
 import networkx as nx
-from copy import deepcopy
+# from copy import deepcopy
 from functools import reduce
 from collections import abc
 
 
 __author__ = 'Alfred J. Reich'
 __version__ = '0.3.0'
+
+# Map 4-Point Network "Signatures" to Typical Names
+key_name_mapping = {
+      '<,<,<,<': 'B',       '>,>,>,>': 'BI',
+      '>,<,>,<': 'D',       '<,<,>,>': 'DI',
+      '=,<,>,=': 'E',       '=,=,=,=': 'PE',
+      '>,<,>,=': 'F',       '<,<,>,=': 'FI',
+      '<,<,=,<': 'M',       '>,=,>,>': 'MI',
+      '<,<,>,<': 'O',       '>,<,>,>': 'OI',
+      '=,<,>,<': 'S',       '=,<,>,>': 'SI',
+      '>,=,>,=': 'PF',      '<,<,=,=': 'PFI',
+      '=,<,=,<': 'PS',      '=,=,>,>': 'PSI',
+     '<,<,>,r~': 'RO',    '<,<,r~,r~': 'RB',
+     '=,<,>,r~': 'RS',     '>,<,>,r~': 'ROI',
+    '>,r~,>,r~': 'RBI', 'r~,r~,r~,r~': 'R~',
+     'l~,<,>,<': 'LO',     'l~,<,>,=': 'LF',
+     'l~,<,>,>': 'LOI',   'l~,l~,>,>': 'LBI',
+    'l~,<,l~,<': 'LB',  'l~,l~,l~,l~': 'L~'
+}
 
 
 class RelSet(bases.BitSet):
@@ -400,6 +419,19 @@ class Network(nx.DiGraph):
                 break
         return result
 
+    def to_list(self, entities=None):
+        """Return a list of lists of constraints, where the lists in the list represent
+        rows of a matrix of constraints, ordered by the ordering in the list of entities."""
+        if not entities:
+            entities = self.nodes
+        result = []
+        for row_ent in entities:
+            row = []
+            for col_ent in entities:
+                row.append(str(self.edges[row_ent, col_ent]['constraint']))
+            result.append(row)
+        return result
+
     # def print_as_matrix(self, node_names=None):
     #     """Print the Network constraints in matrix form using the ordering of entities
     #     as given by their names in node_names or, if that's None, then by the ordering
@@ -459,6 +491,30 @@ class Network(nx.DiGraph):
             print(f"  {head.name}:")
             for tail in self.neighbors(head):
                 print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
+
+
+class FourPoint(Network):
+    """Create four Temporal Entities that represent time points and use them
+    to express two independent intervals. For example, (s1,e1) and (s2,e2),
+    where s1 < e1 and s2 < e2, represents two proper intervals.  Using '<|='
+    instead of '<', would represent two intervals where one or both might
+    be points.  Return the network and the four temporal entities."""
+
+    def __init__(self, algebra, name, lessthanstr, startname="StartPt", endname="EndPt"):
+        self.algebra = algebra
+        self.lessthan = algebra.relset(lessthanstr)
+        # Start & End Points of Interval 1
+        self.start1 = TemporalEntity(["Point"], name=startname + "1")
+        self.end1 = TemporalEntity(["Point"], name=endname + "1")
+        # Start & End Points of Interval 2
+        self.start2 = TemporalEntity(["Point"], name=startname + "2")
+        self.end2 = TemporalEntity(["Point"], name=endname + "2")
+        super().__init__(algebra, name)
+        self.add_constraint(self.start1, self.end1, self.lessthan, verbose=False)
+        self.add_constraint(self.start2, self.end2, self.lessthan, verbose=False)
+
+    def get_points(self):
+        return [self.start1, self.end1, self.start2, self.end2]
 
 
 if __name__ == '__main__':
