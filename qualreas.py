@@ -516,6 +516,24 @@ class FourPoint(Network):
     def get_points(self):
         return [self.start1, self.end1, self.start2, self.end2]
 
+    def __ontology_classes(self, start, end):
+        """The constraints between the start and end points of a temporal entity
+        determine whether it belongs to the class of Point, ProperIntervals, or
+        both.  Return a list containing the class names for the input network, net."""
+        class_list = []
+        constr = self.edges[start, end]['constraint']
+        if '=' in constr:
+            class_list.append('Point')
+        if '<' in constr:
+            class_list.append('ProperInterval')
+        return class_list
+
+    def domain_and_range(self):
+        """Return a tuple, (domain, range), for the interval/point relation
+        represented by the input 4-point network."""
+        return (self.__ontology_classes(self.start1, self.end1),
+                self.__ontology_classes(self.start2, self.end2))
+
 
 if __name__ == '__main__':
 
