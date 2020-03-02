@@ -9,6 +9,7 @@ import networkx as nx
 # from copy import deepcopy
 from functools import reduce
 from collections import abc
+import numpy as np
 
 
 __author__ = 'Alfred J. Reich'
@@ -533,6 +534,46 @@ class FourPoint(Network):
         represented by the input 4-point network."""
         return (self.__ontology_classes(self.start1, self.end1),
                 self.__ontology_classes(self.start2, self.end2))
+
+
+# Viewing the network as a matrix, 'elem13', below, refers to the element in row 1 col 3,
+# and so on for 'elem23', etc.  The matrix is 4x4, so if we partition it into four 2x2
+# matrices, then the two partiions on the diagonal represent two intervals and the two
+# off-diagonal partitions represent how those two intervals relate to each other.
+# Also, the off-diagonal 2x2 partitions are converse transposes of each other.
+# Oh, and the intervals represented by the diagonal partitions could be intervals,
+# proper intervals, or points.
+def generate_consistent_networks(alg, lessthan="<", startname="StartPt", endname="EndPt",
+                                 verbose=False):
+    consistent_nets = dict()
+    for elem13 in alg.elements:
+        for elem23 in alg.elements:
+            for elem14 in alg.elements:
+                for elem24 in alg.elements:
+                    four_pt_net_name = elem13 + ',' + elem23 + ',' + elem14 + ',' + elem24
+                    net = FourPoint(alg, four_pt_net_name, lessthan, startname, endname)
+                    pt1, pt2, pt3, pt4 = net.get_points()
+                    rs13 = alg.relset(elem13)
+                    rs23 = alg.relset(elem23)
+                    rs14 = alg.relset(elem14)
+                    rs24 = alg.relset(elem24)
+                    net.add_constraint(pt1, pt3, rs13)
+                    net.add_constraint(pt2, pt3, rs23)
+                    net.add_constraint(pt1, pt4, rs14)
+                    net.add_constraint(pt2, pt4, rs24)
+                    if net.propagate():
+                        elem_key = ",".join([str(rs13), str(rs14), str(rs23), str(rs24)])
+                        consistent_nets[key_name_mapping[elem_key]] = net
+                        if verbose:
+                            print("==========================")
+                            if elem_key in key_name_mapping:
+                                print(key_name_mapping[elem_key])
+                            else:
+                                print("UNKNOWN")
+                            #print(np.matrix(constraint_matrix_to_list(net, pts)))
+                            print(np.matrix(net.to_list()))
+    print(f"\n{len(consistent_nets)} consistent networks")
+    return consistent_nets
 
 
 if __name__ == '__main__':
