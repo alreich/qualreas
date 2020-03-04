@@ -188,19 +188,19 @@ class TestAlgebra(unittest.TestCase):
         self.assertEqual(self.alg0.relations['B'].short_name, 'B')
 
     def test_equality_relations0(self):
-        self.assertEqual(set(map(lambda x: x.short_name, self.alg0.equality_relations)), {'E'})
+        self.assertEqual(set(map(lambda x: x.short_name, self.alg0.all_equality_relations)), {'E'})
 
     def test_equality_relations1(self):
-        self.assertEqual(set(map(lambda x: x.short_name, self.alg1.equality_relations)), {'E', 'PE'})
+        self.assertEqual(set(map(lambda x: x.short_name, self.alg1.all_equality_relations)), {'E', 'PE'})
 
     def test_equality_relations2(self):
-        self.assertEqual(set(map(lambda x: x.short_name, self.alg2.equality_relations)), {'E', 'PE'})
+        self.assertEqual(set(map(lambda x: x.short_name, self.alg2.all_equality_relations)), {'E', 'PE'})
 
     def test_equality_relations3(self):
-        self.assertEqual(set(map(lambda x: x.short_name, self.alg3.equality_relations)), {'E', 'PE'})
+        self.assertEqual(set(map(lambda x: x.short_name, self.alg3.all_equality_relations)), {'E', 'PE'})
 
     def test_equality_relations4(self):
-        self.assertEqual(set(map(lambda x: x.short_name, self.alg4.equality_relations)), {'EQ'})
+        self.assertEqual(set(map(lambda x: x.short_name, self.alg4.all_equality_relations)), {'EQ'})
 
     def test_relset0(self):
         self.assertEqual(set(map(lambda x: x.short_name, self.alg0.relset(['B', 'D', 'O']))), {'B', 'D', 'O'})

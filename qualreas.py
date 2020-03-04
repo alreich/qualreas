@@ -165,11 +165,11 @@ class Algebra(object):
         return f"<{self.name}: {self.description}>"
 
     @property
-    def equality_relations(self):
+    def all_equality_relations(self):
         """Return all of the algebra's equality relations."""
         return self.__equality_relations
 
-    def equality_relation(self, domain_or_range):
+    def get_domain_or_range_equality_rel(self, domain_or_range):
         return self.equality_relations_dict[domain_or_range]
 
     def relset(self, relations):
@@ -236,7 +236,7 @@ class Algebra(object):
         """Print out a summary of this algebra and its elements."""
         print(f"  Algebra Name: {self.name}")
         print(f"   Description: {self.description}")
-        print(f" Equality Rels: {self.equality_relations}")
+        print(f" Equality Rels: {self.all_equality_relations}")
         print("     Relations:")
         print("{:>25s} {:>25s} {:>10s} {:>10s} {:>10s} {:>8s} {:>12s}".format("NAME (ABBREV)", "CONVERSE (ABBREV)",
                                                                               "REFLEXIVE", "SYMMETRIC", "TRANSITIVE",
@@ -350,10 +350,10 @@ class Network(nx.DiGraph):
 
         # Get the proper equality relation(s) for each of the two entities
         eq_rels1 = reduce(lambda r1, s1: r1.union(s1),
-                          (map(lambda t1: self.algebra.equality_relation(t1),
+                          (map(lambda t1: self.algebra.get_domain_or_range_equality_rel(t1),
                                entity1.classes)))
         eq_rels2 = reduce(lambda r2, s2: r2.union(s2),
-                          (map(lambda t2: self.algebra.equality_relation(t2),
+                          (map(lambda t2: self.algebra.get_domain_or_range_equality_rel(t2),
                                entity2.classes)))
 
         # Each entity must equal itself
@@ -436,27 +436,13 @@ class Network(nx.DiGraph):
             result.append(row)
         return result
 
-    # def print_as_matrix(self, node_names=None):
-    #     """Print the Network constraints in matrix form using the ordering of entities
-    #     as given by their names in node_names or, if that's None, then by the ordering
-    #     returned by the method self.nodes."""
-    #     if not node_names:
-    #         nodes_list = list(self.nodes)
-    #         node_names = list(map(lambda x: x.name, nodes_list))
-    #     else:
-    #         nodes_list = list(map(lambda nm: self.get_entity_by_name(nm), node_names))
-    #     print(node_names)
-    #     for row_node in nodes_list:
-    #         row = ""
-    #         for col_node in nodes_list:
-    #             row += "  " + str(self.edges[row_node, col_node]['constraint'])
-    #         print(row)
-
     def propagate(self, verbose=False):
         """Propagate constraints in the network. Constraint propagation is a fixed-point iteration of a square
         constraint matrix.  Or, in plain English, we treat the network as if it's a matrix, multiplying it by
         itself, repeatedly, until it stops changing.
         @param verbose: Print number of iterations required to propagate constraints.
+        :param verbose: If True, then the number of iterations required is printed
+        :return: True if network is consistent, otherwise False
         """
         loop_count = 0
         self.__set_unconstrained_values(verbose)
@@ -497,7 +483,11 @@ class Network(nx.DiGraph):
                 print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
 
 
-class FourPoint(Network):
+# IMPORTANT: The only intended purpose of the class, FourPoint, is to generate point-based
+# representations of interval relations using the function, generate_consistent_networks.
+# It has no other intended purpose.
+
+class FourPointNet(Network):
     """Create four Temporal Entities that represent time points and use them
     to express two independent intervals. For example, (s1,e1) and (s2,e2),
     where s1 < e1 and s2 < e2, represents two proper intervals.  Using '<|='
@@ -580,20 +570,20 @@ signature_name_mapping = {
 # proper intervals, or points.
 
 
-def generate_consistent_networks(alg, lessthan="<", startname="StartPt", endname="EndPt",
+def generate_consistent_networks(point_algebra, lessthan="<", startname="StartPt", endname="EndPt",
                                  verbose=False):
     consistent_nets = dict()
-    for elem13 in alg.elements:
-        for elem23 in alg.elements:
-            for elem14 in alg.elements:
-                for elem24 in alg.elements:
+    for elem13 in point_algebra.elements:
+        for elem23 in point_algebra.elements:
+            for elem14 in point_algebra.elements:
+                for elem24 in point_algebra.elements:
                     four_pt_net_name = elem13 + ',' + elem23 + ',' + elem14 + ',' + elem24
-                    net = FourPoint(alg, four_pt_net_name, lessthan, startname, endname)
+                    net = FourPointNet(point_algebra, four_pt_net_name, lessthan, startname, endname)
                     pt1, pt2, pt3, pt4 = net.get_points()
-                    rs13 = alg.relset(elem13)
-                    rs23 = alg.relset(elem23)
-                    rs14 = alg.relset(elem14)
-                    rs24 = alg.relset(elem24)
+                    rs13 = point_algebra.relset(elem13)
+                    rs23 = point_algebra.relset(elem23)
+                    rs14 = point_algebra.relset(elem14)
+                    rs24 = point_algebra.relset(elem24)
                     net.add_constraint(pt1, pt3, rs13)
                     net.add_constraint(pt2, pt3, rs23)
                     net.add_constraint(pt1, pt4, rs14)
@@ -607,8 +597,7 @@ def generate_consistent_networks(alg, lessthan="<", startname="StartPt", endname
                                 print(signature_name_mapping[elem_key])
                             else:
                                 print("UNKNOWN")
-                            #print(np.matrix(constraint_matrix_to_list(net, pts)))
-                            print(np.matrix(net.to_list()))
+                            print(np.array(net.to_list()))
     print(f"\n{len(consistent_nets)} consistent networks")
     return consistent_nets
 
@@ -721,14 +710,14 @@ if __name__ == '__main__':
     # pint_J = TemporalObject(["Point", "ProperInterval"], "J")
     # pint_K = TemporalObject(["Point", "ProperInterval"], "K")
     # pint_L = TemporalObject(["Point", "ProperInterval"], "L")
-    # D1 = alg[1].relations["D"]
-    # DI1 = alg[1].relations["DI"]
-    # F1 = alg[1].relations["F"]
-    # FI1 = alg[1].relations["FI"]
-    # M1 = alg[1].relations["M"]
-    # O1 = alg[1].relations["O"]
-    # S1 = alg[1].relations["S"]
-    # net2x = Network(alg[1], "Book Example Extended")
+    # D1 = point_algebra[1].relations["D"]
+    # DI1 = point_algebra[1].relations["DI"]
+    # F1 = point_algebra[1].relations["F"]
+    # FI1 = point_algebra[1].relations["FI"]
+    # M1 = point_algebra[1].relations["M"]
+    # O1 = point_algebra[1].relations["O"]
+    # S1 = point_algebra[1].relations["S"]
+    # net2x = Network(point_algebra[1], "Book Example Extended")
     # net2x.constraint(pint_I, pint_J, [F1, FI1])
     # net2x.constraint(pint_I, pint_L, [S1, M1])
     # net2x.constraint(pint_L, pint_J, [S1, M1])
@@ -744,10 +733,10 @@ if __name__ == '__main__':
     # y1 = TemporalObject(["Point", "ProperInterval"], "Y")
     # z1 = TemporalObject(["Point", "ProperInterval"], "Z")
     # u1 = TemporalObject(["Point", "ProperInterval"], "U")
-    # ps1 = alg[1].relations["PS"]
-    # b1 = alg[1].relations["B"]
-    # d1 = alg[1].relations["D"]
-    # net3 = Network(alg[1], "Associativity Test")
+    # ps1 = point_algebra[1].relations["PS"]
+    # b1 = point_algebra[1].relations["B"]
+    # d1 = point_algebra[1].relations["D"]
+    # net3 = Network(point_algebra[1], "Associativity Test")
     # net3.constraint(x1, y1, [ps1])
     # net3.constraint(y1, z1, [b1])
     # net3.constraint(z1, u1, [d1])
@@ -755,8 +744,8 @@ if __name__ == '__main__':
     # net3.propagate(verbose=True)
     # net3.print_constraints()
     #
-    # print("\n{} is associative? {}\n".format(alg[0].name, str(alg[0].is_associative())))
-    # #    print "\n{} is associative? {}\n" % (alg[1].short_name, str(alg[1].is_associative(verbose=True)))
+    # print("\n{} is associative? {}\n".format(point_algebra[0].name, str(point_algebra[0].is_associative())))
+    # #    print "\n{} is associative? {}\n" % (point_algebra[1].short_name, str(point_algebra[1].is_associative(verbose=True)))
     # #    print "\n{} is associative? {}" % (alg2.short_name, str(alg2.is_associative()))
     # #    print "\n{} is associative? {}" % (alg3.short_name, str(alg3.is_associative()))
     # #    print "\n{} is associative? {}" % (alg4.short_name, str(alg4.is_associative()))

@@ -54,7 +54,7 @@ Relation sets can also be 'added' together. 'Addition' here is actually set inte
 >>> sorted( (b0 * mi0) + (mi0 * b0), key=lambda rel: rel.short_name)
 [B, M, O]
 
->>> alg0.equality_relations
+>>> alg0.all_equality_relations
 [E]
 
 The examples shown, above, are repeated for three more relation algebras in the next three sections.  In each example,
@@ -93,7 +93,7 @@ inv( inv(Before) * inv(Met-By) ):
 >>> sorted( (b1 * mi1) + (mi1 * b1), key=lambda rel: rel.short_name)
 [B, M, O]
 
->>> sorted(alg1.equality_relations, key=lambda rel: rel.short_name)
+>>> sorted(alg1.all_equality_relations, key=lambda rel: rel.short_name)
 [E, PE]
 
 ----------------------------------------
@@ -128,7 +128,7 @@ inv( inv(Before) * inv(Met-By) ):
 >>> sorted( (b2 * mi2) + (mi2 * b2), key=lambda rel: rel.short_name)
 [B, M, O]
 
->>> sorted(alg2.equality_relations, key=lambda rel: rel.short_name)
+>>> sorted(alg2.all_equality_relations, key=lambda rel: rel.short_name)
 [E, PE]
 
 -----------------------------------------
@@ -163,7 +163,7 @@ inv( inv(Before) * inv(Met-By) ):
 >>> sorted( (b3 * mi3) + (mi3 * b3), key=lambda rel: rel.short_name)
 [B, M, O]
 
->>> sorted(alg3.equality_relations, key=lambda rel: rel.short_name)
+>>> sorted(alg3.all_equality_relations, key=lambda rel: rel.short_name)
 [E, PE]
 
 -----------------------------
