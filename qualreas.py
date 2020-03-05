@@ -6,7 +6,7 @@
 from bitsets import bitset, bases
 import json
 import networkx as nx
-# from copy import deepcopy
+from copy import deepcopy
 from functools import reduce
 from collections import abc
 import numpy as np
@@ -483,7 +483,7 @@ class Network(nx.DiGraph):
                 print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
 
 
-# IMPORTANT: The only intended purpose of the class, FourPoint, is to generate point-based
+# IMPORTANT: The only intended purpose of the class, FourPointNet, is to generate point-based
 # representations of interval relations using the function, generate_consistent_networks.
 # It has no other intended purpose.
 
@@ -638,8 +638,6 @@ if __name__ == '__main__':
     print("Check algebra associativity")
     print("---------------------------")
 
-    verbosity = False
-
     for a in alg:
         print(f"\n{a.name}:")
         print(f"Relations: {a.elements}")
@@ -734,29 +732,6 @@ if __name__ == '__main__':
     net2x.summary()
     net2x.propagate(verbose=True)
     net2x.summary()
-    #
-    # # Associativity example done as a network instead
-    # x1 = TemporalObject(["Point", "ProperInterval"], "X")
-    # y1 = TemporalObject(["Point", "ProperInterval"], "Y")
-    # z1 = TemporalObject(["Point", "ProperInterval"], "Z")
-    # u1 = TemporalObject(["Point", "ProperInterval"], "U")
-    # ps1 = point_algebra[1].relations["PS"]
-    # b1 = point_algebra[1].relations["B"]
-    # d1 = point_algebra[1].relations["D"]
-    # net3 = Network(point_algebra[1], "Associativity Test")
-    # net3.constraint(x1, y1, [ps1])
-    # net3.constraint(y1, z1, [b1])
-    # net3.constraint(z1, u1, [d1])
-    # net3.print_constraints()
-    # net3.propagate(verbose=True)
-    # net3.print_constraints()
-    #
-    # print("\n{} is associative? {}\n".format(point_algebra[0].name, str(point_algebra[0].is_associative())))
-    # #    print "\n{} is associative? {}\n" % (point_algebra[1].short_name, str(point_algebra[1].is_associative(verbose=True)))
-    # #    print "\n{} is associative? {}" % (alg2.short_name, str(alg2.is_associative()))
-    # #    print "\n{} is associative? {}" % (alg3.short_name, str(alg3.is_associative()))
-    # #    print "\n{} is associative? {}" % (alg4.short_name, str(alg4.is_associative()))
-    #
 
     print("\n----------------------------------------------")
     print("Region Connection Calculus 8")
@@ -786,10 +761,19 @@ if __name__ == '__main__':
     net4.propagate()
     net4.summary()
 
-    # Note: According to Wikipedia, the correct constraints
-    # between 'road' and 'property1', and
-    # between 'road' and 'property2' are:
-    #   road property1 EC|PO
-    #   road property2 PO|TPP
+    print("""\nNote on example above:
+    According to Wikipedia,
+    https://en.wikipedia.org/wiki/Region_connection_calculus#Examples,
+    the correct constraints
+    between 'road' and 'property1', and
+    between 'road' and 'property2' are:
+      road property1 EC|PO
+      road property2 PO|TPP""")
+
+    #net4.converse().summary()
+
+    print("""------------
+    END OF TESTS
+    ------------""")
 
     # End of File
