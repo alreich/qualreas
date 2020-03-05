@@ -301,7 +301,7 @@ class Algebra(object):
                             print(f"  Skipping check due to a x b: {self.rel_range(_a)}::{self.rel_domain(_b)}")
                         countskipped += 1
                         counttotal += 1
-        print(f"\nTEST SUMMARY: {countok} OK, {countskipped} Skipped, {countfailed} Failed ({counttotal} Total)")
+        print(f"TEST SUMMARY: {countok} OK, {countskipped} Skipped, {countfailed} Failed ({counttotal} Total)")
         numrels = len(rels)
         totaltests = numrels * numrels * numrels
         if counttotal != totaltests:
@@ -634,6 +634,20 @@ if __name__ == '__main__':
         else:
             print("Multiplication Identity Failed")
 
+    print("\n---------------------------")
+    print("Check algebra associativity")
+    print("---------------------------")
+
+    verbosity = False
+
+    for a in alg:
+        print(f"\n{a.name}:")
+        print(f"Relations: {a.elements}")
+        if a.is_associative():
+            print(f"{a.name} is associative.")
+        else:
+            print(f"{a.name} is NOT associative.")
+
     print("\n-----------------------------------------------")
     print("Check network propagation for interval algebras")
     print("-----------------------------------------------")
@@ -704,29 +718,22 @@ if __name__ == '__main__':
     net2.propagate()
     net2.summary()
 
-    # # Example in book on constraint processing for temporal reasoning
-    # # (extended to intervals & points)
-    # pint_I = TemporalObject(["Point", "ProperInterval"], "I")
-    # pint_J = TemporalObject(["Point", "ProperInterval"], "J")
-    # pint_K = TemporalObject(["Point", "ProperInterval"], "K")
-    # pint_L = TemporalObject(["Point", "ProperInterval"], "L")
-    # D1 = point_algebra[1].relations["D"]
-    # DI1 = point_algebra[1].relations["DI"]
-    # F1 = point_algebra[1].relations["F"]
-    # FI1 = point_algebra[1].relations["FI"]
-    # M1 = point_algebra[1].relations["M"]
-    # O1 = point_algebra[1].relations["O"]
-    # S1 = point_algebra[1].relations["S"]
-    # net2x = Network(point_algebra[1], "Book Example Extended")
-    # net2x.constraint(pint_I, pint_J, [F1, FI1])
-    # net2x.constraint(pint_I, pint_L, [S1, M1])
-    # net2x.constraint(pint_L, pint_J, [S1, M1])
-    # net2x.constraint(pint_K, pint_I, [D1, DI1])
-    # net2x.constraint(pint_K, pint_J, [D1, DI1])
-    # net2x.constraint(pint_L, pint_K, [O1])
-    # net2x.print_constraints()
-    # net2x.propagate(verbose=True)
-    # net2x.print_constraints()
+    # Example in book on constraint processing for temporal reasoning
+    # (extended to intervals & points)
+    pint_I = TemporalEntity(["Point", "ProperInterval"], "I")
+    pint_J = TemporalEntity(["Point", "ProperInterval"], "J")
+    pint_K = TemporalEntity(["Point", "ProperInterval"], "K")
+    pint_L = TemporalEntity(["Point", "ProperInterval"], "L")
+    net2x = Network(alg[1], "Book Example Extended")
+    net2x.add_constraint(pint_I, pint_J, "F|FI")
+    net2x.add_constraint(pint_I, pint_L, "S|M")
+    net2x.add_constraint(pint_L, pint_J, "S|M")
+    net2x.add_constraint(pint_K, pint_I, "D|DI")
+    net2x.add_constraint(pint_K, pint_J, "D|DI")
+    net2x.add_constraint(pint_L, pint_K, "O")
+    net2x.summary()
+    net2x.propagate(verbose=True)
+    net2x.summary()
     #
     # # Associativity example done as a network instead
     # x1 = TemporalObject(["Point", "ProperInterval"], "X")
