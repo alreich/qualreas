@@ -772,7 +772,7 @@ if __name__ == '__main__':
 
     #net4.converse().summary()
 
-    print("""------------
+    print("""    ------------
     END OF TESTS
     ------------""")
 
