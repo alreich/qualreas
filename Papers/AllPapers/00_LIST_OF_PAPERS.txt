@@ -12,14 +12,17 @@
 1992 Randell - Spatial Logic based on Regions and Connection.pdf
 1992 Schwalb - Processing Temporal Constraint Networks.pdf
 1992 van Beek - Reasoning about Qualitative Temporal Information.pdf
+1993 Golumbic - Complexity and Algorithms for Reasoning About Time.pdf*
 1993 Hrycej - Temporal Extension of Prolog.pdf
 1994 Bennett - Some Observations and Puzzles.pdf
 1994 Reich - Algebra Transitivity Tables.txt
 1994 Reich - Intervals Points and Branching Time.pdf
 1994 Vila - Survey on Temporal Reasoning in AI.pdf
+1995 Hirsch - Relation Algebras of Intervals v1.pdf
+1995 Hirsch - from Points to Intervals.pdf
 1995 Nebel - Reasoning about Temporal Relations.pdf
 1996 Hayes - Catalog of Temporal Theories.pdf
-1996 Hirsch - Relation Algebras of Intervals.pdf
+1996 Hirsch - Relation Algebras of Intervals v2.pdf
 1999 Knauff - Cognitive Adequacy of Allens Interval Calc.pdf
 2001 Cohn - Qualitative Spatial Representation and Reasoning.pdf
 2001 Tsamardinos - Temporal Reasoning for Planning.pdf
@@ -41,3 +44,4 @@
 2017 Gruninger - Time Ontology of Allen's Interval Algebra.pdf
 2019 Janhunen - Allens Algebra Makes the Diff SLIDES.pdf
 2019 Janhunen - Allens Algebra Makes the Diff.pdf
+

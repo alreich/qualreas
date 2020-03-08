@@ -1,5 +1,5 @@
 """
-@author: Alfred J. Reich, Ph.D.
+@author: Alfred J. Reich
 
 """
 
@@ -22,14 +22,15 @@ class RelSet(bases.BitSet):
     of relations denote disjunctions, e.g., {r,s} ==> (TE1 r TE2) or (TE1 s TE2).  We use
     '|' to denote 'or' and we abbreviate sets like {r,s} with 'r|s'.  All of the functionality
     needed to implement sets of relations is provided by the BitSet class and all we do here
-    is extend it a little to allow for the abbreviation mentioned, above, and an addition (+)
-    operation, which is really just set intersection."""
+    is extend it a bit (pun intended) to allow for the abbreviation mentioned, above, and an
+    addition (+) operation, which is really just set intersection."""
 
     def __str__(self):
         return "|".join(self.members())
 
     def __add__(self, rs):
         return self.intersection(rs)
+
 
 # Spatial and Temporal Entities:
 #
@@ -120,7 +121,7 @@ class Algebra(object):
             dom = self.rel_domain(eqrel)[0]  # Get the single item out of the eqrel's domain set.
             self.equality_relations_dict[dom] = self.relset([eqrel])
 
-        # Setup the transitivity table used by Relation Set multiplication
+        # Setup the transitivity table used by Relation Set composition
         self.transitivity_table = dict()
         tabledefs = self.algebra_dict["TransTable"]
         for rel1 in tabledefs:
@@ -185,8 +186,8 @@ class Algebra(object):
         """Take a string like 'B|M|O' and turn it into a relation set."""
         return self.relset(string.split(delimiter))
 
-    def mult(self, relset1, relset2):
-        """Multiplication is done, element-by-element, on the cross-product
+    def compose(self, relset1, relset2):
+        """Composition is done, element-by-element, on the cross-product
         of the two sets using the algebra's transitivity table, and
         then reducing those results to a single relation set using set
         union.
@@ -197,8 +198,8 @@ class Algebra(object):
                 result = result.union(self.transitivity_table[r1][r2])
         return result
 
-    def check_multiplication_identity(self, verbose=False):
-        """Check the validity of the multiplicative identity for every
+    def check_composition_identity(self, verbose=False):
+        """Check the validity of the composition identity for every
         combination of singleton relset.  :param verbose: Print out
         the details of each test :return: True or False
 
@@ -211,8 +212,8 @@ class Algebra(object):
             for s in rels:
                 count += 1
                 s_rs = self.relset((s,))
-                prod1 = self.mult(r_rs, s_rs)
-                prod2 = self.converse(self.mult(self.converse(s_rs), self.converse(r_rs)))
+                prod1 = self.compose(r_rs, s_rs)
+                prod2 = self.converse(self.compose(self.converse(s_rs), self.converse(r_rs)))
                 if prod1 != prod2:
                     if verbose:
                         print("FAIL:")
@@ -223,7 +224,7 @@ class Algebra(object):
                         print(f"{prod1} != {prod2}")
                     result = False
         if verbose:
-            print(f"\n{self.name} -- Multiplication Identity Check:")
+            print(f"\n{self.name} -- Composition Identity Check:")
         if result:
             if verbose:
                 print(f"PASSED . {count} products tested.")
@@ -437,10 +438,11 @@ class Network(nx.DiGraph):
         return result
 
     def propagate(self, verbose=False):
-        """Propagate constraints in the network. Constraint propagation is a fixed-point iteration of a square
-        constraint matrix.  Or, in plain English, we treat the network as if it's a matrix, multiplying it by
-        itself, repeatedly, until it stops changing.
-        @param verbose: Print number of iterations required to propagate constraints.
+        """Propagate constraints in the network. Constraint propagation is a fixed-point
+        iteration of a square constraint matrix.  That is, we treat the network as if it's
+        a matrix, multiplying it by itself, repeatedly, until it stops changing.
+        The algebra's compose method plays the role of multiplication and the RelSet +
+        operation plays the role of addition in the constraint matrix multiplication.
         :param verbose: If True, then the number of iterations required is printed
         :return: True if network is consistent, otherwise False
         """
@@ -458,7 +460,7 @@ class Network(nx.DiGraph):
                         for ent3 in self.nodes():
                             c13 = self.edges[ent1, ent3]['constraint']
                             c32 = self.edges[ent3, ent2]['constraint']
-                            prod += self.algebra.mult(c13, c32)
+                            prod += self.algebra.compose(c13, c32)
                         if prod != c12:
                             something_changed = True  # Continue iterating
                         self.edges[ent1, ent2]['constraint'] = prod
@@ -621,7 +623,7 @@ if __name__ == '__main__':
            ]
 
     print("\n-------------------------------------")
-    print("Check algebra multiplication identity")
+    print("Check algebra composition identity")
     print("-------------------------------------")
 
     verbosity = False
@@ -629,10 +631,10 @@ if __name__ == '__main__':
     for a in alg:
         print(f"\n{a.name}:")
         print(f"Relations: {a.elements}")
-        if a.check_multiplication_identity():
-            print("Multiplication Identity OK")
+        if a.check_composition_identity():
+            print("Composition Identity OK")
         else:
-            print("Multiplication Identity Failed")
+            print("Composition Identity Failed")
 
     print("\n---------------------------")
     print("Check algebra associativity")

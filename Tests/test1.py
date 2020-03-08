@@ -12,7 +12,7 @@ if __name__ == '__main__':
     path = os.path.join( os.getenv('PYPROJ'), 'qualreas' )
     rcc8_alg = Algebra(os.path.join(path, "RCC8Algebra.json"))
     rcc8 = rcc8_alg.relations
-    #rcc8.check_multiplication_identity()
+    #rcc8.check_composition_identity()
 
     house1 = Region()
     house2 = Region()

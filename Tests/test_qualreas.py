@@ -237,19 +237,19 @@ class TestAlgebra(unittest.TestCase):
         self.assertEqual(len(self.alg4.transitivity_table), 8)
 
     def test_check_mult_identity0(self):
-        self.assertEqual(self.alg0.check_multiplication_identity(), True)
+        self.assertEqual(self.alg0.check_composition_identity(), True)
 
     def test_check_mult_identity1(self):
-        self.assertEqual(self.alg1.check_multiplication_identity(), True)
+        self.assertEqual(self.alg1.check_composition_identity(), True)
 
     def test_check_mult_identity2(self):
-        self.assertEqual(self.alg2.check_multiplication_identity(), True)
+        self.assertEqual(self.alg2.check_composition_identity(), True)
 
     def test_check_mult_identity3(self):
-        self.assertEqual(self.alg3.check_multiplication_identity(), True)
+        self.assertEqual(self.alg3.check_composition_identity(), True)
 
     def test_check_mult_identity4(self):
-        self.assertEqual(self.alg4.check_multiplication_identity(), True)
+        self.assertEqual(self.alg4.check_composition_identity(), True)
 
     def test_is_associative0(self):
         self.assertEqual(self.alg0.is_associative(), True)

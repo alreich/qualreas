@@ -53,6 +53,7 @@ Vilain, M., and H. Kautz. 1986. Constraint Propagation Algorithms for Temporal R
 
 Vilain, M., H. Kautz, and P. van Beek. 1989. Constraint Propagation Algorithms for Temporal Reasoning: A Revised Report. In Readings in Qualitative Reasoning about Physical Systems, D. S. Weld and J. de Kleer (eds.), Morgan-Kaufman, 373-381.
 
+
 ---------
 
 1994 Vila Survey on Temporal Reasoning in AI
@@ -61,4 +62,12 @@ http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.43.2788&rank=1
 2017 Time Ontology of Allen's Interval Algebra
 Li, Zhuojun and Grüninger, M. (2017) The Time Ontology of Allen's Interval Algebra, 24th International Symposium on Temporal Representation and Reasoning (TIME 2017), Mons, Belgium.
 http://stl.mie.utoronto.ca/publications/p16-Gruninger.pdf
+
+----------
+
+1982 Vilain - System for Reasoning about Time.pdf:
+
+* 13 additional relations are added to deal with time points in conjunction with intervals
+
+* Relation sets are referred to as "relational vectors".
 

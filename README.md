@@ -9,6 +9,7 @@ copy of the paper can also be found [here](http://www.google.com/url?sa=t&rct=j&
 
 * Update timeX.ttl ontology to fix W3C reference & add branching time relations
 * Change the name "Point" to "Instant" (to match https://www.w3.org/TR/owl-time/)
+* Change the references in Algebras to "multiplication" & "compose" to "composition" & "comp".
 * Create Sphinx docs
 * Update this Readme
 * Create functionality for Algebra generation
