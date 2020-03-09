@@ -6,7 +6,7 @@
 from bitsets import bitset, bases
 import json
 import networkx as nx
-from copy import deepcopy
+# from copy import deepcopy
 from functools import reduce
 from collections import abc
 import numpy as np
@@ -16,14 +16,17 @@ __author__ = 'Alfred J. Reich'
 __version__ = '0.3.0'
 
 
+# The fundamental algebraic elements here are sets of relations, not individual relations.
+# An individual relation, r, relates two temporal entities, e.g, TE1 r TE2.  Sets
+# of relations denote disjunctions, e.g., TE1 {r,s} TE2 <==> (TE1 r TE2) or (TE1 s TE2).
+# Here, we use '|' to denote 'or' and we abbreviate sets, like {r,s}, with 'r|s'.
+# All of the functionality needed to implement sets of relations is provided by the BitSet
+# class and all we do below is extend it to allow for the abbreviation mentioned, above, and an
+# addition (+) operation, which is really just set intersection.  We would include the compose
+# operation using the multiply operator (*), however, that operation is dependent on Algebra
+# being used, so it can only be defined as an Algebra method (see farther below).
+
 class RelSet(bases.BitSet):
-    """The fundamental algebraic elements here are sets of relations, not individual relations.
-    An individual relation, r, relates two temporal entities, e.g, TE1 r TE2.  Sets
-    of relations denote disjunctions, e.g., {r,s} ==> (TE1 r TE2) or (TE1 s TE2).  We use
-    '|' to denote 'or' and we abbreviate sets like {r,s} with 'r|s'.  All of the functionality
-    needed to implement sets of relations is provided by the BitSet class and all we do here
-    is extend it a bit (pun intended) to allow for the abbreviation mentioned, above, and an
-    addition (+) operation, which is really just set intersection."""
 
     def __str__(self):
         return "|".join(self.members())
@@ -40,10 +43,22 @@ class RelSet(bases.BitSet):
 # Allen's original algebra of time intervals, the only ontological class supported is the
 # proper time interval; not points, nor improper time intervals.  And, since Allen's algebra
 # only supported one class, it could, and was, essentially ignored in his paper and much
-# subsequent work.  The algebra's defined and developed here, however, support multiple
+# subsequent work.  The algebras defined and developed here, however, support multiple
 # ontological classes, e.g., time points (or instants) and proper time intervals.  Hence, it
 # is necessary to store information about domains and ranges somewhere.  These entities also
-# provide convenient objects to be used as nodes in a network of spatio-temporal constraints.
+# provide convenient objects to be used for storing metric information about that might
+# be derived by a potential, future add-on to this module.  Additionally, they can also be
+# used as nodes in a network of spatio-temporal constraints.
+
+# Also, a note on domains and ranges in the context of relation composition:
+# All relations have a domain and a range.  If D1, R1, D2, and R2 are the domains and ranges
+# of relations r1 & r2, resp., then the composition of r1 and r2 (written r1;r2 in algebraic
+# logic literature) requires that the intersection of R1 and D2 be non-empty.  To see why,
+# consider what the composition means w.r.t. the associated Temporal Entities, teA, teB, and
+# teC, where (teA r1 teB) and (teB r2 teC).  The ontological class(es) that teB belongs to
+# must include the range of r1 and the domain of r2 for r1;r2 to make sense.  (Matrix
+# multiplication, M x N, provides an analogy: the number of columns of M must match the
+# number of rows of N.)
 
 # NOTE: Although it might be tempting to use the type of class hierarchy available in OOP
 # languages, such as Python, ontological classes are different, and so the classes that
