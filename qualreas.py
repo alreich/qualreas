@@ -69,7 +69,7 @@ class RelSet(bases.BitSet):
 # "ProperInterval", "Duration").  See https://www.w3.org/TR/owl-time/.
 
 
-class TemporalEntity(object):
+class TemporalEntity:
     """A temporal entity, such as Time Instant/Point or Time Interval."""
 
     def __init__(self, classes, name=None):
@@ -85,7 +85,7 @@ class TemporalEntity(object):
 
 # Don't have a good source yet for a spatial vocabulary,
 # but see https://www.w3.org/2017/sdwig/bp/
-class SpatialEntity(object):
+class SpatialEntity:
     """A spatial entity, such as a spatial feature or thing (e.g., Point, Area)."""
 
     def __init__(self, classes, name=None):
@@ -108,7 +108,7 @@ def abbrev(term_list):
     return '|'.join([abbrev_dict[term] for term in term_list])
 
 
-class Algebra(object):
+class Algebra:
 
     def __init__(self, filename):
         """An algebra is created from a JSON file containing the algebra's
