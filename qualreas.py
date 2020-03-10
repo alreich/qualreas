@@ -56,19 +56,21 @@ class RelSet(bases.BitSet):
 # logic literature) requires that the intersection of R1 and D2 be non-empty.  To see why,
 # consider what the composition means w.r.t. the associated Temporal Entities, teA, teB, and
 # teC, where (teA r1 teB) and (teB r2 teC).  The ontological class(es) that teB belongs to
-# must include the range of r1 and the domain of r2 for r1;r2 to make sense.  (Matrix
+# must include the range of r1 and the domain of r2 for r1;r2 to make sense.  Matrix
 # multiplication, M x N, provides an analogy: the number of columns of M must match the
-# number of rows of N.)
+# number of rows of N.
 
-# NOTE: Although it might be tempting to use the type of class hierarchy available in OOP
-# languages, such as Python, ontological classes are different, and so the classes that
-# a particular Temporal Entity belongs are stored as a list of string ontological class
-# names in a field within the Temporal Entity object, using names that conform to those
-# found in the W3.org's time ontology ("Point", "ProperInterval", "Duration").
-# See https://www.w3.org/TR/owl-time/.
+# NOTE: Ontological classes can be organized hierarchically, and so can object-oriented
+# programming (OOP) classes, so it might be tempting to use OOP to represent the ontology
+# of spatio-temporal "objects" (entities), however, ontological classes are different,
+# and so the classes that a particular Temporal Entity belongs are stored, instead, as a
+# list of strings, representing ontological class names, in a field within the Temporal Entity
+# object, using names that conform to those found in the W3.org's time ontology ("Point",
+# "ProperInterval", "Duration").  See https://www.w3.org/TR/owl-time/.
 
 
 class TemporalEntity(object):
+    """A temporal entity, such as Time Instant/Point or Time Interval."""
 
     def __init__(self, classes, name=None):
         self.classes = classes  # Ontological Classes, e.g., Point, ProperInterval
@@ -84,6 +86,7 @@ class TemporalEntity(object):
 # Don't have a good source yet for a spatial vocabulary,
 # but see https://www.w3.org/2017/sdwig/bp/
 class SpatialEntity(object):
+    """A spatial entity, such as a spatial feature or thing (e.g., Point, Area)."""
 
     def __init__(self, classes, name=None):
         self.classes = classes  # Ontological, not OOP
