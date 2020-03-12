@@ -598,26 +598,26 @@ def generate_consistent_networks(point_algebra, lessthan="<", startname="StartPt
             for elem14 in point_algebra.elements:
                 for elem24 in point_algebra.elements:
                     four_pt_net_name = elem13 + ',' + elem23 + ',' + elem14 + ',' + elem24
-                    net = FourPointNet(point_algebra, four_pt_net_name, lessthan, startname, endname)
-                    pt1, pt2, pt3, pt4 = net.get_points()
+                    ptnet = FourPointNet(point_algebra, four_pt_net_name, lessthan, startname, endname)
+                    pt1, pt2, pt3, pt4 = ptnet.get_points()
                     rs13 = point_algebra.relset(elem13)
                     rs23 = point_algebra.relset(elem23)
                     rs14 = point_algebra.relset(elem14)
                     rs24 = point_algebra.relset(elem24)
-                    net.add_constraint(pt1, pt3, rs13)
-                    net.add_constraint(pt2, pt3, rs23)
-                    net.add_constraint(pt1, pt4, rs14)
-                    net.add_constraint(pt2, pt4, rs24)
-                    if net.propagate():
+                    ptnet.add_constraint(pt1, pt3, rs13)
+                    ptnet.add_constraint(pt2, pt3, rs23)
+                    ptnet.add_constraint(pt1, pt4, rs14)
+                    ptnet.add_constraint(pt2, pt4, rs24)
+                    if ptnet.propagate():
                         elem_key = ",".join([str(rs13), str(rs14), str(rs23), str(rs24)])
-                        consistent_nets[signature_name_mapping[elem_key]] = net
+                        consistent_nets[signature_name_mapping[elem_key]] = ptnet
                         if verbose:
                             print("==========================")
                             if elem_key in signature_name_mapping:
                                 print(signature_name_mapping[elem_key])
                             else:
                                 print("UNKNOWN")
-                            print(np.array(net.to_list()))
+                            print(np.array(ptnet.to_list()))
     print(f"\n{len(consistent_nets)} consistent networks")
     return consistent_nets
 
