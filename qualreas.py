@@ -16,15 +16,17 @@ __author__ = 'Alfred J. Reich'
 __version__ = '0.3.0'
 
 
-# The fundamental algebraic elements here are sets of relations, not individual relations.
-# An individual relation, r, relates two temporal entities, e.g, TE1 r TE2.  Sets
-# of relations denote disjunctions, e.g., TE1 {r,s} TE2 <==> (TE1 r TE2) or (TE1 s TE2).
-# Here, we use '|' to denote 'or' and we abbreviate sets, like {r,s}, with 'r|s'.
-# All of the functionality needed to implement sets of relations is provided by the BitSet
-# class and all we do below is extend it to allow for the abbreviation mentioned, above, and an
-# addition (+) operation, which is really just set intersection.  We would include the compose
-# operation using the multiply operator (*), however, that operation is dependent on Algebra
-# being used, so it can only be defined as an Algebra method (see farther below).
+# The fundamental algebraic elements here are SETS of relations, not individual relations.
+# An individual relation, r, relates two temporal entities, e.g, teA r teB.  Sets
+# of relations denote disjunctions, e.g., teA {r,s} teB <==> (teA r teB) or (teA s teB).
+# Here, we use '|' to denote 'or' and we abbreviate sets like {r,s} with 'r|s'.  All of
+# the relation sets (referred to here as "relsets") are finite and come from a finite
+# population of relations. The functionality needed to implement such finite sets of relations
+# is provided for by the BitSet module and all we really need to do is extend it a bit (no pun
+# intended) to allow for the abbreviation mentioned, above, and an addition (+) operation,
+# which is really just set intersection.  We would include the compose operation also, using
+# the multiply operator (*), however, that operation is dependent on Algebra being used,
+# so it can only be defined within the context of an Algebra, as a method (see farther below).
 
 class RelSet(bases.BitSet):
 
@@ -39,32 +41,43 @@ class RelSet(bases.BitSet):
 #
 # Since the focus here is on relations between spatial & temporal entities, the reification
 # of those entities, as actual classes, would seem to be unnecessary.  However, all relations
-# have both a DOMAIN and a RANGE, which denote the ontological classes of the entities.  In
-# Allen's original algebra of time intervals, the only ontological class supported is the
-# proper time interval; not points, nor improper time intervals.  And, since Allen's algebra
-# only supported one class, it could, and was, essentially ignored in his paper and much
-# subsequent work.  The algebras defined and developed here, however, support multiple
-# ontological classes, e.g., time points (or instants) and proper time intervals.  Hence, it
-# is necessary to store information about domains and ranges somewhere.  These entities also
-# provide convenient objects to be used for storing metric information about that might
-# be derived by a potential, future add-on to this module.  Additionally, they can also be
-# used as nodes in a network of spatio-temporal constraints.
+# have both a DOMAIN and a RANGE, which denote the ontological classes of the entities being
+# related by a relation.  In Allen's original algebra of time intervals, the only ontological
+# class supported is the proper time interval; not points, nor improper time intervals.
+# And, since Allen's algebra only supported one class, domains and ranges could, and were,
+# essentially ignored in his paper and much subsequent work. (Some consideration was given to
+# whether time intervals included their end points or not, but nothing was put into a rigorous
+# mathematical context in early papers.)  The algebras defined and developed in this module,
+# however, support multiple ontological classes, e.g., time points (or instants) and proper
+# time intervals.  Hence, it is necessary to store information about domains and ranges
+# somewhere.  Temporal and Spatial Entities are convenient for doing that.  They may also be
+# for storing metric information by some potential, future add-on to this module.
+# Additionally, they can also be used as nodes in a network of spatio-temporal constraints.
 
 # Also, a note on domains and ranges in the context of relation composition:
 # All relations have a domain and a range.  If D1, R1, D2, and R2 are the domains and ranges
 # of relations r1 & r2, resp., then the composition of r1 and r2 (written r1;r2 in algebraic
 # logic literature) requires that the intersection of R1 and D2 be non-empty.  To see why,
-# consider what the composition means w.r.t. the associated Temporal Entities, teA, teB, and
-# teC, where (teA r1 teB) and (teB r2 teC).  The ontological class(es) that teB belongs to
-# must include the range of r1 and the domain of r2 for r1;r2 to make sense.  Matrix
-# multiplication, M x N, provides an analogy: the number of columns of M must match the
-# number of rows of N.
+# consider what the composition means wrt the associated Temporal Entities, teA, teB, and
+# teC, where (teA r1 teB) and (teB r2 teC).  The ontological classes that teB belongs to
+# must include the range of r1 (R1) and the domain of r2 (D2) for r1;r2 to make sense.
+#
+#                r1         r2
+#          teA -----> teB -----> teC
+#           D1       R1,D2        R2
+#            |                    ^
+#            |                    |
+#            +--------------------+
+#                     r1;r2
+#
+# Matrix multiplication, M x N, provides an analogy: the number of columns of M must
+# match the number of rows of N.
 
 # NOTE: Ontological classes can be organized hierarchically, and so can object-oriented
 # programming (OOP) classes, so it might be tempting to use OOP to represent the ontology
 # of spatio-temporal "objects" (entities), however, ontological classes are different,
-# and so the classes that a particular Temporal Entity belongs are stored, instead, as a
-# list of strings, representing ontological class names, in a field within the Temporal Entity
+# and so the classes to which a particular Temporal Entity belongs are stored, instead, as a
+# list of ontological class name strings, in a field within the Temporal Entity
 # object, using names that conform to those found in the W3.org's time ontology ("Point",
 # "ProperInterval", "Duration").  See https://www.w3.org/TR/owl-time/.
 
@@ -99,8 +112,8 @@ class SpatialEntity:
             return f"<SpatialObject {self.classes}>"
 
 
-# Abbreviations for Algebra Summary
-# TODO: Don't embed the abbreviation dictionary in code; create a file for it
+# Abbreviations used by the Algebra Summary method:
+# TODO: Create a separate file for this; or perhaps don't abbreviate at all
 def abbrev(term_list):
     abbrev_dict = {"Point": "Pt",
                    "ProperInterval": "PInt",
@@ -121,25 +134,22 @@ class Algebra:
 
         self.description = self.algebra_dict["Description"]
 
-        # TODO: For consistency, rename relations_dict to rel_dict
-        self.relations_dict = self.algebra_dict["Relations"]
+        self.rel_info_dict = self.algebra_dict["Relations"]
 
-        # self.elements_bitset = bitset(self.name, tuple(self.relations_dict.keys()))  # A class object
-        self.elements_bitset = bitset('relset', tuple(self.relations_dict.keys()), base=RelSet)
+        self.elements_bitset = bitset('relset', tuple(self.rel_info_dict.keys()), base=RelSet)
 
-        # TODO: Rename 'identity' to 'elements'
         self.elements = self.elements_bitset.supremum
 
         # The equality relations of the algebra
         self.__equality_relations = self.relset([rel for rel in self.elements if self.rel_equality(rel)])
 
-        # Populate a dictionary that allows equality relations to be looked-up based on their domain/range.
+        # Create a dict to return equality relations, keyed on their domain or range name
         self.equality_relations_dict = dict()
         for eqrel in self.__equality_relations:
             dom = self.rel_domain(eqrel)[0]  # Get the single item out of the eqrel's domain set.
             self.equality_relations_dict[dom] = self.relset([eqrel])
 
-        # Setup the transitivity table used by Relation Set composition
+        # Setup the transitivity (or composition) table to be used by Relation Set composition
         self.transitivity_table = dict()
         tabledefs = self.algebra_dict["TransTable"]
         for rel1 in tabledefs:
@@ -147,25 +157,25 @@ class Algebra:
             for rel2 in tabledefs[rel1]:
                 self.transitivity_table[rel1][rel2] = self.elements_bitset(tuple(tabledefs[rel1][rel2]))
 
-    # Accessors for information about a given relation.
+    # Accessors for information about a given relation:
 
     def rel_name(self, rel):
-        return self.relations_dict[rel]["Name"]
+        return self.rel_info_dict[rel]["Name"]
 
     def rel_domain(self, rel):
-        return self.relations_dict[rel]["Domain"]
+        return self.rel_info_dict[rel]["Domain"]
 
     def rel_range(self, rel):
-        return self.relations_dict[rel]["Range"]
+        return self.rel_info_dict[rel]["Range"]
 
     def rel_reflexive(self, rel):
-        return self.relations_dict[rel]["Reflexive"]
+        return self.rel_info_dict[rel]["Reflexive"]
 
     def rel_symmetric(self, rel):
-        return self.relations_dict[rel]["Symmetric"]
+        return self.rel_info_dict[rel]["Symmetric"]
 
     def rel_transitive(self, rel):
-        return self.relations_dict[rel]["Transitive"]
+        return self.rel_info_dict[rel]["Transitive"]
 
     def rel_equality(self, rel):
         """If a relation is reflexive, symmetric, and transitive, then it is an
@@ -173,9 +183,11 @@ class Algebra:
         return self.rel_reflexive(rel) & self.rel_symmetric(rel) & self.rel_transitive(rel)
 
     def converse(self, rel_or_relset):
-        """Return the converse of a relation (str) or relation set (bitset)."""
+        """Return the converse of a relation (str) or relation set (bitset).
+        e.g., 'A before B' has converse 'B after A', so 'after' is the converse of 'before',
+        and vice versa."""
         if isinstance(rel_or_relset, str):
-            return self.relations_dict[rel_or_relset]["Converse"]
+            return self.rel_info_dict[rel_or_relset]["Converse"]
         else:
             return self.elements_bitset((self.converse(r) for r in rel_or_relset.members()))
 
@@ -193,9 +205,12 @@ class Algebra:
 
     def relset(self, relations):
         """Return a relation set (bitset) for the given relations."""
-        if isinstance(relations, str):  # Assumed to be something like 'B|M|O'
-            return self.string_to_relset(relations)
-        elif isinstance(relations, abc.Iterable):  # e.g., ['B','M','O'] or ('B',)
+        if isinstance(relations, str):  # if relations is like 'B|M|O' or 'B', or ''
+            if relations == '':
+                return self.relset([])
+            else:
+                return self.string_to_relset(relations)
+        elif isinstance(relations, abc.Iterable):  # relations is like ['B','M','O'], ('B',), or []
             return self.elements_bitset(relations)
         else:
             raise TypeError("Input must be a string, list, tuple, or set.")
@@ -271,6 +286,15 @@ class Algebra:
         print("\nDomain & Range Abbreviations:")
         print("   Pt = Point")
         print(" PInt = Proper Interval")
+
+    def element_summary(self, rel_string_name):
+        print(f"                    Name: {self.rel_name(rel_string_name)}")
+        print(f"                  Domain: {self.rel_domain(rel_string_name)}")
+        print(f"                   Range: {self.rel_range(rel_string_name)}")
+        print(f"           Is Reflexive?: {self.rel_reflexive(rel_string_name)}")
+        print(f"           Is Symmetric?: {self.rel_symmetric(rel_string_name)}")
+        print(f"          Is Transitive?: {self.rel_transitive(rel_string_name)}")
+        print(f"Is an Equality Relation?: {self.rel_equality(rel_string_name)}")
 
     def is_associative(self, verbose=False):
         result = True
