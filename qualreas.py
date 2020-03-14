@@ -162,6 +162,9 @@ class Algebra:
     def rel_name(self, rel):
         return self.rel_info_dict[rel]["Name"]
 
+    def rel_converse_name(self, rel):
+        return self.rel_name(self.rel_info_dict[rel]["Converse"])
+
     def rel_domain(self, rel):
         return self.rel_info_dict[rel]["Domain"]
 
@@ -282,7 +285,7 @@ class Algebra:
                   f"{self.rel_name(self.converse(r)):>19s} ({self.converse(r):>3s}) "
                   f"{self.rel_reflexive(r)!s:>8} {self.rel_symmetric(r)!s:>10} {self.rel_transitive(r)!s:>10}"
                   f"{abbrev(self.rel_domain(r))!s:>11} {abbrev(self.rel_range(r))!s:>13}")
-        # TODO: Don't hardcode the legend below; make it depend on an abbreviations file (JSON)
+        # TODO: Don't hard code the legend below; make it depend on an abbreviations file (JSON)
         print("\nDomain & Range Abbreviations:")
         print("   Pt = Point")
         print(" PInt = Proper Interval")
@@ -291,6 +294,7 @@ class Algebra:
         print(f"                    Name: {self.rel_name(rel_string_name)}")
         print(f"                  Domain: {self.rel_domain(rel_string_name)}")
         print(f"                   Range: {self.rel_range(rel_string_name)}")
+        print(f"                Converse: {self.rel_converse_name(rel_string_name)}")
         print(f"           Is Reflexive?: {self.rel_reflexive(rel_string_name)}")
         print(f"           Is Symmetric?: {self.rel_symmetric(rel_string_name)}")
         print(f"          Is Transitive?: {self.rel_transitive(rel_string_name)}")
@@ -814,7 +818,7 @@ if __name__ == '__main__':
       road property1 EC|PO
       road property2 PO|TPP""")
 
-    #net4.converse().summary()
+    # net4.converse().summary()
 
     print("""    ------------
     END OF TESTS
