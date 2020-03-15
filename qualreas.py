@@ -275,7 +275,7 @@ class Algebra:
         print(f"   Description: {self.description}")
         print(f" Equality Rels: {self.all_equality_relations}")
         print("     Relations:")
-        print("{:>25s} {:>25s} {:>10s} {:>10s} {:>10s} {:>8s} {:>12s}".format("NAME (ABBREV)", "CONVERSE (ABBREV)",
+        print("{:>25s} {:>25s} {:>10s} {:>10s} {:>10s} {:>8s} {:>12s}".format("NAME (SYMBOL)", "CONVERSE (ABBREV)",
                                                                               "REFLEXIVE", "SYMMETRIC", "TRANSITIVE",
                                                                               "DOMAIN", "RANGE"))
         # TODO: Vary spacing between columns based on max word lengths
