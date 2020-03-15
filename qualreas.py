@@ -17,7 +17,7 @@ __version__ = '0.3.0'
 
 
 # The fundamental algebraic elements here are SETS of relations, not individual relations.
-# An individual relation, r, relates two temporal entities, e.g, teA r teB.  Sets
+# An individual relation, r, relates two temporal entities (te), e.g, teA r teB.  Sets
 # of relations denote disjunctions, e.g., teA {r,s} teB <==> (teA r teB) or (teA s teB).
 # Here, we use '|' to denote 'or' and we abbreviate sets like {r,s} with 'r|s'.  All of
 # the relation sets (referred to here as "relsets") are finite and come from a finite
