@@ -433,6 +433,18 @@ class Network(nx.DiGraph):
             print(f"Constraint Added: {entity1.name} {entity2.name} {list(rel_set.members())}")
             print(f"Constraint Added: {entity2.name} {entity1.name} {list(rel_set_converse.members())}")
 
+    def __add__(self, other):
+        """Combine this network with another network, and return the new, combined network."""
+        new_net = Network(self.algebra, "")
+        new_net.graph.update(other.graph)
+        new_net.graph.update(self.graph)
+        new_net.add_nodes_from(other.nodes(data=True))
+        new_net.add_nodes_from(self.nodes(data=True))
+        new_net.add_edges_from(other.edges(data=True))
+        new_net.add_edges_from(self.edges(data=True))
+        new_net.name = self.name + "+" + other.name
+        return new_net
+
     # TODO: Write transpose method for networks
     # def transpose(self, other):
     #     """Viewing this network as a matrix, return a copy that is its transpose."""
