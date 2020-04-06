@@ -56,7 +56,7 @@ constraints for temporal entities "contained" by other temporal entitites.
 * [Python format string syntax](https://docs.python.org/3/library/string.html#format-string-syntax) - used in Algebra summary method
 * [Spatial Ontology](https://www.w3.org/2017/sdwig/bp/) - I'm still looking for a standard spatial vocabulary; maybe start here
 * [Qualitative Spatial Relations (QSR) Library](https://qsrlib.readthedocs.io/en/latest/index.html) - an alternative library to the one defined here
-* [Papers on Qualitative Reasoning](http://www.cs.utexas.edu/users/qr/papers-QR.html#Basic) - a list by Benjamin Kuipers
+* [Papers on Qualitative Reasoning](http://www.cs.utexas.edu/users/qr/papers-QR.html#) - a list by Benjamin Kuipers
 
 
 ## What is this repository for? ###
