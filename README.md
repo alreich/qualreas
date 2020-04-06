@@ -2,11 +2,12 @@
 
 ## Summary
 
-**qualreas** is a Python module that implements *relation algebras* for performing qualitative reasoning.  The primary
-type of relation algebras derived and hosted here are for temporal and spatial reasoning, however, other algebras
-are possible.  They include the four temporal algebras found in ["Intervals, Points, and Branching Time"
-(Reich, 1994)](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time).  (A scanned
-copy of the paper can also be found [here](http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0CCMQFjAA&url=http%3A%2F%2Fwww2.cs.uregina.ca%2F~temporal%2Ftime94%2Freich.pdf&ei=XeieVLnkFsX9yQSBi4G4Cw&usg=AFQjCNG8EUtVBz_5OFJXFbMJVtHGjj6b7w&sig2=RrmzWe5WcwCet7fr2AuLNg&bvm=bv.82001339,d.aWw).)  The [Region Connection Calculus (RCC8)](http://en.wikipedia.org/wiki/Region_connection_calculus) is also included.
+**qualreas** is a Python module that implements *Relation Algebras* for performing *Qualitative Reasoning (QR)*.
+The primary type of relation algebras derived and hosted here are for temporal and spatial reasoning, however,
+the software framework here is general purpose, so other relation algebra domains are possible.
+
+The four temporal algebras found in ["Intervals, Points, and Branching Time"(Reich, 1994)](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time) are included here.
+(A scanned copy of the paper can also be found [here](http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0CCMQFjAA&url=http%3A%2F%2Fwww2.cs.uregina.ca%2F~temporal%2Ftime94%2Freich.pdf&ei=XeieVLnkFsX9yQSBi4G4Cw&usg=AFQjCNG8EUtVBz_5OFJXFbMJVtHGjj6b7w&sig2=RrmzWe5WcwCet7fr2AuLNg&bvm=bv.82001339,d.aWw).)  The [Region Connection Calculus (RCC8)](http://en.wikipedia.org/wiki/Region_connection_calculus) is also included.
 
 ## To Be Done
 
@@ -34,7 +35,15 @@ constraints for temporal entities "contained" by other temporal entitites.
 
 ## Allen's Algebra of Proper Time Intervals
 
-![Allen's Algebra of Proper Time Intervals](Images/AllensAlgebraOfProperTimeIntervals_500width.png)
+![Extension of Allen's Algebra](Images/Extension_of_Allens_Interval_Relations.png)
+
+![Point-Interval Relations](Images/Point_Interval_Relations.png)
+
+![Right-Branching Time Relations](Images/Right_Branching_Time_Relations.png)
+
+![Left-Branching Time Relations](Images/Left_Branching_Time_Relations.png)
+
+
 
 ## Resources
 
