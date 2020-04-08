@@ -117,7 +117,8 @@ class SpatialEntity:
 def abbrev(term_list):
     abbrev_dict = {"Point": "Pt",
                    "ProperInterval": "PInt",
-                   "Interval": "Int"}
+                   "Interval": "Int",
+                   "Region": "Reg"}
     return '|'.join([abbrev_dict[term] for term in term_list])
 
 
