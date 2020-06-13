@@ -11,6 +11,8 @@ The four temporal algebras found in ["Intervals, Points, and Branching Time"(Rei
 
 ## To Be Done
 
+* At some point, create and maintain a "changelog"
+* Add a comment to the bitset import statement that provides the URL.
 * Create a JSON &/or RDF interface for asserting constraints
 * Update and test the csv2json.py code to Python 3
 * Update the names of the CSV files to match those of their JSON counterparts
