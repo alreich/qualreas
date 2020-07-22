@@ -69,5 +69,6 @@ http://stl.mie.utoronto.ca/publications/p16-Gruninger.pdf
 
 * 13 additional relations are added to deal with time points in conjunction with intervals
 
+
 * Relation sets are referred to as "relational vectors".
 
