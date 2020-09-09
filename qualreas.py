@@ -42,7 +42,7 @@ class RelSet(bases.BitSet):
 # Since the focus here is on relations between spatial & temporal entities, the reification
 # of those entities, as actual classes, would seem to be unnecessary.  However, all relations
 # have both a DOMAIN and a RANGE, which denote the ontological classes of the entities being
-# related by a relation.  In Allen's original algebra of time intervals, the only ontological
+# related.  In Allen's original algebra of time intervals, the only ontological
 # class supported is the proper time interval; not points, nor improper time intervals.
 # And, since Allen's algebra only supported one class, domains and ranges could, and were,
 # essentially ignored in his paper and much subsequent work. (Some consideration was given to
@@ -51,7 +51,7 @@ class RelSet(bases.BitSet):
 # however, support multiple ontological classes, e.g., time points (or instants) and proper
 # time intervals.  Hence, it is necessary to store information about domains and ranges
 # somewhere.  Temporal and Spatial Entities are convenient for doing that.  They may also be
-# for storing metric information by some potential, future add-on to this module.
+# used for storing metric information by some potential, future add-on to this module.
 # Additionally, they can also be used as nodes in a network of spatio-temporal constraints.
 
 # Also, a note on domains and ranges in the context of relation composition:
@@ -292,6 +292,7 @@ class Algebra:
         print(" PInt = Proper Interval")
 
     def element_summary(self, rel_string_name):
+        print(f"                  Symbol: {rel_string_name}")
         print(f"                    Name: {self.rel_name(rel_string_name)}")
         print(f"                  Domain: {self.rel_domain(rel_string_name)}")
         print(f"                   Range: {self.rel_range(rel_string_name)}")
