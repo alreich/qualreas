@@ -626,8 +626,8 @@ signature_name_mapping = {
 # Viewing the network as a matrix, 'elem13', below, refers to the element in row 1 col 3,
 # and so on for 'elem23', etc.  The matrix is 4x4, so if we partition it into four 2x2
 # matrices, then the two partitions on the diagonal represent two intervals and the two
-# off-diagonal partitions represent how those two intervals relate to each other.
-# Also, the off-diagonal 2x2 partitions are converse transposes of each other.
+# off-diagonal partitions represent how the end points those two intervals relate to
+# each other. Also, the off-diagonal 2x2 partitions are converse transposes of each other.
 # Oh, and the intervals represented by the diagonal partitions could be intervals,
 # proper intervals, or points.
 
