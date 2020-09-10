@@ -1,6 +1,6 @@
 {
     "Description": "Reich's right-branching extension to Allen's time interval algebra (see TIME-94 paper)", 
-    "Name": "RightBranchingIntervalAlgebra",
+    "Name": "Right_Branching_Interval_Algebra",
     "Relations": {
         "B": {
             "Domain": ["Point", "ProperInterval"], 

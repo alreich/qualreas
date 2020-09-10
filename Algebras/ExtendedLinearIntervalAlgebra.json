@@ -1,6 +1,6 @@
 {
-    "Description": "Extension of Allen's algebra to include Instants/Points (P)",
-    "Name": "ExtendedLinearIntervalAlgebra",
+    "Description": "Extension of Allen's algebra to include points and intervals",
+    "Name": "Extended_Linear_Interval_Algebra",
     "Relations": {
         "B": {
             "Domain": ["Point", "ProperInterval"], 
