@@ -1,0 +1,24 @@
+{
+    "name": "RCC8 Example 1",
+    "algebra": "RCC8Algebra",
+    "abbreviations": {"?": "DC|EC|TPP|TPPI|PO|EQ|NTPP|NTPPI"},
+    "nodes": {
+        "h1": ["House1", "Region"],
+        "h2": ["House2", "Region"],
+        "p1": ["Property1", "Region"],
+        "p2": ["Property2", "Region"],
+        "rd": ["Road", "Region"]
+    },
+    "edges": [
+        ["h1", "h2", "DC"],
+        ["h1", "p1", "TPP|NTPP"],
+        ["h1", "p2", "DC|EC"],
+        ["h1", "rd", "EC"],
+        ["h2", "p1", "DC|EC"],
+        ["h2", "p2", "NTPP"],
+        ["h2", "rd", "EC"],
+        ["p1", "p2", "DC|EC"],
+        ["rd", "p1", "?"],
+        ["rd", "p2", "?"]
+    ]
+}

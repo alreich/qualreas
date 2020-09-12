@@ -112,6 +112,14 @@ class SpatialEntity:
             return f"<SpatialObject {self.classes}>"
 
 
+# The following dictionary is used when loading a JSON specification
+# for a network so that entity classes can be resolved into class (type)
+# constructors.
+class_type_dict = {"ProperInterval": TemporalEntity,
+                   "Point": TemporalEntity,
+                   "Region": SpatialEntity}
+
+
 # Abbreviations used by the Algebra Summary method:
 # TODO: Create a separate file for this; or perhaps don't abbreviate at all
 def abbrev(term_list):
@@ -543,6 +551,45 @@ class Network(nx.DiGraph):
             print(f"  {head.name}:")
             for tail in self.neighbors(head):
                 print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
+
+
+# load_network reads a JSON file similar to the example below and returns the network
+# that corresponds to it.
+#
+# {
+#     "name": "RCC8 Example 1",
+#     "algebra": "RCC8Algebra",
+#     "abbreviations": {"?": "DC|EC|TPP|TPPI|PO|EQ|NTPP|NTPPI"},
+#     "nodes": {
+#         "h1": ["House1", "Region"],
+#         "h2": ["House2", "Region"],
+#         ...
+#     },
+#     "edges": [
+#         ["h1", "h2", "DC"],
+#         ["h1", "p1", "TPP|NTPP"],
+#         ...
+#     ]
+# }
+
+def load_network(alg_path, json_file, net_ext=".json"):
+    """Loads a network specification from a JSON file. Returns the resulting network."""
+    with open(json_file, "r") as file:
+        net_dict = json.load(file)
+    net_alg = Algebra(alg_path + net_dict["algebra"] + net_ext)
+    nodes = net_dict["nodes"]
+    entities = {}
+    for nkey, nspec in nodes.items():
+        entities[nkey] = class_type_dict[nspec[1]](nspec[1:], nspec[0])
+    ntwk = Network(net_alg, net_dict["name"])
+    for espec in net_dict["edges"]:
+        cons = espec[2]
+        if cons in net_dict["abbreviations"]:
+            constraint = net_dict["abbreviations"][cons]
+        else:
+            constraint = cons
+        ntwk.add_constraint(entities[espec[0]], entities[espec[1]], constraint)
+    return ntwk
 
 
 # IMPORTANT: The only intended purpose of the class, FourPointNet, is to generate point-based
