@@ -407,9 +407,11 @@ class Network(nx.DiGraph):
     def __init__(self, algebra=None, name=None,
                  algebra_path=None, json_file_name=None, network_dict=None,
                  json_ext=".json"):
+        # If an Algebra object is input then we're done
         if algebra:
             self.algebra = algebra
             super().__init__(name=make_name(name))
+        # Else read from a JSON file
         else:
             if json_file_name:
                 with open(json_file_name, "r") as json_file:
@@ -425,7 +427,10 @@ class Network(nx.DiGraph):
                 entities[nkey] = class_type_dict[nspec[1]](nspec[1:], nspec[0])
             super().__init__(name=make_name(name))
             for espec in net_dict["edges"]:
-                cons = espec[2]
+                if len(espec) == 3:
+                    cons = espec[2]
+                else:
+                    cons = self.algebra.elements
                 if cons in net_dict["abbreviations"]:
                     constraint = net_dict["abbreviations"][cons]
                 else:
