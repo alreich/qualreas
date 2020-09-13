@@ -5,6 +5,7 @@
 
 from bitsets import bitset, bases
 import json
+import random, string
 import networkx as nx
 # from copy import deepcopy
 from functools import reduce
@@ -14,6 +15,14 @@ import numpy as np
 
 __author__ = 'Alfred J. Reich'
 __version__ = '0.3.0'
+
+
+def make_name(name=None, prefix="Network:", size=8):
+    """If no name, then return a random name; otherwise return name."""
+    if not name:
+        chars = string.ascii_letters + string.digits + '!@#$%&*'
+        name = prefix + "".join([random.choice(chars) for ch in range(size)])
+    return name
 
 
 # The fundamental algebraic elements here are SETS of relations, not individual relations.
@@ -370,12 +379,58 @@ class Algebra:
 class InconsistentNetwork(Exception):
     pass
 
+# load_network reads a JSON file similar to the example below and returns the network
+# that corresponds to it.
+#
+# {
+#     "name": "RCC8 Example 1",
+#     "algebra": "RCC8Algebra",
+#     "abbreviations": {"?": "DC|EC|TPP|TPPI|PO|EQ|NTPP|NTPPI"},
+#     "nodes": {
+#         "h1": ["House1", "Region"],
+#         "h2": ["House2", "Region"],
+#         ...
+#     },
+#     "edges": [
+#         ["h1", "h2", "DC"],
+#         ["h1", "p1", "TPP|NTPP"],
+#         ...
+#     ]
+# }
 
 class Network(nx.DiGraph):
 
-    def __init__(self, algebra, name=None):
-        self.algebra = algebra
-        super().__init__(name=name)
+    # def __init__(self, algebra, name=None):
+    #     self.algebra = algebra
+    #     super().__init__(name=name)
+
+    def __init__(self, algebra=None, name=None,
+                 algebra_path=None, json_file_name=None, network_dict=None,
+                 json_ext=".json"):
+        if algebra:
+            self.algebra = algebra
+            super().__init__(name=make_name(name))
+        else:
+            if json_file_name:
+                with open(json_file_name, "r") as json_file:
+                    net_dict = json.load(json_file)
+            else:
+                net_dict = network_dict
+            self.algebra = Algebra(algebra_path + net_dict["algebra"] + json_ext)
+            if "name" in net_dict:
+                name = net_dict["name"]
+            nodes = net_dict["nodes"]
+            entities = {}
+            for nkey, nspec in nodes.items():
+                entities[nkey] = class_type_dict[nspec[1]](nspec[1:], nspec[0])
+            super().__init__(name=make_name(name))
+            for espec in net_dict["edges"]:
+                cons = espec[2]
+                if cons in net_dict["abbreviations"]:
+                    constraint = net_dict["abbreviations"][cons]
+                else:
+                    constraint = cons
+                self.add_constraint(entities[espec[0]], entities[espec[1]], constraint)
 
     def __str__(self):
         return f"<Network--{self.name}--{self.algebra.name}>"
@@ -552,25 +607,6 @@ class Network(nx.DiGraph):
             for tail in self.neighbors(head):
                 print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
 
-
-# load_network reads a JSON file similar to the example below and returns the network
-# that corresponds to it.
-#
-# {
-#     "name": "RCC8 Example 1",
-#     "algebra": "RCC8Algebra",
-#     "abbreviations": {"?": "DC|EC|TPP|TPPI|PO|EQ|NTPP|NTPPI"},
-#     "nodes": {
-#         "h1": ["House1", "Region"],
-#         "h2": ["House2", "Region"],
-#         ...
-#     },
-#     "edges": [
-#         ["h1", "h2", "DC"],
-#         ["h1", "p1", "TPP|NTPP"],
-#         ...
-#     ]
-# }
 
 def load_network(alg_path, json_file, net_ext=".json"):
     """Loads a network specification from a JSON file. Returns the resulting network."""
