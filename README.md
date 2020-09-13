@@ -11,8 +11,8 @@ The four temporal algebras found in ["Intervals, Points, and Branching Time"(Rei
 
 ## To Be Done
 
-* At some point, create and maintain a "changelog"
-* Add a comment to the bitset import statement that provides the URL.
+* Make the print representations for entities into constructors
+* When I go public, create and maintain a "changelog"
 * Create a JSON &/or RDF interface for asserting constraints
 * Update and test the csv2json.py code to Python 3
 * Update the names of the CSV files to match those of their JSON counterparts
@@ -37,13 +37,13 @@ constraints for temporal entities "contained" by other temporal entitites.
 
 ## Allen's Algebra of Proper Time Intervals
 
-![Extension of Allen's Algebra](Images/Extension_of_Allens_Interval_Relations.png)
+![Extension of Allen's Algebra](Notebooks/Images/Extension_of_Allens_Interval_Relations.png)
 
-![Point-Interval Relations](Images/Point_Interval_Relations.png)
+![Point-Interval Relations](Notebooks/Images/Point_Interval_Relations.png)
 
-![Right-Branching Time Relations](Images/Right_Branching_Time_Relations.png)
+![Right-Branching Time Relations](Notebooks/Images/Right_Branching_Time_Relations.png)
 
-![Left-Branching Time Relations](Images/Left_Branching_Time_Relations.png)
+![Left-Branching Time Relations](Notebooks/Images/Left_Branching_Time_Relations.png)
 
 
 

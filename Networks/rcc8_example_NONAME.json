@@ -1,6 +1,7 @@
 {
     "algebra": "RCC8Algebra",
     "abbreviations": {"?": "DC|EC|TPP|TPPI|PO|EQ|NTPP|NTPPI"},
+    "description": "Tests when no name is given; and when no constraint is given.",
     "nodes": {
         "h1": ["House1", "Region"],
         "h2": ["House2", "Region"],

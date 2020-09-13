@@ -2,6 +2,7 @@
     "name": "RCC8 Example 1",
     "algebra": "RCC8Algebra",
     "abbreviations": {"?": "DC|EC|TPP|TPPI|PO|EQ|NTPP|NTPPI"},
+    "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples",
     "nodes": {
         "h1": ["House1", "Region"],
         "h2": ["House2", "Region"],

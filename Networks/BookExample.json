@@ -1,0 +1,19 @@
+{
+    "name": "Example from book",
+    "algebra": "BookExample",
+    "description": "Example in book on constraint processing for temporal reasoning",
+    "nodes": {
+        "pint_I": ["I", "ProperInterval"],
+        "pint_J": ["J", "ProperInterval"],
+        "pint_K": ["K", "ProperInterval"],
+        "pint_L": ["L", "ProperInterval"]
+    },
+    "edges": [
+        ["pint_I", "pint_J", "F|FI"],
+        ["pint_I", "pint_L", "S|M"],
+        ["pint_L", "pint_J", "S|M"],
+        ["pint_K", "pint_I", "D|DI"],
+        ["pint_K", "pint_J", "D|DI"],
+        ["pint_L", "pint_K", "O"]
+    ]
+}
