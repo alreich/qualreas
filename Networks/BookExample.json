@@ -1,12 +1,12 @@
 {
     "name": "Example from book",
-    "algebra": "BookExample",
+    "algebra": "LinearIntervalAlgebra",
     "description": "Example in book on constraint processing for temporal reasoning",
     "nodes": {
-        "pint_I": ["I", "ProperInterval"],
-        "pint_J": ["J", "ProperInterval"],
-        "pint_K": ["K", "ProperInterval"],
-        "pint_L": ["L", "ProperInterval"]
+        "pint_I": ["I", ["ProperInterval"]],
+        "pint_J": ["J", ["ProperInterval"]],
+        "pint_K": ["K", ["ProperInterval"]],
+        "pint_L": ["L", ["ProperInterval"]]
     },
     "edges": [
         ["pint_I", "pint_J", "F|FI"],

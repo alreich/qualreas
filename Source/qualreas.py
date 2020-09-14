@@ -411,6 +411,7 @@ class Network(nx.DiGraph):
             if json_file_name:
                 with open(json_file_name, "r") as json_file:
                     net_dict = json.load(json_file)
+                json_file.close()
             else:
                 net_dict = network_dict
             # At this point we're working with a dictionary
@@ -430,7 +431,7 @@ class Network(nx.DiGraph):
                     cons = espec[2]
                 else:
                     cons = self.algebra.elements
-                if cons in net_dict["abbreviations"]:
+                if ("abbreviations" in net_dict) and (cons in net_dict["abbreviations"]):
                     constraint = net_dict["abbreviations"][cons]
                 else:
                     constraint = cons
