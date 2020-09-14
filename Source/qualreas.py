@@ -5,23 +5,23 @@
 # https://bitsets.readthedocs.io/en/stable/
 from bitsets import bitset, bases
 import json
-import random, string
+import random
+import string
 import networkx as nx
 # from copy import deepcopy
 from functools import reduce
 from collections import abc
 import numpy as np
 
-
 __author__ = 'Alfred J. Reich'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 
 def make_name(name=None, prefix="Network:", size=8):
     """If no name, then return a random name; otherwise return name."""
     if not name:
         chars = string.ascii_letters + string.digits + '!@#$%&*'
-        name = prefix + "".join([random.choice(chars) for ch in range(size)])
+        name = prefix + "".join([random.choice(chars) for _ in range(size)])
     return name
 
 
@@ -96,13 +96,10 @@ class TemporalEntity:
 
     def __init__(self, classes, name=None):
         self.classes = classes  # Ontological Classes, e.g., Point, ProperInterval
-        self.name = name
+        self.name = make_name(name=name, prefix="TE:", size=8)
 
     def __repr__(self):
-        if self.name:
-            return f"<TemporalEntity {self.name} {self.classes}>"
-        else:
-            return f"<TemporalEntity {self.classes}>"
+        return f"TemporalEntity({self.classes} \'{self.name}\')"
 
 
 # Don't have a good source yet for a spatial vocabulary,
@@ -112,13 +109,10 @@ class SpatialEntity:
 
     def __init__(self, classes, name=None):
         self.classes = classes  # Ontological, not OOP
-        self.name = name
+        self.name = make_name(name=name, prefix="SE:", size=8)
 
     def __repr__(self):
-        if self.name:
-            return f"<SpatialObject {self.name} {self.classes}>"
-        else:
-            return f"<SpatialObject {self.classes}>"
+        return f"SpatialObject({self.classes} \'{self.name}\')"
 
 
 # The following dictionary is used when loading a JSON specification
@@ -236,9 +230,9 @@ class Algebra:
         else:
             raise TypeError("Input must be a string, list, tuple, or set.")
 
-    def string_to_relset(self, string, delimiter='|'):
-        """Take a string like 'B|M|O' and turn it into a relation set."""
-        return self.relset(string.split(delimiter))
+    def string_to_relset(self, st, delimiter='|'):
+        """Take a string, st, like 'B|M|O' and turn it into a relation set."""
+        return self.relset(st.split(delimiter))
 
     def compose(self, relset1, relset2):
         """Composition is done, element-by-element, on the cross-product
@@ -379,6 +373,7 @@ class Algebra:
 class InconsistentNetwork(Exception):
     pass
 
+
 # load_network reads a JSON file similar to the example below and returns the network
 # that corresponds to it.
 #
@@ -411,20 +406,24 @@ class Network(nx.DiGraph):
         if algebra:
             self.algebra = algebra
             super().__init__(name=make_name(name))
-        # Else read from a JSON file
+        # Else read from a JSON file or a Python dictionary
         else:
             if json_file_name:
                 with open(json_file_name, "r") as json_file:
                     net_dict = json.load(json_file)
             else:
                 net_dict = network_dict
+            # At this point we're working with a dictionary
             self.algebra = Algebra(algebra_path + net_dict["algebra"] + json_ext)
             if "name" in net_dict:
                 name = net_dict["name"]
             nodes = net_dict["nodes"]
             entities = {}
             for nkey, nspec in nodes.items():
-                entities[nkey] = class_type_dict[nspec[1]](nspec[1:], nspec[0])
+                node_name = nspec[0]
+                classes = nspec[1]
+                # entities[nkey] = class_type_dict[nspec[1]](nspec[1:], nspec[0])
+                entities[nkey] = class_type_dict[classes[0]](classes, node_name)
             super().__init__(name=make_name(name))
             for espec in net_dict["edges"]:
                 if len(espec) == 3:
@@ -682,22 +681,23 @@ class FourPointNet(Network):
 # Map 4-Point network "signatures" to typical relation names.
 # This mapping is used in generate_consistent_networks, below.
 signature_name_mapping = {
-      '<,<,<,<': 'B',       '>,>,>,>': 'BI',
-      '>,<,>,<': 'D',       '<,<,>,>': 'DI',
-      '=,<,>,=': 'E',       '=,=,=,=': 'PE',
-      '>,<,>,=': 'F',       '<,<,>,=': 'FI',
-      '<,<,=,<': 'M',       '>,=,>,>': 'MI',
-      '<,<,>,<': 'O',       '>,<,>,>': 'OI',
-      '=,<,>,<': 'S',       '=,<,>,>': 'SI',
-      '>,=,>,=': 'PF',      '<,<,=,=': 'PFI',
-      '=,<,=,<': 'PS',      '=,=,>,>': 'PSI',
-     '<,<,>,r~': 'RO',    '<,<,r~,r~': 'RB',
-     '=,<,>,r~': 'RS',     '>,<,>,r~': 'ROI',
+    '<,<,<,<': 'B', '>,>,>,>': 'BI',
+    '>,<,>,<': 'D', '<,<,>,>': 'DI',
+    '=,<,>,=': 'E', '=,=,=,=': 'PE',
+    '>,<,>,=': 'F', '<,<,>,=': 'FI',
+    '<,<,=,<': 'M', '>,=,>,>': 'MI',
+    '<,<,>,<': 'O', '>,<,>,>': 'OI',
+    '=,<,>,<': 'S', '=,<,>,>': 'SI',
+    '>,=,>,=': 'PF', '<,<,=,=': 'PFI',
+    '=,<,=,<': 'PS', '=,=,>,>': 'PSI',
+    '<,<,>,r~': 'RO', '<,<,r~,r~': 'RB',
+    '=,<,>,r~': 'RS', '>,<,>,r~': 'ROI',
     '>,r~,>,r~': 'RBI', 'r~,r~,r~,r~': 'R~',
-     'l~,<,>,<': 'LO',     'l~,<,>,=': 'LF',
-     'l~,<,>,>': 'LOI',   'l~,l~,>,>': 'LBI',
-    'l~,<,l~,<': 'LB',  'l~,l~,l~,l~': 'L~'
+    'l~,<,>,<': 'LO', 'l~,<,>,=': 'LF',
+    'l~,<,>,>': 'LOI', 'l~,l~,>,>': 'LBI',
+    'l~,<,l~,<': 'LB', 'l~,l~,l~,l~': 'L~'
 }
+
 
 # A 4-point network (generated by FourPoint) only has constraints specified so that the first two points define an
 # interval, and same for the second two points. No constraints are specified between the two implied intervals (e.g.,
