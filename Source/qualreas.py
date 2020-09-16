@@ -418,13 +418,17 @@ class Network(nx.DiGraph):
             self.algebra = Algebra(algebra_path + net_dict["algebra"] + json_ext)
             if "name" in net_dict:
                 name = net_dict["name"]
-            nodes = net_dict["nodes"]
+            node_list = net_dict["nodes"]
+            nodes = {}
+            for nd in node_list:
+                nodes[nd[0]] = nd[1]
             entities = {}
-            for nkey, nspec in nodes.items():
-                node_name = nspec[0]
-                classes = nspec[1]
-                # entities[nkey] = class_type_dict[nspec[1]](nspec[1:], nspec[0])
-                entities[nkey] = class_type_dict[classes[0]](classes, node_name)
+            # for nkey, nspec in nodes.items():
+            #     node_name = nspec[0]
+            #     classes = nspec[1]
+            #     entities[nkey] = class_type_dict[classes[0]](classes, node_name)
+            for node_name, node_classes in nodes.items():
+                entities[node_name] = class_type_dict[node_classes[0]](node_classes, node_name)
             super().__init__(name=make_name(name))
             for espec in net_dict["edges"]:
                 if len(espec) == 3:
