@@ -1,0 +1,23 @@
+{
+    "algebra": "RCC8Algebra",
+    "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples",
+    "nodes": [
+        ["House1", ["Region"]],
+        ["House2", ["Region"]],
+        ["Property1", ["Region"]],
+        ["Property2", ["Region"]],
+        ["Road", ["Region"]]
+    ],
+    "edges": [
+        ["House1", "House2", "DC"],
+        ["House1", "Property1", "TPP|NTPP"],
+        ["House1", "Property2", "DC|EC"],
+        ["House1", "Road", "EC"],
+        ["House2", "Property1", "DC|EC"],
+        ["House2", "Property2", "NTPP"],
+        ["House2", "Road", "EC"],
+        ["Property1", "Property2", "DC|EC"],
+        ["Road", "Property1"],
+        ["Road", "Property2"]
+    ]
+}
