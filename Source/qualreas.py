@@ -168,9 +168,12 @@ class Algebra:
             for rel2 in tabledefs[rel1]:
                 table_entry = tabledefs[rel1][rel2]
                 if type(table_entry) == list:
-                    self.transitivity_table[rel1][rel2] = self.elements_bitset(tuple(table_entry))
+                    entry = table_entry
+                elif type(table_entry) == str:
+                    entry = table_entry.split('|')
                 else:
-                    self.transitivity_table[rel1][rel2] = self.string_to_relset(table_entry)
+                    raise Exception("Bad entry in transitivity table")
+                self.transitivity_table[rel1][rel2] = self.elements_bitset(tuple(entry))
 
     # Accessors for information about a given relation:
 
