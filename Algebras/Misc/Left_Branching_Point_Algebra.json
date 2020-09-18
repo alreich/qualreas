@@ -1,0 +1,68 @@
+{
+    "Description": "Left-Branching Point Algebra", 
+    "Name": "Left_Branching_Point_Algebra",
+    "Relations": {
+        "<": {
+            "Domain": ["Point"], 
+            "Converse": ">", 
+            "Name": "LessThan", 
+            "Range": ["Point"], 
+            "Reflexive": false, 
+            "Symmetric": false, 
+            "Transitive": true
+        }, 
+        "=": {
+            "Domain": ["Point"], 
+            "Converse": "=", 
+            "Name": "Equals", 
+            "Range": ["Point"], 
+            "Reflexive": true, 
+            "Symmetric": true, 
+            "Transitive": true
+        }, 
+        ">": {
+            "Domain": ["Point"], 
+            "Converse": "<", 
+            "Name": "GreaterThan", 
+            "Range": ["Point"], 
+            "Reflexive": false, 
+            "Symmetric": false, 
+            "Transitive": true
+        }, 
+        "l~": {
+            "Domain": ["Point"], 
+            "Converse": "l~", 
+            "Name": "Incomparable", 
+            "Range": ["Point"], 
+            "Reflexive": false, 
+            "Symmetric": true, 
+            "Transitive": false
+        }
+    }, 
+    "TransTable": {
+        "<": {
+            "<": "<",
+            "=": "<",
+            ">": "<|=|>|l~",
+            "l~": "l~"
+        },
+        "=": {
+            "<": "<",
+            "=": "=",
+            ">": ">",
+            "l~": "l~"
+        },
+        ">": {
+            "<": "<|=|>",
+            "=": ">",
+            ">": ">",
+            "l~": ">|l~"
+        },
+        "l~": {
+            "<": "<|l~",
+            "=": "l~",
+            ">": "l~",
+            "l~": "<|=|>|l~"
+        }
+    }
+}
