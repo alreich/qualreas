@@ -166,7 +166,11 @@ class Algebra:
         for rel1 in tabledefs:
             self.transitivity_table[rel1] = dict()
             for rel2 in tabledefs[rel1]:
-                self.transitivity_table[rel1][rel2] = self.elements_bitset(tuple(tabledefs[rel1][rel2]))
+                table_entry = tabledefs[rel1][rel2]
+                if type(table_entry) == list:
+                    self.transitivity_table[rel1][rel2] = self.elements_bitset(tuple(table_entry))
+                else:
+                    self.transitivity_table[rel1][rel2] = self.string_to_relset(table_entry)
 
     # Accessors for information about a given relation:
 

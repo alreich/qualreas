@@ -1,6 +1,7 @@
 {
     "Description": "Allen's algebra of proper time intervals", 
     "Name": "Linear_Interval_Algebra",
+    "Type": "Relation System",
     "Relations": {
         "B": {
             "Domain": ["ProperInterval"],
@@ -894,6 +895,5 @@
                 "SI"
             ]
         }
-    }, 
-    "Type": "Relation System"
+    }
 }
