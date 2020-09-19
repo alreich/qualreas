@@ -1,5 +1,5 @@
 {
-    "algebra": "RCC8Algebra",
+    "algebra": "RCC8_Algebra",
     "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples",
     "nodes": [
         ["House1", ["Region"]],

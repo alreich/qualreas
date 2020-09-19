@@ -160,7 +160,9 @@ class Algebra:
             dom = self.rel_domain(eqrel)[0]  # Get the single item out of the eqrel's domain set.
             self.equality_relations_dict[dom] = self.relset([eqrel])
 
-        # Setup the transitivity (or composition) table to be used by Relation Set composition
+        # Setup the transitivity (or composition) table to be used by Relation Set composition.
+        # This code can read both the original transitivity table format and the newer compact
+        # transitivity table format, which is now the default.
         self.transitivity_table = dict()
         tabledefs = self.algebra_dict["TransTable"]
         for rel1 in tabledefs:
@@ -170,9 +172,13 @@ class Algebra:
                 if type(table_entry) == list:
                     entry = table_entry
                 elif type(table_entry) == str:
-                    entry = table_entry.split('|')
+                    if table_entry == "":
+                        entry = []  # because "".split('|') = ['']
+                    else:
+                        entry = table_entry.split('|')
                 else:
                     raise Exception("Bad entry in transitivity table")
+                # print(rel1, rel2)
                 self.transitivity_table[rel1][rel2] = self.elements_bitset(tuple(entry))
 
     # Accessors for information about a given relation:
@@ -373,6 +379,29 @@ class Algebra:
         if counttotal != totaltests:
             print(f"Test counts do not add up; Total should be {totaltests}")
         return result
+
+    def print_compact_transitivity_table(self):
+        """This function's only purpose was to convert the original transitivity table format
+        to the new compact representation.  It's preserved for posterity here in case it's ever
+        needed again."""
+        num_elements = len(self.elements)
+        print("    \"TransTable\": {")
+        outer_count = num_elements  # Used to avoid printing last comma in outer list
+        for rel1 in self.transitivity_table:
+            outer_count -= 1
+            print(f"        \"{rel1}\": {{")
+            inner_count = num_elements  # Used to avoid printing last comma in inner list
+            for rel2 in self.transitivity_table[rel1]:
+                inner_count -= 1
+                if inner_count > 0:
+                    print(f"            \"{rel2}\": \"{self.transitivity_table[rel1][rel2]}\",")
+                else:
+                    print(f"            \"{rel2}\": \"{self.transitivity_table[rel1][rel2]}\"")
+            if outer_count > 0:
+                print(f"        }},")
+            else:
+                print(f"        }}")
+        print("    }")
 
 
 # Used to break out of Network propagation if it is found to be inconsistent

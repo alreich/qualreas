@@ -1,6 +1,6 @@
 {
     "name": "Extended example from book",
-    "algebra": "ExtendedLinearIntervalAlgebra",
+    "algebra": "Extended_Linear_Interval_Algebra",
     "description": "Example in book on constraint processing for temporal reasoning, extended",
     "nodes": [
         ["I", ["Point", "ProperInterval"]],

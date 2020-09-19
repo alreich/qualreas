@@ -1,6 +1,6 @@
 {
     "name": "RCC8 Example 1",
-    "algebra": "RCC8Algebra",
+    "algebra": "RCC8_Algebra",
     "abbreviations": {"?": "DC|EC|TPP|TPPI|PO|EQ|NTPP|NTPPI"},
     "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples",
     "nodes": [
