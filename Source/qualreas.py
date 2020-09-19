@@ -774,14 +774,14 @@ if __name__ == '__main__':
 
     path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
 
-    alg = [Algebra(os.path.join(path, "Algebras/LinearIntervalAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/ExtendedLinearIntervalAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/LeftBranchingIntervalAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/RightBranchingIntervalAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/RCC8Algebra.json")),
-           Algebra(os.path.join(path, "Algebras/LinearPointAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/RightBranchingPointAlgebra.json")),
-           Algebra(os.path.join(path, "Algebras/LeftBranchingPointAlgebra.json"))
+    alg = [Algebra(os.path.join(path, "Algebras/Linear_Interval_Algebra.json")),
+           Algebra(os.path.join(path, "Algebras/Extended_Linear_Interval_Algebra.json")),
+           Algebra(os.path.join(path, "Algebras/Left_Branching_Interval_Algebra.json")),
+           Algebra(os.path.join(path, "Algebras/Right_Branching_Interval_Algebra.json")),
+           Algebra(os.path.join(path, "Algebras/RCC8_Algebra.json")),
+           Algebra(os.path.join(path, "Algebras/Linear_Point_Algebra.json")),
+           Algebra(os.path.join(path, "Algebras/Right_Branching_Point_Algebra.json")),
+           Algebra(os.path.join(path, "Algebras/Left_Branching_Point_Algebra.json"))
            ]
 
     print("\n-------------------------------------")
@@ -902,28 +902,36 @@ if __name__ == '__main__':
     print("Example from http://en.wikipedia.org/wiki/RCC8")
     print("----------------------------------------------")
 
-    alg4 = Algebra(os.path.join(path, "Algebras/RCC8Algebra.json"))
+    rcc8x = Network(algebra_path=path+"/Algebras/",
+                    json_file_name=path+"/Networks/rcc8_example.json")
 
-    house1 = SpatialEntity(["Region"], "house1")
-    house2 = SpatialEntity(["Region"], "house2")
-    property1 = SpatialEntity(["Region"], "property1")
-    property2 = SpatialEntity(["Region"], "property2")
-    road = SpatialEntity(["Region"], "road")
+    rcc8x.summary()
+    rcc8x.propagate()
+    rcc8x.summary()
 
-    net4 = Network(alg4, "Wikipedia RCC8 Example")
-
-    net4.add_constraint(house1, house2, "DC", verbosity)
-    net4.add_constraint(house1, property1, "TPP|NTPP", verbosity)
-    net4.add_constraint(house1, property2, "DC|EC", verbosity)
-    net4.add_constraint(house1, road, "EC", verbosity)
-    net4.add_constraint(house2, property1, "DC|EC", verbosity)
-    net4.add_constraint(house2, property2, "NTPP", verbosity)
-    net4.add_constraint(house2, road, "EC", verbosity)
-    net4.add_constraint(property1, property2, "DC|EC", verbosity)
-
-    net4.summary()
-    net4.propagate()
-    net4.summary()
+    # # alg4 = Algebra(os.path.join(path, "Algebras/RCC8_Algebra.json"))
+    # alg4 = alg[4]
+    #
+    # house1 = SpatialEntity(["Region"], "house1")
+    # house2 = SpatialEntity(["Region"], "house2")
+    # property1 = SpatialEntity(["Region"], "property1")
+    # property2 = SpatialEntity(["Region"], "property2")
+    # road = SpatialEntity(["Region"], "road")
+    #
+    # net4 = Network(alg4, "Wikipedia RCC8 Example")
+    #
+    # net4.add_constraint(house1, house2, "DC", verbosity)
+    # net4.add_constraint(house1, property1, "TPP|NTPP", verbosity)
+    # net4.add_constraint(house1, property2, "DC|EC", verbosity)
+    # net4.add_constraint(house1, road, "EC", verbosity)
+    # net4.add_constraint(house2, property1, "DC|EC", verbosity)
+    # net4.add_constraint(house2, property2, "NTPP", verbosity)
+    # net4.add_constraint(house2, road, "EC", verbosity)
+    # net4.add_constraint(property1, property2, "DC|EC", verbosity)
+    #
+    # net4.summary()
+    # net4.propagate()
+    # net4.summary()
 
     print("""\nNote on example above:
     According to Wikipedia,
