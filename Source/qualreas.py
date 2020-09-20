@@ -4,6 +4,7 @@
 """
 # https://bitsets.readthedocs.io/en/stable/
 from bitsets import bitset, bases
+import os
 import json
 import random
 import string
@@ -448,7 +449,7 @@ class Network(nx.DiGraph):
             else:
                 net_dict = network_dict
             # At this point we're working with a dictionary
-            self.algebra = Algebra(algebra_path + net_dict["algebra"] + json_ext)
+            self.algebra = Algebra(os.path.join(algebra_path, net_dict["algebra"]) + json_ext)
             if "name" in net_dict:
                 name = net_dict["name"]
             node_list = net_dict["nodes"]
@@ -770,8 +771,6 @@ if __name__ == '__main__':
 
     print("\n=======================================================================")
 
-    import os
-
     path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
 
     alg = [Algebra(os.path.join(path, "Algebras/Linear_Interval_Algebra.json")),
@@ -902,9 +901,18 @@ if __name__ == '__main__':
     print("Example from http://en.wikipedia.org/wiki/RCC8")
     print("----------------------------------------------")
 
-    rcc8x = Network(algebra_path=path+"/Algebras/",
-                    json_file_name=path+"/Networks/rcc8_example.json")
+    # Algebra(os.path.join(path, "Algebras/Linear_Interval_Algebra.json"
 
+    # rcc8x = Network(algebra_path=path+"/Algebras/",
+    #                 json_file_name=path+"/Networks/rcc8_example.json")
+
+    # print(f"Path = {path}")
+    # alg_path = os.path.join(path, "Algebras")
+    # print(f"Alg path = {alg_path}")
+    # json_fname = os.path.join(path, "Networks/rcc8_example.json")
+    # print(f"JSON path = {json_fname}")
+    rcc8x = Network(algebra_path=os.path.join(path, "Algebras"),
+                    json_file_name=os.path.join(path, "Networks/rcc8_example.json"))
     rcc8x.summary()
     rcc8x.propagate()
     rcc8x.summary()
