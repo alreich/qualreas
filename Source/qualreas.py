@@ -586,6 +586,12 @@ class Network(nx.DiGraph):
                 break
         return result
 
+    def get_edge_by_names(self, source, target):
+        src = self.get_entity_by_name(source)
+        tgt = self.get_entity_by_name(target)
+        con = str(self.edges[src, tgt]['constraint'])
+        return (source, target, con)
+
     def to_list(self, entities=None):
         """Return a list of lists of constraints, where the lists in the list represent
         rows of a matrix of constraints, ordered by the ordering in the list of entities."""
