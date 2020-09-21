@@ -1,0 +1,526 @@
+
+=======================================================================
+
+-------------------------------------
+Check algebra composition identity
+-------------------------------------
+
+Linear_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|S|SI
+Composition Identity OK
+
+Extended_Linear_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|S|SI
+Composition Identity OK
+
+Left_Branching_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|LB|LBI|LF|LO|LOI|L~|M|MI|O|OI|PE|PF|PFI|PS|PSI|S|SI
+Composition Identity OK
+
+Right_Branching_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|RB|RBI|RO|ROI|RS|R~|S|SI
+Composition Identity OK
+
+RCC8_Algebra:
+Relations: DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
+Composition Identity OK
+
+Linear_Point_Algebra:
+Relations: <|=|>
+Composition Identity OK
+
+Right_Branching_Point_Algebra:
+Relations: <|=|>|r~
+Composition Identity OK
+
+Left_Branching_Point_Algebra:
+Relations: <|=|>|l~
+Composition Identity OK
+
+---------------------------
+Check algebra associativity
+---------------------------
+
+Linear_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|S|SI
+TEST SUMMARY: 2197 OK, 0 Skipped, 0 Failed (2197 Total)
+Linear_Interval_Algebra is associative.
+
+Extended_Linear_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|S|SI
+TEST SUMMARY: 3609 OK, 2223 Skipped, 0 Failed (5832 Total)
+Extended_Linear_Interval_Algebra is associative.
+
+Left_Branching_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|LB|LBI|LF|LO|LOI|L~|M|MI|O|OI|PE|PF|PFI|PS|PSI|S|SI
+TEST SUMMARY: 9772 OK, 4052 Skipped, 0 Failed (13824 Total)
+Left_Branching_Interval_Algebra is associative.
+
+Right_Branching_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|RB|RBI|RO|ROI|RS|R~|S|SI
+TEST SUMMARY: 9772 OK, 4052 Skipped, 0 Failed (13824 Total)
+Right_Branching_Interval_Algebra is associative.
+
+RCC8_Algebra:
+Relations: DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
+TEST SUMMARY: 512 OK, 0 Skipped, 0 Failed (512 Total)
+RCC8_Algebra is associative.
+
+Linear_Point_Algebra:
+Relations: <|=|>
+TEST SUMMARY: 27 OK, 0 Skipped, 0 Failed (27 Total)
+Linear_Point_Algebra is associative.
+
+Right_Branching_Point_Algebra:
+Relations: <|=|>|r~
+TEST SUMMARY: 64 OK, 0 Skipped, 0 Failed (64 Total)
+Right_Branching_Point_Algebra is associative.
+
+Left_Branching_Point_Algebra:
+Relations: <|=|>|l~
+TEST SUMMARY: 64 OK, 0 Skipped, 0 Failed (64 Total)
+Left_Branching_Point_Algebra is associative.
+
+-----------------------------------------------
+Check network propagation for interval algebras
+-----------------------------------------------
+
+--------------------------------------------------
+Algebra: Linear_Interval_Algebra
+
+Network-Linear_Interval_Algebra: 3 nodes, 7 edges
+  Algebra: Linear_Interval_Algebra
+  X:
+    => X: E
+    => Y: B
+  Y:
+    => Y: E
+    => X: BI
+    => Z: D
+  Z:
+    => Z: E
+    => Y: DI
+Constraint Added: X Z ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'S', 'SI']
+Constraint Added: Z X ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'S', 'SI']
+Number of iterations: 2
+
+Network-Linear_Interval_Algebra: 3 nodes, 9 edges
+  Algebra: Linear_Interval_Algebra
+  X:
+    => X: E
+    => Y: B
+    => Z: B|D|M|O|S
+  Y:
+    => Y: E
+    => X: BI
+    => Z: D
+  Z:
+    => Z: E
+    => Y: DI
+    => X: BI|DI|MI|OI|SI
+
+--------------------------------------------------
+Algebra: Extended_Linear_Interval_Algebra
+
+Network-Extended_Linear_Interval_Algebra: 3 nodes, 7 edges
+  Algebra: Extended_Linear_Interval_Algebra
+  X:
+    => X: E
+    => Y: B
+  Y:
+    => Y: E
+    => X: BI
+    => Z: D
+  Z:
+    => Z: E
+    => Y: DI
+Constraint Added: X Z ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'S', 'SI']
+Constraint Added: Z X ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'S', 'SI']
+Number of iterations: 2
+
+Network-Extended_Linear_Interval_Algebra: 3 nodes, 9 edges
+  Algebra: Extended_Linear_Interval_Algebra
+  X:
+    => X: E
+    => Y: B
+    => Z: B|D|M|O|S
+  Y:
+    => Y: E
+    => X: BI
+    => Z: D
+  Z:
+    => Z: E
+    => Y: DI
+    => X: BI|DI|MI|OI|SI
+
+--------------------------------------------------
+Algebra: Left_Branching_Interval_Algebra
+
+Network-Left_Branching_Interval_Algebra: 3 nodes, 7 edges
+  Algebra: Left_Branching_Interval_Algebra
+  X:
+    => X: E
+    => Y: B
+  Y:
+    => Y: E
+    => X: BI
+    => Z: D
+  Z:
+    => Z: E
+    => Y: DI
+Constraint Added: X Z ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'LB', 'LBI', 'LF', 'LO', 'LOI', 'L~', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'S', 'SI']
+Constraint Added: Z X ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'LB', 'LBI', 'LF', 'LO', 'LOI', 'L~', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'S', 'SI']
+Number of iterations: 2
+
+Network-Left_Branching_Interval_Algebra: 3 nodes, 9 edges
+  Algebra: Left_Branching_Interval_Algebra
+  X:
+    => X: E
+    => Y: B
+    => Z: B|D|LB|LO|M|O|S
+  Y:
+    => Y: E
+    => X: BI
+    => Z: D
+  Z:
+    => Z: E
+    => Y: DI
+    => X: BI|DI|LBI|LOI|MI|OI|SI
+
+--------------------------------------------------
+Algebra: Right_Branching_Interval_Algebra
+
+Network-Right_Branching_Interval_Algebra: 3 nodes, 7 edges
+  Algebra: Right_Branching_Interval_Algebra
+  X:
+    => X: E
+    => Y: B
+  Y:
+    => Y: E
+    => X: BI
+    => Z: D
+  Z:
+    => Z: E
+    => Y: DI
+Constraint Added: X Z ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'RB', 'RBI', 'RO', 'ROI', 'RS', 'R~', 'S', 'SI']
+Constraint Added: Z X ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'RB', 'RBI', 'RO', 'ROI', 'RS', 'R~', 'S', 'SI']
+Number of iterations: 2
+
+Network-Right_Branching_Interval_Algebra: 3 nodes, 9 edges
+  Algebra: Right_Branching_Interval_Algebra
+  X:
+    => X: E
+    => Y: B
+    => Z: B|D|M|O|S
+  Y:
+    => Y: E
+    => X: BI
+    => Z: D
+  Z:
+    => Z: E
+    => Y: DI
+    => X: BI|DI|MI|OI|SI
+
+--------------------------------------------------
+Algebra: Linear_Point_Algebra
+
+Network-Linear_Point_Algebra: 3 nodes, 7 edges
+  Algebra: Linear_Point_Algebra
+  X:
+    => X: =
+    => Y: <
+  Y:
+    => Y: =
+    => X: >
+    => Z: <
+  Z:
+    => Z: =
+    => Y: >
+
+Network-Linear_Point_Algebra: 3 nodes, 9 edges
+  Algebra: Linear_Point_Algebra
+  X:
+    => X: =
+    => Y: <
+    => Z: <
+  Y:
+    => Y: =
+    => X: >
+    => Z: <
+  Z:
+    => Z: =
+    => Y: >
+    => X: >
+
+--------------------------------------------------
+Algebra: Right_Branching_Point_Algebra
+
+Network-Right_Branching_Point_Algebra: 3 nodes, 7 edges
+  Algebra: Right_Branching_Point_Algebra
+  X:
+    => X: =
+    => Y: <
+  Y:
+    => Y: =
+    => X: >
+    => Z: <
+  Z:
+    => Z: =
+    => Y: >
+
+Network-Right_Branching_Point_Algebra: 3 nodes, 9 edges
+  Algebra: Right_Branching_Point_Algebra
+  X:
+    => X: =
+    => Y: <
+    => Z: <
+  Y:
+    => Y: =
+    => X: >
+    => Z: <
+  Z:
+    => Z: =
+    => Y: >
+    => X: >
+
+--------------------------------------------------
+Algebra: Left_Branching_Point_Algebra
+
+Network-Left_Branching_Point_Algebra: 3 nodes, 7 edges
+  Algebra: Left_Branching_Point_Algebra
+  X:
+    => X: =
+    => Y: <
+  Y:
+    => Y: =
+    => X: >
+    => Z: <
+  Z:
+    => Z: =
+    => Y: >
+
+Network-Left_Branching_Point_Algebra: 3 nodes, 9 edges
+  Algebra: Left_Branching_Point_Algebra
+  X:
+    => X: =
+    => Y: <
+    => Z: <
+  Y:
+    => Y: =
+    => X: >
+    => Z: <
+  Z:
+    => Z: =
+    => Y: >
+    => X: >
+
+--------------------------------------------------
+Algebra: RCC8_Algebra
+
+Network-RCC8_Algebra: 3 nodes, 7 edges
+  Algebra: RCC8_Algebra
+  X:
+    => X: EQ
+    => Y: NTPP
+  Y:
+    => Y: EQ
+    => X: NTPPI
+    => Z: NTPP
+  Z:
+    => Z: EQ
+    => Y: NTPPI
+
+Network-RCC8_Algebra: 3 nodes, 9 edges
+  Algebra: RCC8_Algebra
+  X:
+    => X: EQ
+    => Y: NTPP
+    => Z: NTPP
+  Y:
+    => Y: EQ
+    => X: NTPPI
+    => Z: NTPP
+  Z:
+    => Z: EQ
+    => Y: NTPPI
+    => X: NTPPI
+
+---------------------------------------------------------------
+Example in book on constraint processing for temporal reasoning
+---------------------------------------------------------------
+
+Book Example: 4 nodes, 16 edges
+  Algebra: Linear_Interval_Algebra
+  I:
+    => I: E
+    => J: F|FI
+    => L: M|S
+    => K: D|DI
+  J:
+    => J: E
+    => I: F|FI
+    => L: MI|SI
+    => K: D|DI
+  L:
+    => L: E
+    => I: MI|SI
+    => J: M|S
+    => K: O
+  K:
+    => K: E
+    => I: D|DI
+    => J: D|DI
+    => L: OI
+
+Book Example: 4 nodes, 16 edges
+  Algebra: Linear_Interval_Algebra
+  I:
+    => I: E
+    => J: 
+    => L: M|S
+    => K: D|DI
+  J:
+    => J: E
+    => I: F|FI
+    => L: MI|SI
+    => K: D|DI
+  L:
+    => L: E
+    => I: MI|SI
+    => J: M|S
+    => K: O
+  K:
+    => K: E
+    => I: D|DI
+    => J: D|DI
+    => L: OI
+
+Book Example Extended: 4 nodes, 16 edges
+  Algebra: Extended_Linear_Interval_Algebra
+  I:
+    => I: E|PE
+    => J: F|FI
+    => L: M|S
+    => K: D|DI
+  J:
+    => J: E|PE
+    => I: F|FI
+    => L: MI|SI
+    => K: D|DI
+  L:
+    => L: E|PE
+    => I: MI|SI
+    => J: M|S
+    => K: O
+  K:
+    => K: E|PE
+    => I: D|DI
+    => J: D|DI
+    => L: OI
+Propagation suspended; the network is inconsistent.
+
+Book Example Extended: 4 nodes, 16 edges
+  Algebra: Extended_Linear_Interval_Algebra
+  I:
+    => I: E
+    => J: 
+    => L: M|S
+    => K: D|DI
+  J:
+    => J: E|PE
+    => I: F|FI
+    => L: MI|SI
+    => K: D|DI
+  L:
+    => L: E|PE
+    => I: MI|SI
+    => J: M|S
+    => K: O
+  K:
+    => K: E|PE
+    => I: D|DI
+    => J: D|DI
+    => L: OI
+
+----------------------------------------------
+Region Connection Calculus 8
+Example from http://en.wikipedia.org/wiki/RCC8
+----------------------------------------------
+
+RCC8 Example 1: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:
+    => House1: EQ
+    => House2: DC
+    => Property1: NTPP|TPP
+    => Property2: DC|EC
+    => Road: EC
+  House2:
+    => House2: EQ
+    => House1: DC
+    => Property1: DC|EC
+    => Property2: NTPP
+    => Road: EC
+  Property1:
+    => Property1: EQ
+    => House1: NTPPI|TPPI
+    => House2: DC|EC
+    => Property2: DC|EC
+    => Road: DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
+  Property2:
+    => Property2: EQ
+    => House1: DC|EC
+    => House2: NTPPI
+    => Property1: DC|EC
+    => Road: DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
+  Road:
+    => Road: EQ
+    => House1: EC
+    => House2: EC
+    => Property1: DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
+    => Property2: DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
+
+RCC8 Example 1: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:
+    => House1: EQ
+    => House2: DC
+    => Property1: NTPP|TPP
+    => Property2: DC|EC
+    => Road: EC
+  House2:
+    => House2: EQ
+    => House1: DC
+    => Property1: DC
+    => Property2: NTPP
+    => Road: EC
+  Property1:
+    => Property1: EQ
+    => House1: NTPPI|TPPI
+    => House2: DC
+    => Property2: DC|EC
+    => Road: EC|PO
+  Property2:
+    => Property2: EQ
+    => House1: DC|EC
+    => House2: NTPPI
+    => Property1: DC|EC
+    => Road: PO|TPPI
+  Road:
+    => Road: EQ
+    => House1: EC
+    => House2: EC
+    => Property1: EC|PO
+    => Property2: PO|TPP
+
+Note on example above:
+    According to Wikipedia,
+    https://en.wikipedia.org/wiki/Region_connection_calculus#Examples,
+    the correct constraints
+    between 'road' and 'property1', and
+    between 'road' and 'property2' are:
+      road property1 EC|PO
+      road property2 PO|TPP
+    ------------
+    END OF TESTS
+    ------------
