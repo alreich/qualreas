@@ -1,0 +1,26 @@
+{
+    "name": "NSSDF 2009 Example 2",
+    "algebra": "Extended_Linear_Interval_Algebra",
+    "description": "Using Semantic Web Technology to Exploit Soft Information",
+    "nodes": [
+        ["Yesterday",           ["ProperInterval"]],
+        ["Today",               ["ProperInterval"]],
+        ["Yesterday_Morning",   ["ProperInterval"]],
+        ["Yesterday_Evening",   ["ProperInterval"]],
+        ["Time_of_Arrest",      ["Point"]],
+        ["Time_of_Obs",         ["Point"]],
+        ["Time_of_Release",     ["Point"]],
+        ["Period_of_Detention", ["ProperInterval", "Point"]]
+    ],
+    "edges": [
+        ["Yesterday",         "Today",               "M"],
+        ["Yesterday_Morning", "Yesterday",           "S"],
+        ["Yesterday_Evening", "Yesterday",           "F"],
+        ["Yesterday_Morning", "Yesterday_Evening",   "B"],
+        ["Time_of_Obs",       "Yesterday_Evening",   "D"],
+        ["Time_of_Arrest",    "Yesterday_Morning",   "D"],
+        ["Time_of_Release",   "Today",               "D"],
+        ["Time_of_Arrest",    "Period_of_Detention", "PS"],
+        ["Time_of_Release",   "Period_of_Detention", "PF"]
+    ]
+}

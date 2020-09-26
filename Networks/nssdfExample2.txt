@@ -1,0 +1,18 @@
+Interval & Point Algebra of Time
+Yesterday {Equals} Yesterday
+Today {Equals} Today
+Yesterday-Morning {Equals} Yesterday-Morning
+Yesterday-Evening {Equals} Yesterday-Evening
+Time-of-Arrest {PointEquals} Time-of-Arrest
+Time-of-Obs {PointEquals} Time-of-Obs
+Time-of-Release {PointEquals} Time-of-Release
+Period-of-Detention {Equals, PointEquals} Period-of-Detention
+Yesterday {Meets} Today
+Yesterday-Morning {Starts} Yesterday
+Yesterday-Evening {Finishes} Yesterday
+Yesterday-Morning {Before} Yesterday-Evening
+Time-of-Obs {During} Yesterday-Evening
+Time-of-Arrest {During} Yesterday-Morning
+Time-of-Release {During} Today
+Time-of-Arrest {PointStarts} Period-of-Detention
+Time-of-Release {PointFinishes} Period-of-Detention
