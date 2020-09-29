@@ -683,12 +683,21 @@ class Network(nx.DiGraph):
         print("    ],")
         print("   \"edges\": [")
         # TODO: Only print one direction, not both directions
+        ignore = set()  # Set of reverse edges that can be ignored
+        count = 0
         for head in self.nodes:
             for tail in self.neighbors(head):
-                if head != tail:
-                    print(f"        \"{list(self.get_edge_by_names(head.name, tail.name))}\",")
+                if head.name != tail.name:  # Don't output edges from a node to itself
+                    rev_edge = (tail.name, head.name)  # Reverse edge
+                    if not ((head.name, tail.name) in ignore):
+                        print(f"        \"{list(self.get_edge_by_names(head.name, tail.name))}\",")
+                        ignore.add(rev_edge)
+                        count += 1
         print("    ]")
         print("}")
+        print(f"TOTAL EDGE COUNT: {count}")
+        for e in ignore:
+            print(e)
 
 
 # IMPORTANT: The only intended purpose of the class, FourPointNet, is to generate point-based
