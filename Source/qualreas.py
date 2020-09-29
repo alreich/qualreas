@@ -25,6 +25,11 @@ def make_name(name=None, prefix="Network:", size=8):
     return name
 
 
+def flatten(lst):
+    """Flatten a shallow list."""
+    return reduce(lambda x, y: x + y, lst)
+
+
 # The fundamental algebraic elements here are SETS of relations, not individual relations.
 # An individual relation, r, relates two temporal entities (te), e.g, teA r teB.  Sets
 # of relations denote disjunctions, e.g., teA {r,s} teB <==> (teA r teB) or (teA s teB).
@@ -452,6 +457,8 @@ class Network(nx.DiGraph):
             self.algebra = Algebra(os.path.join(algebra_path, net_dict["algebra"]) + json_ext)
             if "name" in net_dict:
                 name = net_dict["name"]
+            if "description" in net_dict:
+                self.description = net_dict["description"]
             node_list = net_dict["nodes"]
             nodes = {}
             for nd in node_list:
@@ -651,6 +658,37 @@ class Network(nx.DiGraph):
             print(f"  {head.name}:")
             for tail in self.neighbors(head):
                 print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
+
+    def to_json(self):
+        """Print out a JSON representation of this network."""
+        print("{")
+        print(f"   \"name\": \"{self.name}\",")
+        print(f"   \"algebra\": \"{self.algebra.name}\",")
+        print(f"   \"description\": \"{self.description}\",")
+        print("   \"nodes\": [")
+        num_nodes = len(self.nodes)
+        for node in self.nodes:
+            self_constraint = self.get_edge_by_names(node.name, node.name)[2]
+            classes = flatten(
+                list(
+                    map(lambda x: self.algebra.rel_domain(x),
+                        list(self.algebra.relset(self_constraint)))
+                )
+            )
+            num_nodes -= 1
+            if num_nodes > 0:
+                print(f"        [\"{node.name}\", {classes}],")
+            else:
+                print(f"        [\"{node.name}\", {classes}]")
+        print("    ],")
+        print("   \"edges\": [")
+        # TODO: Only print one direction, not both directions
+        for head in self.nodes:
+            for tail in self.neighbors(head):
+                if head != tail:
+                    print(f"        \"{list(self.get_edge_by_names(head.name, tail.name))}\",")
+        print("    ]")
+        print("}")
 
 
 # IMPORTANT: The only intended purpose of the class, FourPointNet, is to generate point-based
