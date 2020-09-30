@@ -659,14 +659,54 @@ class Network(nx.DiGraph):
             for tail in self.neighbors(head):
                 print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
 
-    def to_json(self):
-        """Print out a JSON representation of this network."""
-        print("{")
-        print(f"   \"name\": \"{self.name}\",")
-        print(f"   \"algebra\": \"{self.algebra.name}\",")
-        print(f"   \"description\": \"{self.description}\",")
-        print("   \"nodes\": [")
-        num_nodes = len(self.nodes)
+    # def to_json(self):
+    #     """Print out a JSON representation of this network."""
+    #     print("{")
+    #     print(f"   \"name\": \"{self.name}\",")
+    #     print(f"   \"algebra\": \"{self.algebra.name}\",")
+    #     print(f"   \"description\": \"{self.description}\",")
+    #     print("   \"nodes\": [")
+    #     num_nodes = self.number_of_nodes()
+    #     for node in self.nodes:
+    #         self_constraint = self.get_edge_by_names(node.name, node.name)[2]
+    #         classes = flatten(
+    #             list(
+    #                 map(lambda x: self.algebra.rel_domain(x),
+    #                     list(self.algebra.relset(self_constraint)))
+    #             )
+    #         )
+    #         num_nodes -= 1
+    #         if num_nodes > 0:
+    #             print(f"        [\"{node.name}\", {classes}],")
+    #         else:
+    #             print(f"        [\"{node.name}\", {classes}]")
+    #     print("    ],")
+    #     print("   \"edges\": [")
+    #     reverse_edges = set()  # Keep track of reverse edges and don't output them
+    #     edge_count = int((self.number_of_edges() - self.number_of_nodes()) / 2)
+    #     for head in self.nodes:
+    #         for tail in self.neighbors(head):
+    #             if head.name != tail.name:  # Don't output an edge from a node to itself
+    #                 # rev_edge = (tail.name, head.name)  # Reverse edge
+    #                 if not ((head.name, tail.name) in reverse_edges):
+    #                     edge_count -= 1  # Used to prevent printing a final comma
+    #                     if edge_count > 0:
+    #                         print(f"        {list(self.get_edge_by_names(head.name, tail.name))},")
+    #                     else:
+    #                         print(f"        {list(self.get_edge_by_names(head.name, tail.name))}")
+    #                     reverse_edges.add((tail.name, head.name))  # Remember the reverse of this edge
+    #     print("    ]")
+    #     print("}")
+
+    def to_dict(self):
+        """Return a dictionary representation of the network."""
+        net_dict = {
+            "name": self.name,
+            "algebra": self.algebra.name,
+            "description": self.description,
+            "nodes": [],
+            "edges": []
+        }
         for node in self.nodes:
             self_constraint = self.get_edge_by_names(node.name, node.name)[2]
             classes = flatten(
@@ -675,29 +715,15 @@ class Network(nx.DiGraph):
                         list(self.algebra.relset(self_constraint)))
                 )
             )
-            num_nodes -= 1
-            if num_nodes > 0:
-                print(f"        [\"{node.name}\", {classes}],")
-            else:
-                print(f"        [\"{node.name}\", {classes}]")
-        print("    ],")
-        print("   \"edges\": [")
-        # TODO: Only print one direction, not both directions
-        ignore = set()  # Set of reverse edges that can be ignored
-        count = 0
+            net_dict["nodes"].append([node.name, classes])
+        reverse_edges = set()  # Keep track of reverse edges and don't output them
         for head in self.nodes:
             for tail in self.neighbors(head):
-                if head.name != tail.name:  # Don't output edges from a node to itself
-                    rev_edge = (tail.name, head.name)  # Reverse edge
-                    if not ((head.name, tail.name) in ignore):
-                        print(f"        \"{list(self.get_edge_by_names(head.name, tail.name))}\",")
-                        ignore.add(rev_edge)
-                        count += 1
-        print("    ]")
-        print("}")
-        print(f"TOTAL EDGE COUNT: {count}")
-        for e in ignore:
-            print(e)
+                if head.name != tail.name:  # Don't output an edge from a node to itself
+                    if not ((head.name, tail.name) in reverse_edges):
+                        net_dict["edges"].append(list(self.get_edge_by_names(head.name, tail.name)))
+                        reverse_edges.add((tail.name, head.name))  # Remember the reverse of this edge
+        return net_dict
 
 
 # IMPORTANT: The only intended purpose of the class, FourPointNet, is to generate point-based
