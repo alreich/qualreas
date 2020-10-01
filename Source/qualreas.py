@@ -2,19 +2,20 @@
 @author: Alfred J. Reich
 
 """
-# https://bitsets.readthedocs.io/en/stable/
+# BITSETS: https://bitsets.readthedocs.io/en/stable/
 from bitsets import bitset, bases
 import os
 import json
 import random
 import string
+# NETWORKX: https://networkx.github.io/
 import networkx as nx
 from functools import reduce
 from collections import abc
 import numpy as np
 
 __author__ = 'Alfred J. Reich'
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 
 
 def make_name(name=None, prefix="Network:", size=8):
