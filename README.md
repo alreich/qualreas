@@ -11,18 +11,11 @@ The four temporal algebras found in ["Intervals, Points, and Branching Time"(Rei
 
 ## To Be Done
 
-* Make the print representations for entities into constructors
-* When I go public, create and maintain a "changelog"
-* Create a JSON &/or RDF interface for asserting constraints
-* Update and test the csv2json.py code to Python 3
-* Update the names of the CSV files to match those of their JSON counterparts
-* Update timeX.ttl ontology to fix W3C reference & add branching time relations
-* Change the name "Point" to "Instant" (to match https://www.w3.org/TR/owl-time/)
 * Change the references in Algebras to "multiplication" & "compose" to "composition" & "comp".
+* Add method to Networks for writing to JSON file or string.
 * Create Sphinx docs
-* Update this Readme
 * Create functionality for Algebra generation
-  * Generation of algebra elements
+  * Generation of algebra elements (MOSTLY DONE)
   * Generation of algebra composition tables
 * Rectangle Algebra
   * Complete point relation composition table
@@ -32,8 +25,12 @@ The four temporal algebras found in ["Intervals, Points, and Branching Time"(Rei
 * Generate an RCC8 variant that permits a region to have a single hole
 * Add additional algebras: Matuzak (sp?), Anger's right-branching algebra, etc.
 * Compare the additional algebras to those that I generated
-* See if I can make contraint propagation more efficient by not propagating
-constraints for temporal entities "contained" by other temporal entitites.
+* See if I can make contraint propagation more efficient
+* When I go public, create and maintain a "changelog"
+* Update and test the csv2json.py code to Python 3
+* Update the names of the CSV files to match those of their JSON counterparts
+* Update timeX.ttl ontology to fix W3C reference & add branching time relations
+* **Maybe** change the name "Point" to "Instant" (to match https://www.w3.org/TR/owl-time/)
 
 ## Allen's Algebra of Proper Time Intervals
 
