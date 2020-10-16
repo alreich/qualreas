@@ -576,13 +576,13 @@ class Network(nx.DiGraph):
     #     """Return a deep copy of this network."""
     #     return deepcopy(self)
 
-    @property
-    def constraints(self):
-        return self.edges
+    # @property
+    # def constraints(self):
+    #     return self.edges
 
-    @property
-    def entities(self):
-        return self.nodes
+    # @property
+    # def entities(self):
+    #     return self.nodes
 
     def get_entity_by_name(self, name):
         """Return the node (entity) with the input name. If more than one have the same name,
