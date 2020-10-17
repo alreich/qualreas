@@ -1,5 +1,5 @@
 {
-    "name": "RCC8 Example 1",
+    "name": "Wikipedia RCC8 Example",
     "algebra": "RCC8_Algebra",
     "abbreviations": {"dec": "DC|EC"},
     "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples",

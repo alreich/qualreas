@@ -3,6 +3,8 @@
 
 """
 # BITSETS: https://bitsets.readthedocs.io/en/stable/
+from typing import List, Any
+
 from bitsets import bitset, bases
 import os
 import json
@@ -265,6 +267,18 @@ class Algebra:
                 result = result.union(self.transitivity_table[r1][r2])
         return result
 
+    def get_domain_classes(self, relset):
+        """Returns the set of domain classes supported by the relations in a relset."""
+        return set(flatten(list(map(lambda x: self.rel_domain(x),
+                                    list(self.relset(relset))
+                                    ))))
+
+    def get_range_classes(self, relset):
+        """Returns the set of range classes supported by the relations in a relset."""
+        return set(flatten(list(map(lambda x: self.rel_range(x),
+                                    list(self.relset(relset))
+                                    ))))
+
     def check_composition_identity(self, verbose=False):
         """Check the validity of the composition identity for every
         combination of singleton relset.  :param verbose: Print out
@@ -446,7 +460,7 @@ class Network(nx.DiGraph):
         if algebra:
             self.algebra = algebra
             super().__init__(name=make_name(name))
-        # Else read from a JSON file or a Python dictionary
+        # else read from a JSON file or a Python dictionary
         else:
             if json_file_name:
                 with open(json_file_name, "r") as json_file:
@@ -454,30 +468,45 @@ class Network(nx.DiGraph):
                 json_file.close()
             else:
                 net_dict = network_dict
+
+            ################################################
             # At this point we're working with a dictionary
+            ################################################
+
+            # Instantiate the network's algebra
             self.algebra = Algebra(os.path.join(algebra_path, net_dict["algebra"]) + json_ext)
+
             if "name" in net_dict:
                 name = net_dict["name"]
             if "description" in net_dict:
                 self.description = net_dict["description"]
+
+            # Create 'nodes' as a dictionary where key:value = node_name:node_classes
+            # TODO: Eliminate this dictionary and incorporate it in 'entities' below
             node_list = net_dict["nodes"]
-            nodes = {}
+            nodes = dict()
             for nd in node_list:
                 nodes[nd[0]] = nd[1]
-            entities = {}
+
+            # Create 'entities' as a dictionary where key:value = node_name:Entity(classes, node_name)
+            entities = dict()
             for node_name, node_classes in nodes.items():
                 entities[node_name] = class_type_dict[node_classes[0]](node_classes, node_name)
+
+            # Initialize the superclass
             super().__init__(name=make_name(name))
-            for espec in net_dict["edges"]:
-                if len(espec) == 3:
-                    cons = espec[2]
+
+            # Add the constraint to the network as an attribute on an edge
+            for edge_spec in net_dict["edges"]:
+                if len(edge_spec) == 3:
+                    cons = edge_spec[2]
                 else:
                     cons = self.algebra.elements
                 if ("abbreviations" in net_dict) and (cons in net_dict["abbreviations"]):
                     constraint = net_dict["abbreviations"][cons]
                 else:
                     constraint = cons
-                self.add_constraint(entities[espec[0]], entities[espec[1]], constraint)
+                self.add_constraint(entities[edge_spec[0]], entities[edge_spec[1]], constraint)
 
     def __str__(self):
         return f"<Network--{self.name}--{self.algebra.name}>"
@@ -643,6 +672,10 @@ class Network(nx.DiGraph):
                         # If any product is empty then the Network is inconsistent
                         if not prod.any():
                             raise InconsistentNetwork
+            # Update the Entity/Node classes to reflect changes due to constraint propagation
+            for nd in self.nodes():
+                # Only consider domains since the edges below are from the node to itself
+                nd.classes = list(self.algebra.get_domain_classes(self.edges[nd, nd]['constraint']))
             if verbose:
                 print(f"Number of iterations: {loop_count}")
             return True
@@ -656,7 +689,7 @@ class Network(nx.DiGraph):
         print(f"\n{self.name}: {len(self.nodes)} nodes, {len(self.edges)} edges")
         print(f"  Algebra: {self.algebra.name}")
         for head in self.nodes:
-            print(f"  {head.name}:")
+            print(f"  {head.name}:{head.classes}")
             for tail in self.neighbors(head):
                 print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
 
@@ -709,13 +742,17 @@ class Network(nx.DiGraph):
             "edges": []
         }
         for node in self.nodes:
-            self_constraint = self.get_edge_by_names(node.name, node.name)[2]
-            classes = flatten(
-                list(
-                    map(lambda x: self.algebra.rel_domain(x),
-                        list(self.algebra.relset(self_constraint)))
-                )
-            )
+            self_constraints = self.get_edge_by_names(node.name, node.name)[2]
+            # classes = flatten(
+            #     list(
+            #         map(lambda x: self.algebra.rel_domain(x),
+            #             list(self.algebra.relset(self_constraint)))
+            #     )
+            # )
+            # Determine the classes that the node is in based on the domains of its
+            # equality relations.  Since it is an edge from a node to itself, the
+            # ranges do not need to be considered.
+            classes = list(self.algebra.get_domain_classes(self_constraints))
             net_dict["nodes"].append([node.name, classes])
         reverse_edges = set()  # Keep track of reverse edges and don't output them
         for head in self.nodes:
