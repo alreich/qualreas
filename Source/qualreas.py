@@ -2,9 +2,8 @@
 @author: Alfred J. Reich
 
 """
-# BITSETS: https://bitsets.readthedocs.io/en/stable/
-from typing import List, Any
 
+# BITSETS: https://bitsets.readthedocs.io/en/stable/
 from bitsets import bitset, bases
 import os
 import json
@@ -627,7 +626,7 @@ class Network(nx.DiGraph):
         src = self.get_entity_by_name(source)
         tgt = self.get_entity_by_name(target)
         con = str(self.edges[src, tgt]['constraint'])
-        return (source, target, con)
+        return source, target, con
 
     def to_list(self, entities=None):
         """Return a list of lists of constraints, where the lists in the list represent

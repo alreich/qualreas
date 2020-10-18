@@ -11,8 +11,10 @@ The four temporal algebras found in ["Intervals, Points, and Branching Time"(Rei
 
 ## To Be Done
 
+* Write code to identify all "singleton-labelled" networks from a general network
+* What is the proper way to identify "author" in code?
 * Change the references in Algebras to "multiplication" & "compose" to "composition" & "comp".
-* Add method to Networks for writing to JSON file or string.
+* Write "Relation Algebra 101" notebook.
 * Create Sphinx docs
 * Create functionality for Algebra generation
   * Generation of algebra elements (MOSTLY DONE)
