@@ -97,6 +97,7 @@ class RelSet(bases.BitSet):
 # object, using names that conform to those found in the W3.org's time ontology ("Point",
 # "ProperInterval", "Duration").  See https://www.w3.org/TR/owl-time/.
 
+# TODO: Maybe add a top-level Entity that the other inherit from.
 
 class TemporalEntity:
     """A temporal entity, such as Time Instant/Point or Time Interval."""
@@ -761,6 +762,16 @@ class Network(nx.DiGraph):
                         net_dict["edges"].append(list(self.get_edge_by_names(head.name, tail.name)))
                         reverse_edges.add((tail.name, head.name))  # Remember the reverse of this edge
         return net_dict
+
+
+# TODO: Modify the Network init so that the orig net can share its algebra with its copy
+
+def copy_network(net, alg_path):
+    """Poor man's copy function. Returns a deep copy of the input network."""
+    net_dict = net.to_dict()
+    net_copy = Network(algebra_path=alg_path,
+                       network_dict=net_dict)
+    return net_copy
 
 
 # IMPORTANT: The only intended purpose of the class, FourPointNet, is to generate point-based
