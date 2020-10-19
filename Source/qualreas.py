@@ -766,6 +766,13 @@ class Network(nx.DiGraph):
 
 # TODO: Modify the Network init so that the orig net can share its algebra with its copy
 
+# A problem with deep copying the Network object here, via NetworkX functionality,
+# is a Network contains objects.  Not just Temporal or Spatial Entities, which
+# would be easy to remove (maybe I'll do that later) but also an Algebra and RelSets.
+# The Algebra doesn't need to be copied at all and can be shared.  RelSets can be deep
+# copied using copy.copy().  The function, below, is the quickest way to deep copy
+# a Network for now.
+
 def copy_network(net, alg_path):
     """Poor man's copy function. Returns a deep copy of the input network."""
     net_dict = net.to_dict()
