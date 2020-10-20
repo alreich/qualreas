@@ -574,6 +574,10 @@ class Network(nx.DiGraph):
             print(f"Constraint Added: {entity1.name} {entity2.name} {list(rel_set.members())}")
             print(f"Constraint Added: {entity2.name} {entity1.name} {list(rel_set_converse.members())}")
 
+    def set_constraint(self, src, tgt, relset):
+        self.edges[src, tgt]['constraint'] = relset
+        self.edges[tgt, src]['constraint'] = self.algebra.converse(relset)
+
     def __add__(self, other):
         """Combine this network with another network, and return the new, combined network."""
         new_net = Network(self.algebra, "")
@@ -684,14 +688,29 @@ class Network(nx.DiGraph):
                 print(f"Propagation suspended; the network is inconsistent.")
             return False
 
-    def summary(self):
-        """Print out a summary of this network and its nodes, edges, and constraints."""
+    # def summary(self):
+    #     """Print out a summary of this network and its nodes, edges, and constraints."""
+    #     print(f"\n{self.name}: {len(self.nodes)} nodes, {len(self.edges)} edges")
+    #     print(f"  Algebra: {self.algebra.name}")
+    #     for head in self.nodes:
+    #         print(f"  {head.name}:{head.classes}")
+    #         for tail in self.neighbors(head):
+    #             print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
+
+    def summary(self, show_all=True):
+        """Prints a summary of the network and its nodes/classes, edges, & constraints.
+        By default, all edges are printed.  That is, every edge and its converse are
+        shown, e.g., A-->B and B-->A, which is a bit redundant.  To just show one of
+        the edges, set show_all to False."""
         print(f"\n{self.name}: {len(self.nodes)} nodes, {len(self.edges)} edges")
         print(f"  Algebra: {self.algebra.name}")
+        done = []
         for head in self.nodes:
             print(f"  {head.name}:{head.classes}")
             for tail in self.neighbors(head):
-                print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
+                if (tail not in done) or show_all:
+                    print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
+            done.append(head)
 
     # def to_json(self):
     #     """Print out a JSON representation of this network."""
@@ -741,17 +760,11 @@ class Network(nx.DiGraph):
             "nodes": [],
             "edges": []
         }
+        # Create an entry for each node in the dictionary, including the classes
+        # that each node is in, based on the domain of the equality relations on
+        # the edge from each node to itself.
         for node in self.nodes:
             self_constraints = self.get_edge_by_names(node.name, node.name)[2]
-            # classes = flatten(
-            #     list(
-            #         map(lambda x: self.algebra.rel_domain(x),
-            #             list(self.algebra.relset(self_constraint)))
-            #     )
-            # )
-            # Determine the classes that the node is in based on the domains of its
-            # equality relations.  Since it is an edge from a node to itself, the
-            # ranges do not need to be considered.
             classes = list(self.algebra.get_domain_classes(self_constraints))
             net_dict["nodes"].append([node.name, classes])
         reverse_edges = set()  # Keep track of reverse edges and don't output them
