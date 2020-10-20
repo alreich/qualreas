@@ -575,6 +575,8 @@ class Network(nx.DiGraph):
             print(f"Constraint Added: {entity2.name} {entity1.name} {list(rel_set_converse.members())}")
 
     def set_constraint(self, src, tgt, relset):
+        """Assuming that an edge exists between src & tgt, this function destructively changes
+         whatever constraint was between them to be relset"""
         self.edges[src, tgt]['constraint'] = relset
         self.edges[tgt, src]['constraint'] = self.algebra.converse(relset)
 
