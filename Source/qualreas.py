@@ -589,11 +589,16 @@ class Network(nx.DiGraph):
                 break
         return result
 
-    def get_edge_by_names(self, source, target):
-        src = self.get_entity_by_name(source)
-        tgt = self.get_entity_by_name(target)
-        con = str(self.edges[src, tgt]['constraint'])
-        return source, target, con
+    def get_edge_by_names(self, source_name, target_name, return_names=True):
+        """Returns the Source Name/Node, Target Name/Node, and Constraint of the
+        Edge corresponding to the input Source/Target Names."""
+        source_node = self.get_entity_by_name(source_name)
+        target_node = self.get_entity_by_name(target_name)
+        con = str(self.edges[source_node, target_node]['constraint'])
+        if return_names:
+            return source_name, target_name, con
+        else:
+            return source_node, target_node, con
 
     def to_list(self, entities=None):
         """Return a list of lists of constraints, where the lists in the list represent
