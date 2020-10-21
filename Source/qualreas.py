@@ -190,6 +190,8 @@ class Algebra:
                 # print(rel1, rel2)
                 self.transitivity_table[rel1][rel2] = self.elements_bitset(tuple(entry))
 
+    # TODO: Write a to_dict() method for Algebras
+
     # Accessors for information about a given relation:
 
     def rel_name(self, rel):
@@ -430,83 +432,66 @@ class InconsistentNetwork(Exception):
     pass
 
 
-# load_network reads a JSON file similar to the example below and returns the network
-# that corresponds to it.
-#
-# {
-#     "name": "RCC8 Example 1",
-#     "algebra": "RCC8Algebra",
-#     "abbreviations": {"?": "DC|EC|TPP|TPPI|PO|EQ|NTPP|NTPPI"},
-#     "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples",
-#     "nodes": [
-#         ["House1", ["Region"]],
-#         ["House2", ["Region"]],
-#         ["Property1", ["Region"]],
-#         ...
-#     ],
-#     "edges": [
-#         ["House1", "House2", "DC"],
-#         ["House1", "Property1", "TPP|NTPP"],
-#         ...
-#     ]
-# }
-
 class Network(nx.DiGraph):
 
     def __init__(self, algebra=None, name=None,
                  algebra_path=None, json_file_name=None, network_dict=None,
                  json_ext=".json"):
-        # If an Algebra object is input then we're done
+
+        # Create the network in dictionary form (net_dict)
+        if json_file_name:
+            with open(json_file_name, "r") as json_file:
+                net_dict = json.load(json_file)
+            json_file.close()
+        # ...or use the input dictionary,
+        elif network_dict:
+            net_dict = network_dict
+        # ...or start from scratch (assumes an Algebra was input, though).
+        else:
+            net_dict = {"name": make_name(name),
+                        "description": "undefined",
+                        "nodes": [],
+                        "edges": []}
+
+        # If an algebra was input, use it...
         if algebra:
             self.algebra = algebra
-            super().__init__(name=make_name(name))
-        # else read from a JSON file or a Python dictionary
+        # ...otherwise read the required algebra from a JSON file.
         else:
-            if json_file_name:
-                with open(json_file_name, "r") as json_file:
-                    net_dict = json.load(json_file)
-                json_file.close()
-            else:
-                net_dict = network_dict
-
-            ################################################
-            # At this point we're working with a dictionary
-            ################################################
-
-            # Instantiate the network's algebra
             self.algebra = Algebra(os.path.join(algebra_path, net_dict["algebra"]) + json_ext)
 
-            if "name" in net_dict:
-                name = net_dict["name"]
-            if "description" in net_dict:
-                self.description = net_dict["description"]
+        # TODO: Make name & description attributes of the DiGraph
+        if "name" in net_dict:
+            name = net_dict["name"]
+        if "description" in net_dict:
+            self.description = net_dict["description"]
 
-            # Create 'nodes' as a dictionary where key:value = node_name:node_classes
-            # TODO: Eliminate this dictionary and incorporate it in 'entities' below
-            node_list = net_dict["nodes"]
-            nodes = dict()
-            for nd in node_list:
-                nodes[nd[0]] = nd[1]
+        # Create 'nodes' as a dictionary where key:value = node_name:node_classes
+        # TODO: Eliminate this dictionary and incorporate it in 'entities' below
+        node_list = net_dict["nodes"]
+        nodes = dict()
+        for nd in node_list:
+            nodes[nd[0]] = nd[1]
 
-            # Create 'entities' as a dictionary where key:value = node_name:Entity(classes, node_name)
-            entities = dict()
-            for node_name, node_classes in nodes.items():
-                entities[node_name] = class_type_dict[node_classes[0]](node_classes, node_name)
+        # Create 'entities' as a dictionary where key:value = node_name:Entity(classes, node_name)
+        entities = dict()
+        for node_name, node_classes in nodes.items():
+            entities[node_name] = class_type_dict[node_classes[0]](node_classes, node_name)
 
-            # Initialize the superclass
-            super().__init__(name=make_name(name))
+        # Initialize the superclass
+        super().__init__(name=make_name(name))
 
-            # Add the constraint to the network as an attribute on an edge
-            for edge_spec in net_dict["edges"]:
-                if len(edge_spec) == 3:
-                    cons = edge_spec[2]
-                else:
-                    cons = self.algebra.elements
-                if ("abbreviations" in net_dict) and (cons in net_dict["abbreviations"]):
-                    constraint = net_dict["abbreviations"][cons]
-                else:
-                    constraint = cons
-                self.add_constraint(entities[edge_spec[0]], entities[edge_spec[1]], constraint)
+        # Add the constraint to the network as an attribute on an edge
+        for edge_spec in net_dict["edges"]:
+            if len(edge_spec) == 3:
+                cons = edge_spec[2]
+            else:
+                cons = self.algebra.elements
+            if ("abbreviations" in net_dict) and (cons in net_dict["abbreviations"]):
+                constraint = net_dict["abbreviations"][cons]
+            else:
+                constraint = cons
+            self.add_constraint(entities[edge_spec[0]], entities[edge_spec[1]], constraint)
 
     def __str__(self):
         return f"<Network--{self.name}--{self.algebra.name}>"
@@ -578,7 +563,9 @@ class Network(nx.DiGraph):
         """Assuming that an edge exists between src & tgt, this function destructively changes
          whatever constraint was between them to be relset"""
         self.edges[src, tgt]['constraint'] = relset
-        self.edges[tgt, src]['constraint'] = self.algebra.converse(relset)
+        # Don't bother looking at the converse for equality relations
+        if src != tgt:
+            self.edges[tgt, src]['constraint'] = self.algebra.converse(relset)
 
     def __add__(self, other):
         """Combine this network with another network, and return the new, combined network."""
@@ -591,33 +578,6 @@ class Network(nx.DiGraph):
         new_net.add_edges_from(self.edges(data=True))
         new_net.name = self.name + "+" + other.name
         return new_net
-
-    # TODO: Write transpose method for networks
-    # def transpose(self, other):
-    #     """Viewing this network as a matrix, return a copy that is its transpose."""
-    #     pass
-
-    # TODO: Write converse method for networks
-    # def converse(self):
-    #     """Return a copy of this network where all of the elements are converses of the original."""
-    #     net_copy = deepcopy(self)
-    #     for node1 in net_copy:
-    #         for node2 in net_copy:
-    #             constraint12 = net_copy.edges(node1, node2)['constraint']
-    #             net_copy.edges(node1, node2)['constraint'] = self.algebra.converse(constraint12)
-    #     return net_copy
-
-    # def copy(self):
-    #     """Return a deep copy of this network."""
-    #     return deepcopy(self)
-
-    # @property
-    # def constraints(self):
-    #     return self.edges
-
-    # @property
-    # def entities(self):
-    #     return self.nodes
 
     def get_entity_by_name(self, name):
         """Return the node (entity) with the input name. If more than one have the same name,
@@ -689,15 +649,6 @@ class Network(nx.DiGraph):
             if verbose:
                 print(f"Propagation suspended; the network is inconsistent.")
             return False
-
-    # def summary(self):
-    #     """Print out a summary of this network and its nodes, edges, and constraints."""
-    #     print(f"\n{self.name}: {len(self.nodes)} nodes, {len(self.edges)} edges")
-    #     print(f"  Algebra: {self.algebra.name}")
-    #     for head in self.nodes:
-    #         print(f"  {head.name}:{head.classes}")
-    #         for tail in self.neighbors(head):
-    #             print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
 
     def summary(self, show_all=True):
         """Prints a summary of the network and its nodes/classes, edges, & constraints.
@@ -778,22 +729,9 @@ class Network(nx.DiGraph):
                         reverse_edges.add((tail.name, head.name))  # Remember the reverse of this edge
         return net_dict
 
-
-# TODO: Modify the Network init so that the orig net can share its algebra with its copy
-
-# A problem with deep copying the Network object here, via NetworkX functionality,
-# is a Network contains objects.  Not just Temporal or Spatial Entities, which
-# would be easy to remove (maybe I'll do that later) but also an Algebra and RelSets.
-# The Algebra doesn't need to be copied at all and can be shared.  RelSets can be deep
-# copied using copy.copy().  The function, below, is the quickest way to deep copy
-# a Network for now.
-
-def copy_network(net, alg_path):
-    """Poor man's copy function. Returns a deep copy of the input network."""
-    net_dict = net.to_dict()
-    net_copy = Network(algebra_path=alg_path,
-                       network_dict=net_dict)
-    return net_copy
+    def copy(self):
+        """Returns a mostly deep copy of the network, except for the Algebra, which is shared."""
+        return Network(algebra=self.algebra, network_dict=self.to_dict())
 
 
 # IMPORTANT: The only intended purpose of the class, FourPointNet, is to generate point-based
