@@ -786,6 +786,11 @@ class FourPointNet(Network):
 
 
 def generate_realizations(in_work, result):
+    """To being, in_work should be a list of only one network. And result should be
+    an empty list.  The edges in the single input network with compound relsets on its
+    edges will be expended (copied) with until the edges in all of the network copies
+    have only one relation on each edge.  Of those networks, only the consistent ones
+    will be returned."""
     if len(in_work) == 0:
         return result
     else:
@@ -797,6 +802,10 @@ def generate_realizations(in_work, result):
 
 
 def expand(network):
+    """Search along the network's edges until one is found with multiple relations
+    in it's constraint (relation set).  Then create a copy of this network for each
+    relation in the relset, and, for the corresponding edge in each network copy, set
+    it's constraint to be one of the multiple constraints."""
     expansion = []
     for src, tgt in network.edges:
         edge_constraint = network.edges[src, tgt]['constraint']
