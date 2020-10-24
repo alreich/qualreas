@@ -1,0 +1,242 @@
+------------------------
+   Realization #1
+------------------------
+
+Wikipedia RCC8 Example: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:['Region']
+    => House1: EQ
+    => House2: DC
+    => Property1: TPP
+    => Property2: EC
+    => Road: EC
+  House2:['Region']
+    => House2: EQ
+    => Property1: DC
+    => Property2: NTPP
+    => Road: EC
+  Property1:['Region']
+    => Property1: EQ
+    => Property2: EC
+    => Road: PO
+  Property2:['Region']
+    => Property2: EQ
+    => Road: PO
+  Road:['Region']
+    => Road: EQ
+ 
+------------------------
+   Realization #2
+------------------------
+
+Wikipedia RCC8 Example: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:['Region']
+    => House1: EQ
+    => House2: DC
+    => Property1: TPP
+    => Property2: EC
+    => Road: EC
+  House2:['Region']
+    => House2: EQ
+    => Property1: DC
+    => Property2: NTPP
+    => Road: EC
+  Property1:['Region']
+    => Property1: EQ
+    => Property2: EC
+    => Road: EC
+  Property2:['Region']
+    => Property2: EQ
+    => Road: TPPI
+  Road:['Region']
+    => Road: EQ
+ 
+------------------------
+   Realization #3
+------------------------
+
+Wikipedia RCC8 Example: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:['Region']
+    => House1: EQ
+    => House2: DC
+    => Property1: TPP
+    => Property2: EC
+    => Road: EC
+  House2:['Region']
+    => House2: EQ
+    => Property1: DC
+    => Property2: NTPP
+    => Road: EC
+  Property1:['Region']
+    => Property1: EQ
+    => Property2: EC
+    => Road: EC
+  Property2:['Region']
+    => Property2: EQ
+    => Road: PO
+  Road:['Region']
+    => Road: EQ
+ 
+------------------------
+   Realization #4
+------------------------
+
+Wikipedia RCC8 Example: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:['Region']
+    => House1: EQ
+    => House2: DC
+    => Property1: TPP
+    => Property2: DC
+    => Road: EC
+  House2:['Region']
+    => House2: EQ
+    => Property1: DC
+    => Property2: NTPP
+    => Road: EC
+  Property1:['Region']
+    => Property1: EQ
+    => Property2: EC
+    => Road: PO
+  Property2:['Region']
+    => Property2: EQ
+    => Road: PO
+  Road:['Region']
+    => Road: EQ
+ 
+------------------------
+   Realization #5
+------------------------
+
+Wikipedia RCC8 Example: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:['Region']
+    => House1: EQ
+    => House2: DC
+    => Property1: TPP
+    => Property2: DC
+    => Road: EC
+  House2:['Region']
+    => House2: EQ
+    => Property1: DC
+    => Property2: NTPP
+    => Road: EC
+  Property1:['Region']
+    => Property1: EQ
+    => Property2: EC
+    => Road: EC
+  Property2:['Region']
+    => Property2: EQ
+    => Road: PO
+  Road:['Region']
+    => Road: EQ
+ 
+------------------------
+   Realization #6
+------------------------
+
+Wikipedia RCC8 Example: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:['Region']
+    => House1: EQ
+    => House2: DC
+    => Property1: TPP
+    => Property2: DC
+    => Road: EC
+  House2:['Region']
+    => House2: EQ
+    => Property1: DC
+    => Property2: NTPP
+    => Road: EC
+  Property1:['Region']
+    => Property1: EQ
+    => Property2: DC
+    => Road: PO
+  Property2:['Region']
+    => Property2: EQ
+    => Road: PO
+  Road:['Region']
+    => Road: EQ
+ 
+------------------------
+   Realization #7
+------------------------
+
+Wikipedia RCC8 Example: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:['Region']
+    => House1: EQ
+    => House2: DC
+    => Property1: TPP
+    => Property2: DC
+    => Road: EC
+  House2:['Region']
+    => House2: EQ
+    => Property1: DC
+    => Property2: NTPP
+    => Road: EC
+  Property1:['Region']
+    => Property1: EQ
+    => Property2: DC
+    => Road: EC
+  Property2:['Region']
+    => Property2: EQ
+    => Road: PO
+  Road:['Region']
+    => Road: EQ
+ 
+------------------------
+   Realization #8
+------------------------
+
+Wikipedia RCC8 Example: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:['Region']
+    => House1: EQ
+    => House2: DC
+    => Property1: NTPP
+    => Property2: DC
+    => Road: EC
+  House2:['Region']
+    => House2: EQ
+    => Property1: DC
+    => Property2: NTPP
+    => Road: EC
+  Property1:['Region']
+    => Property1: EQ
+    => Property2: EC
+    => Road: PO
+  Property2:['Region']
+    => Property2: EQ
+    => Road: PO
+  Road:['Region']
+    => Road: EQ
+ 
+------------------------
+   Realization #9
+------------------------
+
+Wikipedia RCC8 Example: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:['Region']
+    => House1: EQ
+    => House2: DC
+    => Property1: NTPP
+    => Property2: DC
+    => Road: EC
+  House2:['Region']
+    => House2: EQ
+    => Property1: DC
+    => Property2: NTPP
+    => Road: EC
+  Property1:['Region']
+    => Property1: EQ
+    => Property2: DC
+    => Road: PO
+  Property2:['Region']
+    => Property2: EQ
+    => Road: PO
+  Road:['Region']
+    => Road: EQ

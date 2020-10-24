@@ -785,6 +785,46 @@ class FourPointNet(Network):
                 self.__ontology_classes(self.start2, self.end2))
 
 
+def generate_realizations(in_work, result):
+    if len(in_work) == 0:
+        return result
+    else:
+        next_net = in_work.pop()
+        if finished(next_net) and next_net.propagate():
+            return generate_realizations(in_work, result + [next_net])
+        else:
+            return generate_realizations(in_work + expand(next_net), result)
+
+
+def expand(network):
+    expansion = []
+    for src, tgt in network.edges:
+        edge_constraint = network.edges[src, tgt]['constraint']
+        if len(edge_constraint) > 1:
+            # print("--------")
+            # print(f"Edge Constraint: {edge_constraint}")
+            for rel in edge_constraint:
+                # print(f"   Relation: {rel}")
+                net_copy = network.copy()
+                src_node, tgt_node, _ = net_copy.get_edge_by_names(src.name, tgt.name, return_names=False)
+                net_copy.set_constraint(src_node, tgt_node, net_copy.algebra.relset(rel))
+                expansion = expansion + [net_copy]
+                # print(f"   Expansion: {expansion}")
+            break
+    return expansion
+
+
+def finished(network):
+    """Returns True if all constraints are singletons."""
+    answer = True
+    for src, tgt in network.edges:
+        edge_constraint = network.edges[src, tgt]['constraint']
+        if len(edge_constraint) > 1:
+            answer = False
+            break
+    return answer
+
+
 # Map 4-Point network "signatures" to typical relation names.
 # This mapping is used in generate_consistent_networks, below.
 signature_name_mapping = {
