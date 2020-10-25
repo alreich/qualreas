@@ -670,45 +670,6 @@ class Network(nx.DiGraph):
                     print(f"    => {tail.name}: {str(self.edges[head, tail]['constraint'])}")
             done.append(head)
 
-    # def to_json(self):
-    #     """Print out a JSON representation of this network."""
-    #     print("{")
-    #     print(f"   \"name\": \"{self.name}\",")
-    #     print(f"   \"algebra\": \"{self.algebra.name}\",")
-    #     print(f"   \"description\": \"{self.description}\",")
-    #     print("   \"nodes\": [")
-    #     num_nodes = self.number_of_nodes()
-    #     for node in self.nodes:
-    #         self_constraint = self.get_edge_by_names(node.name, node.name)[2]
-    #         classes = flatten(
-    #             list(
-    #                 map(lambda x: self.algebra.rel_domain(x),
-    #                     list(self.algebra.relset(self_constraint)))
-    #             )
-    #         )
-    #         num_nodes -= 1
-    #         if num_nodes > 0:
-    #             print(f"        [\"{node.name}\", {classes}],")
-    #         else:
-    #             print(f"        [\"{node.name}\", {classes}]")
-    #     print("    ],")
-    #     print("   \"edges\": [")
-    #     reverse_edges = set()  # Keep track of reverse edges and don't output them
-    #     edge_count = int((self.number_of_edges() - self.number_of_nodes()) / 2)
-    #     for head in self.nodes:
-    #         for tail in self.neighbors(head):
-    #             if head.name != tail.name:  # Don't output an edge from a node to itself
-    #                 # rev_edge = (tail.name, head.name)  # Reverse edge
-    #                 if not ((head.name, tail.name) in reverse_edges):
-    #                     edge_count -= 1  # Used to prevent printing a final comma
-    #                     if edge_count > 0:
-    #                         print(f"        {list(self.get_edge_by_names(head.name, tail.name))},")
-    #                     else:
-    #                         print(f"        {list(self.get_edge_by_names(head.name, tail.name))}")
-    #                     reverse_edges.add((tail.name, head.name))  # Remember the reverse of this edge
-    #     print("    ]")
-    #     print("}")
-
     def to_dict(self):
         """Return a dictionary representation of the network."""
         net_dict = {
@@ -737,6 +698,51 @@ class Network(nx.DiGraph):
     def copy(self):
         """Returns a mostly deep copy of the network, except for the Algebra, which is shared."""
         return Network(algebra=self.algebra, network_dict=self.to_dict())
+
+    def all_realizations(self):
+        """Returns a list of copies of this network where each edge has only one
+        relation, consistent with the relation sets on this network. All possible
+        consistent networks are in the list."""
+
+        def main(in_work, result):
+            if len(in_work) == 0:
+                return result
+            else:
+                next_net = in_work.pop()
+                if finished(next_net):
+                    if next_net.propagate():
+                        return main(in_work, result + [next_net])
+                    else:
+                        return main(in_work, result)
+                else:
+                    return main(in_work + expand(next_net), result)
+
+        def expand(network):
+            """Expands the first edge it comes across with multiple relations into
+            multiple network copies with single relations on the same edge."""
+            expansion = []
+            for src, tgt in network.edges:
+                edge_constraint = network.edges[src, tgt]['constraint']
+                if len(edge_constraint) > 1:
+                    for rel in edge_constraint:
+                        net_copy = network.copy()
+                        src_node, tgt_node, _ = net_copy.get_edge_by_names(src.name, tgt.name, return_names=False)
+                        net_copy.set_constraint(src_node, tgt_node, net_copy.algebra.relset(rel))
+                        expansion = expansion + [net_copy]
+                    break
+            return expansion
+
+        def finished(network):
+            """Returns True if all constraints consist of single relations."""
+            answer = True
+            for src, tgt in network.edges:
+                edge_constraint = network.edges[src, tgt]['constraint']
+                if len(edge_constraint) > 1:
+                    answer = False
+                    break
+            return answer
+
+        return main([self], [])
 
 
 # IMPORTANT: The only intended purpose of the class, FourPointNet, is to generate point-based
@@ -783,55 +789,6 @@ class FourPointNet(Network):
         represented by the input 4-point network."""
         return (self.__ontology_classes(self.start1, self.end1),
                 self.__ontology_classes(self.start2, self.end2))
-
-
-def generate_realizations(in_work, result):
-    """To being, in_work should be a list of only one network. And result should be
-    an empty list.  The edges in the single input network with compound relsets on its
-    edges will be expended (copied) with until the edges in all of the network copies
-    have only one relation on each edge.  Of those networks, only the consistent ones
-    will be returned."""
-    if len(in_work) == 0:
-        return result
-    else:
-        next_net = in_work.pop()
-        if finished(next_net) and next_net.propagate():
-            return generate_realizations(in_work, result + [next_net])
-        else:
-            return generate_realizations(in_work + expand(next_net), result)
-
-
-def expand(network):
-    """Search along the network's edges until one is found with multiple relations
-    in it's constraint (relation set).  Then create a copy of this network for each
-    relation in the relset, and, for the corresponding edge in each network copy, set
-    it's constraint to be one of the multiple constraints."""
-    expansion = []
-    for src, tgt in network.edges:
-        edge_constraint = network.edges[src, tgt]['constraint']
-        if len(edge_constraint) > 1:
-            # print("--------")
-            # print(f"Edge Constraint: {edge_constraint}")
-            for rel in edge_constraint:
-                # print(f"   Relation: {rel}")
-                net_copy = network.copy()
-                src_node, tgt_node, _ = net_copy.get_edge_by_names(src.name, tgt.name, return_names=False)
-                net_copy.set_constraint(src_node, tgt_node, net_copy.algebra.relset(rel))
-                expansion = expansion + [net_copy]
-                # print(f"   Expansion: {expansion}")
-            break
-    return expansion
-
-
-def finished(network):
-    """Returns True if all constraints are singletons."""
-    answer = True
-    for src, tgt in network.edges:
-        edge_constraint = network.edges[src, tgt]['constraint']
-        if len(edge_constraint) > 1:
-            answer = False
-            break
-    return answer
 
 
 # Map 4-Point network "signatures" to typical relation names.
