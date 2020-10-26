@@ -1,0 +1,15 @@
+{
+    "name": "Golumbic & Shamir 1993 Example 2.6",
+    "algebra": "Linear_Interval_Algebra",
+    "description": "1993 Complexity & Algorithms for Reasoning about Time: A Graph-Theoretic Approach by Golumbic & Shamir",
+    "nodes": [
+        ["a", ["ProperInterval"]],
+        ["b", ["ProperInterval"]],
+        ["c", ["ProperInterval"]]
+    ],
+    "edges": [
+        ["a", "b", "B|BI"],
+        ["b", "c", "B|BI"],
+        ["a", "c", "B|BI"]
+    ]
+}
