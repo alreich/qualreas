@@ -813,7 +813,7 @@ signature_name_mapping = {
 
 
 # The inverse of the the signature name mapping dictionary, above, but without inverse elements.
-name_signature_mapping = {val: key for key, val in qr.signature_name_mapping.items() if val[-1] != 'I'}
+name_signature_mapping = {val: key for key, val in signature_name_mapping.items() if val[-1] != 'I'}
 # {'B': '<,<,<,<',
 #  'D': '>,<,>,<',
 #  'E': '=,<,>,=',
@@ -862,7 +862,8 @@ def generate_consistent_networks(point_algebra, lessthan="<", startname="StartPt
         for elem23 in point_algebra.elements:
             for elem14 in point_algebra.elements:
                 for elem24 in point_algebra.elements:
-                    four_pt_net_name = elem13 + ',' + elem23 + ',' + elem14 + ',' + elem24
+                    # four_pt_net_name = elem13 + ',' + elem23 + ',' + elem14 + ',' + elem24
+                    four_pt_net_name = elem13 + ',' + elem14 + ',' + elem23 + ',' + elem24
                     ptnet = FourPointNet(point_algebra, four_pt_net_name, lessthan, startname, endname)
                     pt1, pt2, pt3, pt4 = ptnet.get_points()
                     rs13 = point_algebra.relset(elem13)
@@ -879,9 +880,11 @@ def generate_consistent_networks(point_algebra, lessthan="<", startname="StartPt
                         if verbose:
                             print("==========================")
                             if elem_key in signature_name_mapping:
+                                print(elem_key)
                                 print(signature_name_mapping[elem_key])
                             else:
                                 print("UNKNOWN")
+                            print(ptnet.domain_and_range())
                             print(np.array(ptnet.to_list()))
     print(f"\n{len(consistent_nets)} consistent networks")
     return consistent_nets
