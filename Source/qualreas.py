@@ -589,6 +589,11 @@ class Network(nx.DiGraph):
                 break
         return result
 
+    def get_entities_by_name(self, name_list):
+        """Return an iterator over entities with the names in 'name_list', in the order
+        that they appear in the list."""
+        return map(lambda name: self.get_entity_by_name(name), name_list)
+
     def get_edge_by_names(self, source_name, target_name, return_names=True):
         """Returns the Source Name/Node, Target Name/Node, and Constraint of the
         Edge corresponding to the input Source/Target Names."""
@@ -743,6 +748,15 @@ class Network(nx.DiGraph):
                     return main(in_work + next_net.expand(), result)
 
         return main([self], [])
+
+    def get_submatrix_constraints(self, rows, cols, entity_name_list):
+        #default_name_list = ["StartPt1", "EndPt1", "StartPt2", "EndPt2", "StartPt3", "EndPt3"]
+        entities = list(self.get_entities_by_name(entity_name_list))
+        result = []
+        for row in rows:
+            for col in cols:
+                result.append(str(self.edges[entities[row], entities[col]]['constraint']))
+        return result
 
 
 # IMPORTANT: The only intended purpose of the class, FourPointNet, is to generate point-based
@@ -937,6 +951,11 @@ class SixPointNet(Network):
 
     def get_points(self):
         return [self.start1, self.end1, self.start2, self.end2, self.start3, self.end3]
+
+    def get_2x2_partition_constraints(self, startrow, startcol, name_list):
+        result = self.get_submatrix_constraints([startrow, startrow + 1],
+                                                [startcol, startcol + 1], name_list)
+        return ','.join(result)
 
     def __ontology_classes(self, start, end):
         """The constraints between the start and end points of a temporal entity
