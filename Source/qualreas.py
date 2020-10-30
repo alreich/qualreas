@@ -695,7 +695,7 @@ class Network(nx.DiGraph):
                         reverse_edges.add((tail.name, head.name))  # Remember the reverse of this edge
         return net_dict
 
-    def copy(self):
+    def mostly_copy(self):
         """Returns a mostly deep copy of the network, except for the Algebra, which is shared."""
         return Network(algebra=self.algebra, network_dict=self.to_dict())
 
@@ -725,7 +725,7 @@ class Network(nx.DiGraph):
                 edge_constraint = network.edges[src, tgt]['constraint']
                 if len(edge_constraint) > 1:
                     for rel in edge_constraint:
-                        net_copy = network.copy()
+                        net_copy = network.mostly_copy()
                         src_node, tgt_node, _ = net_copy.get_edge_by_names(src.name, tgt.name, return_names=False)
                         net_copy.set_constraint(src_node, tgt_node, net_copy.algebra.relset(rel))
                         expansion = expansion + [net_copy]
@@ -936,6 +936,11 @@ class SixPointNet(Network):
         return (self.__ontology_classes(self.start1, self.end1),
                 self.__ontology_classes(self.start2, self.end2),
                 self.__ontology_classes(self.start3, self.end3))
+
+    def mostly_copy(self):
+        """Returns a mostly deep copy of the network, except for the Algebra, which is shared."""
+        cp = self.super(algebra=self.algebra, network_dict=self.to_dict())
+        return cp
 
 
 if __name__ == '__main__':
