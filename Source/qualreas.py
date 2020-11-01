@@ -837,6 +837,8 @@ signature_name_mapping = {
 name_signature_mapping = {val: key.split(',') for key, val in signature_name_mapping.items()}
 
 
+# The dictionary below includes Allen's Interval Algebra relations plus the additional
+# relations defined in [Reich 1994] for Points and Left/Right-Branching Time algebras.
 relation_long_names = {
     "B": "Before",
     "BI": "After",
@@ -993,8 +995,8 @@ class SixPointNet(Network):
         return class_list
 
 
-def derive_composition(algebra, eq_rel, rel1, rel2):
-    pt_net = SixPointNet(algebra, eq_rel, rel1, rel2)
+def derive_composition(point_algebra, eq_rel, rel1, rel2):
+    pt_net = SixPointNet(point_algebra, eq_rel, rel1, rel2)
     pt_name_list = pt_net.name_list
     pt_net.propagate()
     pt_net_realz = pt_net.all_realizations()
