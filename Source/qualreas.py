@@ -739,6 +739,8 @@ class Network(nx.DiGraph):
                 return result
             else:
                 next_net = in_work.pop()
+                print(np.array(next_net.to_list()))  # DEBUG PRINT
+                print()
                 if next_net.has_only_singleton_constraints():
                     if next_net.propagate():
                         return main(in_work, result + [next_net])
