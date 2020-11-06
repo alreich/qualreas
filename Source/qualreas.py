@@ -707,6 +707,7 @@ class Network(nx.DiGraph):
     def expand(self):
         """Expands the first edge it comes across with multiple relations into
         multiple network copies with single relations on the same edge."""
+        # print(f"Expand: {np.array(self.to_list())}")  # DEBUG
         expansion = []
         for src, tgt in self.edges:
             edge_constraint = self.edges[src, tgt]['constraint']
@@ -717,7 +718,21 @@ class Network(nx.DiGraph):
                     net_copy.set_constraint(src_node, tgt_node, net_copy.algebra.relset(rel))
                     expansion = expansion + [net_copy]
                 break
+        # for x in expansion:
+        #     print(f"    Expansion: {np.array(x.to_list())}")  # DEBUG
         return expansion
+
+    def expand_all(self):
+        def exp_aux(in_work, result):
+            if len(in_work) == 0:
+                return result
+            else:
+                next_net = in_work.pop()
+                if next_net.has_only_singleton_constraints():
+                    return exp_aux(in_work, result + [next_net])
+                else:
+                    return exp_aux(in_work + next_net.expand(), result)
+        return exp_aux([self], [])
 
     def has_only_singleton_constraints(self):
         """Returns True if all constraints consist of single relations."""
@@ -730,26 +745,29 @@ class Network(nx.DiGraph):
         return answer
 
     def all_realizations(self):
-        """Returns a list of copies of this network where each edge has only one
-        relation, consistent with the relation sets on this network. All possible
-        consistent networks are in the list."""
+        return [net for net in self.expand_all() if net.propagate()]
 
-        def main(in_work, result):
-            if len(in_work) == 0:
-                return result
-            else:
-                next_net = in_work.pop()
-                print(np.array(next_net.to_list()))  # DEBUG PRINT
-                print()
-                if next_net.has_only_singleton_constraints():
-                    if next_net.propagate():
-                        return main(in_work, result + [next_net])
-                    else:
-                        return main(in_work, result)
-                else:
-                    return main(in_work + next_net.expand(), result)
-
-        return main([self], [])
+    # def all_realizations(self):
+    #     """Returns a list of copies of this network where each edge has only one
+    #     relation, consistent with the relation sets on this network. All possible
+    #     consistent networks are in the list."""
+    #
+    #     def main(in_work, result):
+    #         if len(in_work) == 0:
+    #             return result
+    #         else:
+    #             next_net = in_work.pop()
+    #             print(np.array(next_net.to_list()))  # DEBUG PRINT
+    #             print()
+    #             if next_net.has_only_singleton_constraints():
+    #                 if next_net.propagate():
+    #                     return main(in_work, result + [next_net])
+    #                 else:
+    #                     return main(in_work, result)
+    #             else:
+    #                 return main(in_work + next_net.expand(), result)
+    #
+    #     return main([self], [])
 
     def get_submatrix_constraints(self, rows, cols, entity_name_list):
         #default_name_list = ["StartPt1", "EndPt1", "StartPt2", "EndPt2", "StartPt3", "EndPt3"]
@@ -1001,6 +1019,7 @@ def derive_composition(point_algebra, eq_rel, rel1, rel2):
     pt_net = SixPointNet(point_algebra, eq_rel, rel1, rel2)
     pt_name_list = pt_net.name_list
     pt_net.propagate()
+    # print(f"Derive Comp for: {np.array(pt_net.to_list())}")  # DEBUG
     pt_net_realz = pt_net.all_realizations()
     comps = set()
     for realz in pt_net_realz:
