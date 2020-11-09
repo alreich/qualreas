@@ -707,7 +707,6 @@ class Network(nx.DiGraph):
     def expand(self):
         """Expands the first edge it comes across with multiple relations into
         multiple network copies with single relations on the same edge."""
-        # print(f"Expand: {np.array(self.to_list())}")  # DEBUG
         expansion = []
         for src, tgt in self.edges:
             edge_constraint = self.edges[src, tgt]['constraint']
@@ -718,8 +717,6 @@ class Network(nx.DiGraph):
                     net_copy.set_constraint(src_node, tgt_node, net_copy.algebra.relset(rel))
                     expansion = expansion + [net_copy]
                 break
-        # for x in expansion:
-        #     print(f"    Expansion: {np.array(x.to_list())}")  # DEBUG
         return expansion
 
     def expand_all(self):
@@ -731,7 +728,7 @@ class Network(nx.DiGraph):
                 if next_net.has_only_singleton_constraints():
                     return exp_aux(in_work, result + [next_net])
                 else:
-                    return exp_aux(in_work + next_net.expand(), result)
+                    return exp_aux(next_net.expand() + in_work, result)
         return exp_aux([self], [])
 
     def has_only_singleton_constraints(self):
@@ -747,30 +744,7 @@ class Network(nx.DiGraph):
     def all_realizations(self):
         return [net for net in self.expand_all() if net.propagate()]
 
-    # def all_realizations(self):
-    #     """Returns a list of copies of this network where each edge has only one
-    #     relation, consistent with the relation sets on this network. All possible
-    #     consistent networks are in the list."""
-    #
-    #     def main(in_work, result):
-    #         if len(in_work) == 0:
-    #             return result
-    #         else:
-    #             next_net = in_work.pop()
-    #             print(np.array(next_net.to_list()))  # DEBUG PRINT
-    #             print()
-    #             if next_net.has_only_singleton_constraints():
-    #                 if next_net.propagate():
-    #                     return main(in_work, result + [next_net])
-    #                 else:
-    #                     return main(in_work, result)
-    #             else:
-    #                 return main(in_work + next_net.expand(), result)
-    #
-    #     return main([self], [])
-
     def get_submatrix_constraints(self, rows, cols, entity_name_list):
-        #default_name_list = ["StartPt1", "EndPt1", "StartPt2", "EndPt2", "StartPt3", "EndPt3"]
         entities = list(self.get_entities_by_name(entity_name_list))
         result = []
         for row in rows:
@@ -799,11 +773,13 @@ class FourPointNet(Network):
         self.algebra = algebra
         self.lessthan = algebra.relset(lessthanstr)
         # Start & End Points of Interval 1
-        s1 = startname + "1"; e1 = endname + "1"
+        s1 = startname + "1"
+        e1 = endname + "1"
         self.start1 = TemporalEntity(["Point"], name=s1)
         self.end1 = TemporalEntity(["Point"], name=e1)
         # Start & End Points of Interval 2
-        s2 = startname + "2"; e2 = endname + "2"
+        s2 = startname + "2"
+        e2 = endname + "2"
         self.start2 = TemporalEntity(["Point"], name=s2)
         self.end2 = TemporalEntity(["Point"], name=e2)
         self.name_list = [s1, e1, s2, e2]
@@ -957,17 +933,20 @@ class SixPointNet(Network):
         self.lessthan = algebra.relset(lessthanstr)
 
         # Start & End Points of Interval 1
-        s1 = startname + "1"; e1 = endname + "1"
+        s1 = startname + "1"
+        e1 = endname + "1"
         self.start1 = TemporalEntity(["Point"], name=s1)
         self.end1 = TemporalEntity(["Point"], name=e1)
 
         # Start & End Points of Interval 2
-        s2 = startname + "2"; e2 = endname + "2"
+        s2 = startname + "2"
+        e2 = endname + "2"
         self.start2 = TemporalEntity(["Point"], name=s2)
         self.end2 = TemporalEntity(["Point"], name=e2)
 
         # Start & End Points of Interval 3
-        s3 = startname + "3"; e3 = endname + "3"
+        s3 = startname + "3"
+        e3 = endname + "3"
         self.start3 = TemporalEntity(["Point"], name=s3)
         self.end3 = TemporalEntity(["Point"], name=e3)
 
