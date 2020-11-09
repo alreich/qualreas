@@ -97,7 +97,7 @@ class RelSet(bases.BitSet):
 # object, using names that conform to those found in the W3.org's time ontology ("Point",
 # "ProperInterval", "Duration").  See https://www.w3.org/TR/owl-time/.
 
-# TODO: Maybe add a top-level Entity that the other inherit from.
+# TODO: Eliminate Entities.  Just use NetworkX node attributes.
 
 class TemporalEntity:
     """A temporal entity, such as Time Instant/Point or Time Interval."""
