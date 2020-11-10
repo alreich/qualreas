@@ -188,7 +188,7 @@
             "Name": "Right-Starts", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
-            "Symmetric": false, 
+            "Symmetric": true,
             "Transitive": false
         }, 
         "R~": {

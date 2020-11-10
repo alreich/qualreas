@@ -89,7 +89,7 @@
             "Name": "Left-Finishes", 
             "Range": ["ProperInterval"], 
             "Reflexive": false, 
-            "Symmetric": false, 
+            "Symmetric": true,
             "Transitive": false
         }, 
         "LO": {
