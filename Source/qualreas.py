@@ -1010,6 +1010,33 @@ def derive_composition(point_algebra, eq_rel, rel1, rel2):
     return '|'.join(comps_list)
 
 
+def create_composition_table(point_algebra, less_than_rel, relations_list):
+    trans_dict = dict()
+    for r1 in relations_list:
+        trans_dict[r1] = dict()
+        for r2 in relations_list:
+            trans_dict[r1][r2] = derive_composition(point_algebra, less_than_rel, r1, r2)
+    return trans_dict
+
+
+def is_transitive(rel_name, pt_alg, less_than_rel):
+    return rel_name == derive_composition(pt_alg, less_than_rel, rel_name, rel_name)
+
+
+def is_symmetric(rel_name, consistent_nets):
+    four_pt_net = consistent_nets[rel_name]
+    part02 = four_pt_net.get_2x2_partition_constraints(0, 2, four_pt_net.name_list)
+    part20 = four_pt_net.get_2x2_partition_constraints(2, 0, four_pt_net.name_list)
+    return part02 == part20
+
+
+def is_reflexive(rel_name, consistent_nets):
+    four_pt_net = consistent_nets[rel_name]
+    part00 = four_pt_net.get_2x2_partition_constraints(0, 0, four_pt_net.name_list)
+    part02 = four_pt_net.get_2x2_partition_constraints(0, 2, four_pt_net.name_list)
+    return part00 == part02
+
+
 if __name__ == '__main__':
 
     print("\n=======================================================================")
