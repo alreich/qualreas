@@ -1010,7 +1010,7 @@ def derive_composition(point_algebra, eq_rel, rel1, rel2):
     return '|'.join(comps_list)
 
 
-def create_composition_table(point_algebra, less_than_rel, relations_list):
+def derive_composition_table(point_algebra, less_than_rel, relations_list):
     trans_dict = dict()
     for r1 in relations_list:
         trans_dict[r1] = dict()
