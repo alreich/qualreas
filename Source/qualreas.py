@@ -790,6 +790,9 @@ class FourPointNet(Network):
     def get_points(self):
         return [self.start1, self.end1, self.start2, self.end2]
 
+    # def get_point_names(self):
+    #     return map(lambda pt: pt.name, self.get_points())
+
     def __ontology_classes(self, start, end):
         """The constraints between the start and end points of a temporal entity
         determine whether it belongs to the class of Point, ProperIntervals, or
