@@ -143,12 +143,16 @@ def abbrev(term_list):
 
 class Algebra:
 
-    def __init__(self, filename):
+    def __init__(self, filename=None, alg_dict=None):
         """An algebra is created from a JSON file containing the algebra's
-        relation and transitivity table definitions.
+        relation and transitivity table definitions.  An algebra can also
+        be instantiated from a dictionary.
         """
-        with open(filename, 'r') as f:
-            self.algebra_dict = json.load(f)
+        if filename:
+            with open(filename, 'r') as f:
+                self.algebra_dict = json.load(f)
+        else:
+            self.algebra_dict = alg_dict
 
         self.name = self.algebra_dict["Name"]
 
@@ -1044,7 +1048,7 @@ def is_reflexive(rel_name, consistent_nets):
     return part00 == part02
 
 
-def relation_info(rel_name, pt_net, consistent_nets, transitivity_table):
+def derive_relation_info(rel_name, pt_net, consistent_nets, transitivity_table):
     info = dict()
     dom_rng = pt_net.domain_and_range()
     part_inv = pt_net.get_2x2_partition_constraints(2, 0, pt_net.name_list)
@@ -1059,15 +1063,34 @@ def relation_info(rel_name, pt_net, consistent_nets, transitivity_table):
     return info
 
 
-def relation_dict(consistent_networks, transitivity_table):
+def derive_relation_dict(consistent_networks, transitivity_table):
     rel_dict = OrderedDict()
     alg_rels_list = list(consistent_networks.keys())
     alg_rels_list.sort()
     for rel_name in alg_rels_list:
         rel_pt_net = consistent_networks[rel_name]
-        rel_dict[rel_name] = relation_info(rel_name, rel_pt_net,
-                                           consistent_networks, transitivity_table)
+        rel_dict[rel_name] = derive_relation_info(rel_name, rel_pt_net,
+                                                  consistent_networks, transitivity_table)
     return dict(rel_dict)
+
+
+def derive_algebra(base_alg, less_than_rel, name=None, description=None):
+    base_nets = generate_consistent_networks(base_alg, lessthan=less_than_rel)
+    alg_rels_list = list(base_nets.keys())
+    alg_rels_list.sort()
+    comp_dict = derive_composition_table(base_alg, less_than_rel, alg_rels_list)
+    rels_dict = derive_relation_dict(base_nets, comp_dict)
+    alg_dict = dict()
+    alg_dict["Name"] = name
+    alg_dict["Description"] = description
+    alg_dict["Relations"] = rels_dict
+    alg_dict["TransTable"] = comp_dict
+    return alg_dict
+
+
+def algebra_to_json_file(algebra, json_path):
+    with open(json_path, "w") as out:
+        json.dump(algebra, out, indent=4, separators=(',', ':'))
 
 
 if __name__ == '__main__':
