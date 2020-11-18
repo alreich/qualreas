@@ -12,7 +12,7 @@ import string
 # NETWORKX: https://networkx.github.io/
 import networkx as nx
 from functools import reduce
-from collections import abc
+from collections import abc, OrderedDict
 import numpy as np
 
 __author__ = 'Alfred J. Reich'
@@ -1022,8 +1022,12 @@ def derive_composition_table(point_algebra, less_than_rel, relations_list):
     return trans_dict
 
 
-def is_transitive(rel_name, pt_alg, less_than_rel):
-    return rel_name == derive_composition(pt_alg, less_than_rel, rel_name, rel_name)
+# def is_transitive(rel_name, pt_alg, less_than_rel):
+#     return rel_name == derive_composition(pt_alg, less_than_rel, rel_name, rel_name)
+
+
+def is_transitive(rel_name, transitivity_table):
+    return rel_name == transitivity_table[rel_name][rel_name]
 
 
 def is_symmetric(rel_name, consistent_nets):
@@ -1038,6 +1042,32 @@ def is_reflexive(rel_name, consistent_nets):
     part00 = four_pt_net.get_2x2_partition_constraints(0, 0, four_pt_net.name_list)
     part02 = four_pt_net.get_2x2_partition_constraints(0, 2, four_pt_net.name_list)
     return part00 == part02
+
+
+def relation_info(rel_name, pt_net, consistent_nets, transitivity_table):
+    info = dict()
+    dom_rng = pt_net.domain_and_range()
+    part_inv = pt_net.get_2x2_partition_constraints(2, 0, pt_net.name_list)
+    rel_inv_name = signature_name_mapping[part_inv]
+    info["Name"] = relation_long_names[rel_name]
+    info["Converse"] = rel_inv_name
+    info["Domain"] = dom_rng[0]
+    info["Range"] = dom_rng[1]
+    info["Reflexive"] = is_reflexive(rel_name, consistent_nets)
+    info["Symmetric"] = is_symmetric(rel_name, consistent_nets)
+    info["Transitive"] = is_transitive(rel_name, transitivity_table)
+    return info
+
+
+def relation_dict(consistent_networks, transitivity_table):
+    rel_dict = OrderedDict()
+    alg_rels_list = list(consistent_networks.keys())
+    alg_rels_list.sort()
+    for rel_name in alg_rels_list:
+        rel_pt_net = consistent_networks[rel_name]
+        rel_dict[rel_name] = relation_info(rel_name, rel_pt_net,
+                                           consistent_networks, transitivity_table)
+    return dict(rel_dict)
 
 
 if __name__ == '__main__':
