@@ -430,6 +430,12 @@ class Algebra:
                 print(f"        }}")
         print("    }")
 
+    def equivalent_algebra(self, other_alg):
+        """Two algebras are equivalent if they have the same relations and transitivity tables."""
+        rels_equiv = (self.algebra_dict['Relations'] == other_alg.algebra_dict['Relations'])
+        tbls_equiv = (self.algebra_dict['TransTable'] == other_alg.algebra_dict['TransTable'])
+        return rels_equiv and tbls_equiv
+
 
 # Used to break out of Network propagation if it is found to be inconsistent
 class InconsistentNetwork(Exception):
@@ -1091,6 +1097,19 @@ def derive_algebra(base_alg, less_than_rel, name=None, description=None):
 def algebra_to_json_file(algebra, json_path):
     with open(json_path, "w") as out:
         json.dump(algebra, out, indent=4, separators=(',', ':'))
+
+
+def print_point_algebra_composition_table(pt_alg):
+    print(f"{pt_alg.name}")
+    print(f"Elements: {', '.join(pt_alg.elements)}")
+    print(f"{'='*30}")
+    print(f" rel1 ; rel2 = composition")
+    print(f"{'='*30}")
+    for rel1 in pt_alg.transitivity_table:
+        for rel2 in pt_alg.transitivity_table[rel1]:
+            comp = pt_alg.transitivity_table[rel1][rel2]
+            print(f" {rel1:>3}    {rel2:>3}      {comp}")
+        print(f"{'-'*30}")
 
 
 if __name__ == '__main__':
