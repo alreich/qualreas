@@ -154,9 +154,15 @@ class Algebra:
         else:
             self.algebra_dict = alg_dict
 
-        self.name = self.algebra_dict["Name"]
+        if "Name" in self.algebra_dict:
+            self.name = self.algebra_dict["Name"]
+        else:
+            self.name = make_name(prefix="Algebra:")
 
-        self.description = self.algebra_dict["Description"]
+        if "Description" in self.algebra_dict:
+            self.description = self.algebra_dict["Description"]
+        else:
+            self.description = "No description provided."
 
         self.rel_info_dict = self.algebra_dict["Relations"]
 
