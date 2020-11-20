@@ -11,25 +11,18 @@ The four temporal algebras found in ["Intervals, Points, and Branching Time"(Rei
 
 ## To Be Done
 
-* Write code to identify all "singleton-labelled" networks from a general network
 * What is the proper way to identify "author" in code?
-* Change the references in Algebras to "multiplication" & "compose" to "composition" & "comp".
 * Write "Relation Algebra 101" notebook.
 * Create Sphinx docs
-* Create functionality for Algebra generation
-  * Generation of algebra elements (MOSTLY DONE)
-  * Generation of algebra composition tables
 * Rectangle Algebra
   * Complete point relation composition table
   * Generate elements (approx 125)
   * Generate composition table
-* Generate all 4 temporal algebras and check them against the existing ones
 * Generate an RCC8 variant that permits a region to have a single hole
 * Add additional algebras: Matuzak (sp?), Anger's right-branching algebra, etc.
 * Compare the additional algebras to those that I generated
 * See if I can make contraint propagation more efficient
 * When I go public, create and maintain a "changelog"
-* Update and test the csv2json.py code to Python 3
 * Update the names of the CSV files to match those of their JSON counterparts
 * Update timeX.ttl ontology to fix W3C reference & add branching time relations
 * **Maybe** change the name "Point" to "Instant" (to match https://www.w3.org/TR/owl-time/)
