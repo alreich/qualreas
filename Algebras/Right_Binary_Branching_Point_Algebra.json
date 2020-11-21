@@ -1,0 +1,68 @@
+{
+    "Description": "Right-Branching Point Algebra", 
+    "Name": "Right_Branching_Point_Algebra",
+    "Relations": {
+        "<": {
+            "Domain": ["Point"], 
+            "Converse": ">", 
+            "Name": "LessThan", 
+            "Range": ["Point"], 
+            "Reflexive": false, 
+            "Symmetric": false, 
+            "Transitive": true
+        }, 
+        "=": {
+            "Domain": ["Point"], 
+            "Converse": "=", 
+            "Name": "Equals", 
+            "Range": ["Point"], 
+            "Reflexive": true, 
+            "Symmetric": true, 
+            "Transitive": true
+        }, 
+        ">": {
+            "Domain": ["Point"], 
+            "Converse": "<", 
+            "Name": "GreaterThan", 
+            "Range": ["Point"], 
+            "Reflexive": false, 
+            "Symmetric": false, 
+            "Transitive": true
+        }, 
+        "r~": {
+            "Domain": ["Point"], 
+            "Converse": "r~", 
+            "Name": "Incomparable", 
+            "Range": ["Point"], 
+            "Reflexive": false, 
+            "Symmetric": true, 
+            "Transitive": false
+        }
+    }, 
+    "TransTable": {
+        "<": {
+            "<": "<",
+            "=": "<",
+            ">": "<|=|>",
+            "r~": "<|r~"
+        },
+        "=": {
+            "<": "<",
+            "=": "=",
+            ">": ">",
+            "r~": "r~"
+        },
+        ">": {
+            "<": "<|=|>|r~",
+            "=": ">",
+            ">": ">",
+            "r~": "r~"
+        },
+        "r~": {
+            "<": "r~",
+            "=": "r~",
+            ">": ">|r~",
+            "r~": "<|=|>"
+        }
+    }
+}
