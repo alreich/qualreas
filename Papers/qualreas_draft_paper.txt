@@ -1,0 +1,26 @@
+qualreas draft paper
+
+Abstract
+
+Introduction
+
+Relation Algebras
+
+Time Point Algebras
+
+Time Interval Algebras
+
+Constraint Networks
+
+Derivation of Interval Algebras
+
+Bibliography
+
+Online Resources
+
+LaTeX for Mac
+
+* https://www.tug.org/mactex/
+* https://www.texstudio.org/
+
+
