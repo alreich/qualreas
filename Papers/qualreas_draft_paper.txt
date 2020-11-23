@@ -12,6 +12,8 @@ Time Interval Algebras
 
 Constraint Networks
 
+* In the context of constraint networks, relations will be referred to as "constraints".
+
 Derivation of Interval Algebras
 
 Bibliography

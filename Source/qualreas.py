@@ -676,11 +676,10 @@ class Network(nx.DiGraph):
                 print(f"Propagation suspended; the network is inconsistent.")
             return False
 
-    def summary(self, show_all=True):
+    def summary(self, show_all=False):
         """Prints a summary of the network and its nodes/classes, edges, & constraints.
-        By default, all edges are printed.  That is, every edge and its converse are
-        shown, e.g., A-->B and B-->A, which is a bit redundant.  To just show one of
-        the edges, set show_all to False."""
+        By default, converse edges are not shown,  That is, if edge A-->B is shown,
+        then it's converse, B-->A, is not shown. To see all edges, set 'show_all' to True."""
         print(f"\n{self.name}: {len(self.nodes)} nodes, {len(self.edges)} edges")
         print(f"  Algebra: {self.algebra.name}")
         done = []
@@ -720,7 +719,7 @@ class Network(nx.DiGraph):
         """Returns a mostly deep copy of the network, except for the Algebra, which is shared."""
         return Network(algebra=self.algebra, network_dict=self.to_dict())
 
-    def expand(self):
+    def next_singleton_labelings(self):
         """Expands the first edge it comes across with multiple relations into
         multiple network copies with single relations on the same edge."""
         expansion = []
@@ -735,7 +734,8 @@ class Network(nx.DiGraph):
                 break
         return expansion
 
-    def expand_all(self):
+    def all_singleton_labelings(self):
+        """Returns a list of networks that represent all of the singleton labelings of this network."""
         def exp_aux(in_work, result):
             if len(in_work) == 0:
                 return result
@@ -744,7 +744,7 @@ class Network(nx.DiGraph):
                 if next_net.has_only_singleton_constraints():
                     return exp_aux(in_work, result + [next_net])
                 else:
-                    return exp_aux(next_net.expand() + in_work, result)
+                    return exp_aux(next_net.next_singleton_labelings() + in_work, result)
         return exp_aux([self], [])
 
     def has_only_singleton_constraints(self):
@@ -757,8 +757,9 @@ class Network(nx.DiGraph):
                 break
         return answer
 
-    def all_realizations(self):
-        return [net for net in self.expand_all() if net.propagate()]
+    def consistent_singleton_labelings(self):
+        """Returns the list of networks representing all consistent singleton labelings of this network."""
+        return [net for net in self.all_singleton_labelings() if net.propagate()]
 
     def get_submatrix_constraints(self, rows, cols, entity_name_list):
         entities = list(self.get_entities_by_name(entity_name_list))
@@ -1018,7 +1019,7 @@ def derive_composition(point_algebra, eq_rel, rel1, rel2):
     pt_name_list = pt_net.name_list
     pt_net.propagate()
     # print(f"Derive Comp for: {np.array(pt_net.to_list())}")  # DEBUG
-    pt_net_realz = pt_net.all_realizations()
+    pt_net_realz = pt_net.consistent_singleton_labelings()
     comps = set()
     for realz in pt_net_realz:
         # diag = realz.get_2x2_partition_constraints(0, 0, pt_name_list)
