@@ -120,7 +120,7 @@ class SpatialEntity:
         self.name = make_name(name=name, prefix="SE:", size=8)
 
     def __repr__(self):
-        return f"SpatialObject({self.classes} \'{self.name}\')"
+        return f"SpatialEntity({self.classes} \'{self.name}\')"
 
 
 # The following dictionary is used when loading a JSON specification
