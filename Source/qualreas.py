@@ -595,7 +595,7 @@ class Network(nx.DiGraph):
         new_net.name = self.name + "+" + other.name
         return new_net
 
-    def get_entity_by_name(self, name):
+    def get_entity(self, name):
         """Return the node (entity) with the input name. If more than one have the same name,
         then the first one found is returned.  So, try to give entities different names."""
         result = None
@@ -605,21 +605,24 @@ class Network(nx.DiGraph):
                 break
         return result
 
-    def get_entities_by_name(self, name_list):
+    def get_entities(self, name_list):
         """Return an iterator over entities with the names in 'name_list', in the order
         that they appear in the list."""
-        return map(lambda name: self.get_entity_by_name(name), name_list)
+        return map(lambda name: self.get_entity(name), name_list)
 
-    def get_edge_by_names(self, source_name, target_name, return_names=True):
+    def get_edge(self, source_name, target_name, return_names=True):
         """Returns the Source Name/Node, Target Name/Node, and Constraint of the
         Edge corresponding to the input Source/Target Names."""
-        source_node = self.get_entity_by_name(source_name)
-        target_node = self.get_entity_by_name(target_name)
+        source_node = self.get_entity(source_name)
+        target_node = self.get_entity(target_name)
         con = str(self.edges[source_node, target_node]['constraint'])
         if return_names:
             return source_name, target_name, con
         else:
             return source_node, target_node, con
+
+    def get_constraint(self, source_name, target_name):
+        return self.get_edge(source_name, target_name)[2]
 
     def to_list(self, entities=None):
         """Return a list of lists of constraints, where the lists in the list represent
@@ -703,7 +706,7 @@ class Network(nx.DiGraph):
         # that each node is in, based on the domain of the equality relations on
         # the edge from each node to itself.
         for node in self.nodes:
-            self_constraints = self.get_edge_by_names(node.name, node.name)[2]
+            self_constraints = self.get_edge(node.name, node.name)[2]
             classes = list(self.algebra.get_domain_classes(self_constraints))
             net_dict["nodes"].append([node.name, classes])
         reverse_edges = set()  # Keep track of reverse edges and don't output them
@@ -711,7 +714,7 @@ class Network(nx.DiGraph):
             for tail in self.neighbors(head):
                 if head.name != tail.name:  # Don't output an edge from a node to itself
                     if not ((head.name, tail.name) in reverse_edges):
-                        net_dict["edges"].append(list(self.get_edge_by_names(head.name, tail.name)))
+                        net_dict["edges"].append(list(self.get_edge(head.name, tail.name)))
                         reverse_edges.add((tail.name, head.name))  # Remember the reverse of this edge
         return net_dict
 
@@ -728,7 +731,7 @@ class Network(nx.DiGraph):
             if len(edge_constraint) > 1:
                 for rel in edge_constraint:
                     net_copy = self.mostly_copy()
-                    src_node, tgt_node, _ = net_copy.get_edge_by_names(src.name, tgt.name, return_names=False)
+                    src_node, tgt_node, _ = net_copy.get_edge(src.name, tgt.name, return_names=False)
                     net_copy.set_constraint(src_node, tgt_node, net_copy.algebra.relset(rel))
                     expansion = expansion + [net_copy]
                 break
@@ -762,7 +765,7 @@ class Network(nx.DiGraph):
         return [net for net in self.all_singleton_labelings() if net.propagate()]
 
     def get_submatrix_constraints(self, rows, cols, entity_name_list):
-        entities = list(self.get_entities_by_name(entity_name_list))
+        entities = list(self.get_entities(entity_name_list))
         result = []
         for row in rows:
             for col in cols:
