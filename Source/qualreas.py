@@ -1085,13 +1085,13 @@ def derive_relation_dict(consistent_networks, transitivity_table):
     alg_rels_list.sort()
     for rel_name in alg_rels_list:
         rel_pt_net = consistent_networks[rel_name]
-        rel_dict[rel_name] = derive_relation_info(rel_name, rel_pt_net,
-                                                  consistent_networks, transitivity_table)
+        rel_dict[rel_name] = derive_relation_info(rel_name, rel_pt_net, consistent_networks,
+                                                  transitivity_table)
     return dict(rel_dict)
 
 
-def derive_algebra(base_alg, less_than_rel, name=None, description=None):
-    base_nets = generate_consistent_networks(base_alg, lessthan=less_than_rel)
+def derive_algebra(base_alg, less_than_rel, name=None, description=None, verbose=False):
+    base_nets = generate_consistent_networks(base_alg, lessthan=less_than_rel, verbose=verbose)
     alg_rels_list = list(base_nets.keys())
     alg_rels_list.sort()
     comp_dict = derive_composition_table(base_alg, less_than_rel, alg_rels_list)
