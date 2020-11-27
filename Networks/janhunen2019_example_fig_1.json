@@ -1,0 +1,18 @@
+{
+    "name": "janhunen2019_example_fig_1",
+    "algebra": "Linear_Interval_Algebra",
+    "description": "What is a Qualitative Calculus? A General Framework",
+    "nodes": [
+        ["x1", ["ProperInterval"]],
+        ["x2", ["ProperInterval"]],
+        ["x3", ["ProperInterval"]],
+        ["x4", ["ProperInterval"]]
+    ],
+    "edges": [
+        ["x1", "x2", "B|M"],
+        ["x1", "x4", "D|FI|S"],
+        ["x2", "x3", "OI"],
+        ["x2", "x4", "M|OI"],
+        ["x3", "x4", "BI|E"]
+    ]
+}
