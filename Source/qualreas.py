@@ -575,13 +575,13 @@ class Network(nx.DiGraph):
             print(f"Constraint Added: {entity1.name} {entity2.name} {list(rel_set.members())}")
             print(f"Constraint Added: {entity2.name} {entity1.name} {list(rel_set_converse.members())}")
 
-    def set_constraint(self, src, tgt, relset):
-        """Assuming that an edge exists between src & tgt, this function destructively changes
+    def set_constraint(self, tail, head, relset):
+        """Assuming that an edge exists between tail & head, this function destructively changes
          whatever constraint was between them to be relset"""
-        self.edges[src, tgt]['constraint'] = relset
+        self.edges[tail, head]['constraint'] = relset
         # Don't bother looking at the converse for equality relations
-        if src != tgt:
-            self.edges[tgt, src]['constraint'] = self.algebra.converse(relset)
+        if tail != head:
+            self.edges[head, tail]['constraint'] = self.algebra.converse(relset)
 
     def __add__(self, other):
         """Combine this network with another network, and return the new, combined network."""
@@ -726,13 +726,13 @@ class Network(nx.DiGraph):
         """Expands the first edge it comes across with multiple relations into
         multiple network copies with single relations on the same edge."""
         expansion = []
-        for src, tgt in self.edges:
-            edge_constraint = self.edges[src, tgt]['constraint']
+        for tail, head in self.edges:
+            edge_constraint = self.edges[tail, head]['constraint']
             if len(edge_constraint) > 1:
                 for rel in edge_constraint:
                     net_copy = self.mostly_copy()
-                    src_node, tgt_node, _ = net_copy.get_edge(src.name, tgt.name, return_names=False)
-                    net_copy.set_constraint(src_node, tgt_node, net_copy.algebra.relset(rel))
+                    tail_node, head_node, _ = net_copy.get_edge(tail.name, head.name, return_names=False)
+                    net_copy.set_constraint(tail_node, head_node, net_copy.algebra.relset(rel))
                     expansion = expansion + [net_copy]
                 break
         return expansion
@@ -753,8 +753,8 @@ class Network(nx.DiGraph):
     def has_only_singleton_constraints(self):
         """Returns True if all constraints consist of single relations."""
         answer = True
-        for src, tgt in self.edges:
-            edge_constraint = self.edges[src, tgt]['constraint']
+        for tail, head in self.edges:
+            edge_constraint = self.edges[tail, head]['constraint']
             if len(edge_constraint) > 1:
                 answer = False
                 break
@@ -762,7 +762,7 @@ class Network(nx.DiGraph):
 
     def consistent_singleton_labelings(self):
         """Returns the list of networks representing all consistent singleton labelings of this network."""
-        return [net for net in self.all_singleton_labelings() if net.propagate()]
+        return [network for network in self.all_singleton_labelings() if network.propagate()]
 
     def get_submatrix_constraints(self, rows, cols, entity_name_list):
         entities = list(self.get_entities(entity_name_list))
