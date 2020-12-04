@@ -134,6 +134,7 @@ class_type_dict = {"ProperInterval": TemporalEntity,
 # Abbreviations used by the Algebra Summary method:
 # TODO: Create a separate file for this; or perhaps don't abbreviate at all
 def abbrev(term_list):
+    """Given a list of terms, return the corresponding list of abbreviated terms."""
     abbrev_dict = {"Point": "Pt",
                    "ProperInterval": "PInt",
                    "Interval": "Int",
@@ -142,6 +143,7 @@ def abbrev(term_list):
 
 
 class Algebra:
+    """An object that represents a Relation Algebra"""
 
     def __init__(self, filename=None, alg_dict=None):
         """An algebra is created from a JSON file containing the algebra's
@@ -249,6 +251,7 @@ class Algebra:
         return self.__equality_relations
 
     def get_domain_or_range_equality_rel(self, domain_or_range):
+        """Return the equality relation associated with a particular ontological class."""
         return self.equality_relations_dict[domain_or_range]
 
     def relset(self, relations):
@@ -443,12 +446,15 @@ class Algebra:
         return rels_equiv and tbls_equiv
 
 
-# Used to break out of Network propagation if it is found to be inconsistent
 class InconsistentNetwork(Exception):
+    """An exception used to break out of Network propagation when an inconsistency is found."""
     pass
 
 
 class Network(nx.DiGraph):
+    """A directed graph consisting of entities as nodes (e.g., SpatialEntity or TemporalEntity)
+    and with labeled edges, where the labels are sets of relations from a Relation Algebra that
+    represent disjunctions of constraints between the entities."""
 
     def __init__(self, algebra=None, name=None,
                  algebra_path=None, json_file_name=None, network_dict=None,
@@ -513,6 +519,8 @@ class Network(nx.DiGraph):
         return f"<Network--{self.name}--{self.algebra.name}>"
 
     def remove_constraint(self, entity1, entity2):
+        """Removes the directed edge between the two entities, where entity1 is the tail
+        and entity2 is the head of the edge."""
         # Remove edges in both directions
         if self.has_edge(entity1, entity2):
             self.remove_edge(entity1, entity2)
@@ -520,6 +528,8 @@ class Network(nx.DiGraph):
             self.remove_edge(entity2, entity1)
 
     def __set_equality_constraint(self, entity, equality_rels, verbose):
+        """If an entity does not already have an edge directed from itself, to itself,
+        add such an edge and label it with the given equality relations."""
         if not self.has_edge(entity, entity):
             self.add_edge(entity, entity, constraint=equality_rels)
             if verbose:
@@ -621,12 +631,14 @@ class Network(nx.DiGraph):
         else:
             return source_node, target_node, con
 
-    def get_constraint(self, source_name, target_name):
-        return self.get_edge(source_name, target_name)[2]
+    def get_constraint(self, tail_name, head_name):
+        """Return the edge between the given tail and head nodes."""
+        return self.get_edge(tail_name, head_name)[2]
 
     def to_list(self, entities=None):
-        """Return a list of lists of constraints, where the lists in the list represent
-        rows of a matrix of constraints, ordered by the ordering in the list of entities."""
+        """Return a representation of the Network in list form.  Returns a list of lists of
+        constraints, where the lists in the list represent rows of a matrix of constraints,
+        optionally ordered by the ordering in the input list of entities."""
         if not entities:
             entities = self.nodes
         result = []
@@ -765,6 +777,9 @@ class Network(nx.DiGraph):
         return [network for network in self.all_singleton_labelings() if network.propagate()]
 
     def get_submatrix_constraints(self, rows, cols, entity_name_list):
+        """Treating the Network as a constraint matrix, return the sub-matrix corresponding
+        to the input rows and cols, where the ordering of rows/cols is given by the input
+        entity_name_list.  The sub-matrix will be returned as a list."""
         entities = list(self.get_entities(entity_name_list))
         result = []
         for row in rows:
@@ -773,6 +788,7 @@ class Network(nx.DiGraph):
         return result
 
     def get_2x2_partition_constraints(self, startrow, startcol, name_list):
+        """Return a 2-by-2 sub-matrix as a list."""
         result = self.get_submatrix_constraints([startrow, startrow + 1],
                                                 [startcol, startcol + 1], name_list)
         return ','.join(result)
@@ -808,6 +824,8 @@ class FourPointNet(Network):
         self.add_constraint(self.start2, self.end2, self.lessthan, verbose=False)
 
     def get_points(self):
+        """Return a list of the 4 Temporal Entities that correspond to the start point #1,
+        end point #1, start point #2, and end point #2."""
         return [self.start1, self.end1, self.start2, self.end2]
 
     # def get_point_names(self):
@@ -915,6 +933,8 @@ relation_long_names = {
 
 def generate_consistent_networks(point_algebra, lessthan="<", startname="StartPt", endname="EndPt",
                                  verbose=False):
+    """For a given point algebra and less than relation, derive all possible consistent networks
+    of 4 points, where the points represent the start and end points of 2 intervals."""
     consistent_nets = dict()
     for elem13 in point_algebra.elements:
         for elem23 in point_algebra.elements:
