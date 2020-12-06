@@ -969,6 +969,8 @@ def generate_consistent_networks(point_algebra, lessthan="<", startname="StartPt
 
 
 class SixPointNet(Network):
+    """Used derive interval compositions.  The six points represent the start and end points
+    of three intervals, A,B,C, such that A;B=C."""
 
     def __init__(self, algebra, lessthanstr, relname1, relname2,
                  startname="StartPt", endname="EndPt"):
