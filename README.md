@@ -1,4 +1,4 @@
-# QR Constraint Networks 101
+# Constraint Networks of Relation Algebra Elements
 
 This notebook provides a brief example of how a <i>qualreas</i> <b>Constraint Network Object</b> can be...
 * represented in JSON or Python dictionary formats
@@ -9,7 +9,7 @@ This notebook provides a brief example of how a <i>qualreas</i> <b>Constraint Ne
 * queried for details about node and edge attributes
 * used to generate all consistent singleton labellings when multiple constraints (relations) are involved
 
-Two different types of contraint algebras are used here:
+Two different types of relation algebras are demonstrated here:
 1. The spatial constraint algebra, [Region Connection Calculus 8 (RCC8)](https://en.wikipedia.org/wiki/Region_connection_calculus)
 1. The temporal interval & point algebra defined by Reich in ["Intervals, Points, and Branching Time", 1994](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time)
 
