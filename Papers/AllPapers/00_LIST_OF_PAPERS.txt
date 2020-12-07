@@ -1,10 +1,11 @@
-1982 Vilain - System for Reasoning about Time.pdf*
+1982 Vilain - System for Reasoning about Time.pdf
 1983 Allen - Maintaining Knowledge about Temporal Intervals.pdf
 1986a Vilain - Constraint Propagation Algorithms for Temporal Reasoning.pdf
 1986b Vilain - Constraint Propagation Algorithms for Temporal Reasoning Revised Report.pdf
 1987 Tsang - Consistent Labeling Problem in Temporal Reasoning.pdf*
 1989 Koomen - TIMELOGIC Temporal Reasoning System.pdf
 1989 van Beek - Approx Algorithms for Temporal Reasoning.pdf
+1990 Frank - Qual spatial reasoning about cardinal directions.pdf
 1990 van Beek - Exact and approximate reasoning about temporal relations.pdf
 1991 Dechter - Temporal Constraint Networks.pdf
 1991 Freksa - Conceptual Neighborhood.pdf
@@ -32,6 +33,8 @@
 2001 Tsamardinos - Temporal Reasoning for Planning.pdf
 2004 Cukierman - Theory of Convex Interval Relations - Flairs04.pdf
 2004 Hobbs - Ontology of Time for the Semantic Web.pdf*
+2004 Ligozat - What is a Qualitative Calculus - A General Framework.pdf
+2004 Scivos - The Finest of its Class __.pdf
 2005 Alspaugh - SW for Allens Interval Algebra.pdf
 2005 Duntsch - Relation Algebras cs0501.pdf
 2005 Moldovan - Temporal Context Rep and Reasoning.pdf*
@@ -40,6 +43,7 @@
 2007 Bodirsky - Qual Temporal and Spatial Reasoning Revisited.pdf
 2007 Gagne - Formal Temporal Semantics for Microsoft Project.pdf
 2007 Planken - TCSP literature survey.pdf
+2007 Renz - Qual Spatial Reasoning using Constraint Calculi.pdf
 2008 Gantner - GQR Fast Reasoner Qualitative Constraint Calc.pdf
 2009 Wolter - SparQ Spatial Reasoning Toolbox.pdf
 2010 Krokhin - Reasoning about temporal relations.pdf
