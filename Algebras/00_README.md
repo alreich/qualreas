@@ -59,7 +59,7 @@ File Name | Description
 
 ## Older Files
 
-* zz_Older_Formats
+* Older_Formats
   * CSV
   * OriginalFormat
   * Text
