@@ -40,7 +40,7 @@ test_derived_right_branching_interval_algebra.json | for testing; same as Right_
 
 The following 4 algebra were generated as experiments.
 
-The 2 "binary" branching interval algebras are similar to the 2 branching interval algebras, above, except that they assume that all branches are binary.  They were derived using the 2 branching point algebras, above.
+The 2 "binary" branching interval algebras are similar to the 2 branching interval algebras, above, except that they assume that all branches are binary.  They were derived using the 2 binary branching point algebras, above.
 
 The 2 "proper" interval algebras are similar to the 2 branching interval algebras, above, except that they assume that all intervals are proper.  That is, no Time Points are allowed.  So, essentially, they are similar to Allen's original algebra of proper intervals except that they allow for right or left branches in time.
 
