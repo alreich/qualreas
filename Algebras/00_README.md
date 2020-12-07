@@ -57,9 +57,10 @@ File Name | Description
 --------- | -----------
 2DPointAlgebra.json | NOT FINISHED; An algebra of rectangles (generalized intervals)
 
-## Directories Containing Older Files
+## Older Files
 
-* CSV
-* OriginalFormat
-* Text
+* zz_Older_Formats
+  * CSV
+  * OriginalFormat
+  * Text
 
