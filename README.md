@@ -40,7 +40,9 @@ This test will generate output that ends with the words, END OF TESTS.
 
 ## Repository Description
 
-This is a brief description of the contents of each directory in this repository:
+This is a brief description of the contents of each directory in this repository.
+
+There is a lot here that is old and even obsolete.  The important directories for now are: <b>Algebras, Networks, Notebooks, Papers, and Sources</b>.  Because much has been in flux, testing & documentation has mostly been done using the notebooks (Jupyter notebooks), but not all of the notebooks have been kept up-to-date. This readme is one of the notebooks, exported to <i>markdown (md).</i>
 
 * Algebras -- Relation Algebras in JSON format
 * Docs -- INCOMPLETE (Don't look in here)
@@ -183,6 +185,7 @@ NOTES:
 1. The Wikipedia page on RCC8 represents disjunctions of constraints as sets, e.g., {DC, EC}, whereas QR represents this with the string "DC|EC".  Constraint sets represent disjunctions of relation statements, e.g., (Tail DC|EC Head) <==> (Tail DC Head) OR (Tail EC Head).
 1. For convenience, constraints can be abbreviated using a dictionary of abbreviations.  For example, the constraint "DC|EC", above, is abbreviated as "dec".  By the way, internally, the QR module stores and operates on constraint sets as [bitsets](https://bitsets.readthedocs.io/en/stable/).
 1. No constraints are given for the Road-to-Property1 or Road-to-Property2 edges.  The meaning then is that all RCC8 relations are possible for those two edges.  This can be seen in the first summary of the network farther below.
+1. The Network object in QR is a subclass of [networkx.digraph](https://networkx.github.io/documentation/stable/reference/classes/digraph.html), which has functionality for loading/saving from/to JSON format. However, the JSON functionality in NetworkX is not easy to read, nor is it compact, and it is awkward to associate an Algebra with a Network using those formats.  So, the bespoke JSON format, described in this notebook, was developed for <i>qualreas</i>.
 
 ## Instantiate the Constraint Network Object
 
@@ -477,15 +480,20 @@ rcc8.relset('DC|EC')
 
 
 
-Relsets can be composed as follows (also called <i>multiplication</i> in many papers):
+In the literature on Relation Algebras, the semicolon (";") is used to represent the composition operator (also called <i>multiplication</i> in many papers).  In <i>qualreas</i>, composition can only be performed on relsets.  Here's an example:
 
 
 ```python
-print(rcc8.compose(rs1, rs2))
+print(f"{rs1};{rs2} = {rcc8.compose(rs1, rs2)}")
 ```
 
-    DC|EC|NTPP|PO|TPP
+    DC|EC;NTPP = DC|EC|NTPP|PO|TPP
 
+
+The meaning of the composition example, above, is that if S, R, and T are spatial entities (regions) per the RCC-8 algebra, then
+> if [(S DC R) or (S EC R)]
+> <p>and (R NTPP T)</p>
+> <p>then either (S DC T) or (S EC T) or (S NTPP T) or (S PO T) or (S TPP T)</p>
 
 Now, back to <b>Constraint Networks</b>.
 
@@ -1106,7 +1114,3 @@ That is, <i>MondayMidnight</i> is the begin point (<i>PointStarts</i>) of the in
 We've also inferred the corresponding converses of these statements (i.e., using the relations <i>PFI</i> and <i>PSI</i>).
 
 Finally, although we defined <i>MondayMidnight</i> as being either a <i>ProperInterval</i> or a <i>Point</i>, after propagation it is determined that it can only be a <i>Point</i>.
-
-## A Final Note
-
-The Network object in QR is a subclass of [networkx.digraph](https://networkx.github.io/documentation/stable/reference/classes/digraph.html), which has functionality for loading/saving from/to JSON format. However, the JSON functionality in NetworkX is not easy to read, nor is it compact, and it is awkward to associate an Algebra with a Network using those formats.  So, the bespoke JSON format, described in this notebook, was developed for <i>qualreas</i>.
