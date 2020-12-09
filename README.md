@@ -423,7 +423,7 @@ rcc8.element_summary('NTPP')
     Is an Equality Relation?: False
 
 
-We can create relsets from lists of elements:
+We can create relsets from lists of element names:
 
 
 ```python
@@ -451,6 +451,8 @@ rs2
 
 
 
+Again, the relset print representation is more compact:
+
 
 ```python
 print(rs1)
@@ -461,7 +463,7 @@ print(rs2)
     NTPP
 
 
-Relsets can also be created from the more compact relset print representation:
+Relsets can also be created from the relset print representation:
 
 
 ```python
@@ -522,7 +524,7 @@ rcc8_net.summary()
         => Road: EQ
 
 
-For comparison, the printout below is in a format similar to that found on the [Wikipedia example page](https://en.wikipedia.org/wiki/Region_connection_calculus#Examples):
+For easier comparison, the printout below is in a format similar to that found on the [Wikipedia example page](https://en.wikipedia.org/wiki/Region_connection_calculus#Examples):
 
 
 ```python
@@ -691,7 +693,7 @@ rcc8_net.summary()
         => Road: EQ
 
 
-Not counting converses, there are 5 links that have multiple relations (e.g., [House1, Property1, NTPP|TPP]).  Since there are 2 relations on each of these 5 edges, if we breakout the network into all possible singleton labelings we have 2^5 = 32 possible networks.  And it's possible that not all of the 32 networks will be consistent.  In fact, as shown below, only 9 of the 32 possible singleton labelings are consistent.
+Not counting converses--which, conveniently, are not shown in the summary, above--there are 5 links that have multiple relations (e.g., [House1, Property1, NTPP|TPP]).  Since there are 2 relations on each of these 5 edges, if we breakout the network into all possible singleton labelings we have 2^5 = 32 possible networks.  And it's possible that not all of the 32 networks will be consistent.  In fact, as shown below, only 9 of the 32 possible singleton labelings are consistent.
 
 
 ```python
@@ -982,7 +984,7 @@ for network in consistent_singleton_labelings:
 
 Here we'll use the temporal interval & point algebra, <b>Extended_Linear_Interval_Algebra</b>, defined by Reich in ["Intervals, Points, and Branching Time", 1994](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time)
 
-This algebra extends Allen's algebra of proper time intervals to include time points, so those two different ontology classes are permitted.
+This algebra extends Allen's algebra of <b>Proper Time Intervals</b> to include <b>Time Points</b>, so those two different ontology classes are permitted.
 
 The relation, "PF", is "PointFinishes", "PS" is "PointStarts", and "PE" is "PointEquals".  "PFI" & "PSI" are the converses of "PF" and "PS", respectively.
 
@@ -1107,4 +1109,4 @@ Finally, although we defined <i>MondayMidnight</i> as being either a <i>ProperIn
 
 ## A Final Note
 
-The Network object in QR is a subclass of [networkx.digraph](https://networkx.github.io/documentation/stable/reference/classes/digraph.html), which has functionality for loading/saving from/to JSON format. However, the JSON functionality in NetworkX is not easy to read, nor is it compact, and it is awkward to associate an Algebra with a Network using those formats.  So, the bespoke JSON format, described in this notebook, was developed for QR.
+The Network object in QR is a subclass of [networkx.digraph](https://networkx.github.io/documentation/stable/reference/classes/digraph.html), which has functionality for loading/saving from/to JSON format. However, the JSON functionality in NetworkX is not easy to read, nor is it compact, and it is awkward to associate an Algebra with a Network using those formats.  So, the bespoke JSON format, described in this notebook, was developed for <i>qualreas</i>.
