@@ -1,6 +1,73 @@
-# Constraint Networks of Relation Algebra Elements
+# Qualitative Reasoning ("qualreas")
 
-This notebook provides a brief example of how a <i>qualreas</i> <b>Constraint Network Object</b> can be...
+The Python module, <b>qualreas</b>, provides a framework for working with the class of <b>Relation Algebras</b> similar to <b>Allen's Algebra of Time Intervals</b> and the <b>Region Connection Calculus (RCC)</b>.  Specifically, <i>qualreas</i> provides a representation of <b>Constraint Networks</b> where the nodes represent <b>Entities</b> (Spatial, Temporal, or whatever) and the edges are labelled with <b>Relation Sets</b> (<i>relsets</i>) that represent spatio-temporal constraints between the entities.
+
+The constraint networks in qualreas can be <b>propagated</b> to achieve <b>path consistency</b> and they can be "factored" into <b>consistent singleton networks</b>.
+
+Algebras and Networks in qualreas can be read from, or written to, <b>JSON</b> or Python dictionary formats.
+
+## How do I get set up?
+
+With respect the Python packages that <b>qualreas</b> depends on, here are the imports from the top of the source code file, <i>qualreas.py</i>:
+# BITSETS: https://bitsets.readthedocs.io/en/stable/
+from bitsets import bitset, bases
+import os
+import json
+import random
+import string
+# NETWORKX: https://networkx.github.io/
+import networkx as nx
+from functools import reduce
+from collections import abc, OrderedDict
+import numpy as np
+All but one of the dependencies, above, will be taken care of if the [Anaconda Python distribution for individuals](https://www.anaconda.com/products/individual) is used.
+
+The one additional dependency required is <b>bitsets</b>.  The [bitsets package](https://bitsets.readthedocs.io/en/stable/#) is not available in the Anaconda distribution, but it can be easily added by executing the following command:
+pip install bitsets
+Then, use <b>git</b> to clone the <b>qualreas</b> respository.
+
+### Testing the installation
+
+Setup an environment variable, <b>PYPROJ</b>, that points to the directory containing <b>qualreas</b>.
+
+Then <b>cd</b> into the directory, <b>PYPROJ/qualreas/Source</b>, and execute the following command:
+python qualreas.py
+This test will generate output that ends with the following lines:
+    ------------
+    END OF TESTS
+    ------------
+## Repository Description
+
+This is a brief description of the contents of each directory in this repository:
+Algebras/.................Relation Algebras in JSON format
+Docs/.....................INCOMPLETE (Don't look in here)
+Images/...................What the title says
+LICENSE...................same
+Misc/.....................Assorted junk (Don't look in here)
+Networks/.................Constraint Networks in JSON format
+Notebooks/................Jupyter Notebooks in wildly varying conditions (old, new, obsolete)
+Ontologies/...............The .ttl file updates the W3C.org ontology of time with definitions
+                          corresponding to the Extended_Linear_Interval_Algebra [Reich 1994]
+Papers/...................A collection of papers from the relevant literature
+README.md.................This file
+Source/...................Two files. The one that matters is "qualreas.py"
+Tests/....................INCOMPLETE (Don't look in here)
+Trash/....................For when I'm too paranoid to delete something I don't really need
+output_13_0.png...........A small figure used in the README
+
+## References
+
+1. ["Maintaining Knowledge about Temporal Intervals" by James F. Allen](https://cse.unl.edu/~choueiry/Documents/Allen-CACM1983.pdf) - Allen's original paper (PDF)
+1. [Allen's Interval Algebra](https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html) or [here](https://thomasalspaugh.org/pub/fnd/allen.html) - summarizes Allen's algebra of proper time intervals
+1. ["Intervals, Points, and Branching Time" by A.J. Reich](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time) - basis for the point & branching time extensions to Allen's algebra
+
+## EXAMPLES
+
+In the following Jupyter Notebook examples, <b>two different types</b> of contraint algebras are demonstrated:
+1. The spatial constraint algebra, [Region Connection Calculus 8 (RCC8)](https://en.wikipedia.org/wiki/Region_connection_calculus)
+1. The temporal interval & point algebra defined by Reich in ["Intervals, Points, and Branching Time", 1994](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time)
+
+The examples provide brief demonstrations of a <i>qualreas</i> <b>Constraint Network</b> can be...
 * represented in JSON or Python dictionary formats
 * instantiated from a JSON file or Python dictionary
 * serialized to a JSON file/string or Python dictionary
@@ -9,9 +76,7 @@ This notebook provides a brief example of how a <i>qualreas</i> <b>Constraint Ne
 * queried for details about node and edge attributes
 * used to generate all consistent singleton labellings when multiple constraints (relations) are involved
 
-Two different types of relation algebras are demonstrated here:
-1. The spatial constraint algebra, [Region Connection Calculus 8 (RCC8)](https://en.wikipedia.org/wiki/Region_connection_calculus)
-1. The temporal interval & point algebra defined by Reich in ["Intervals, Points, and Branching Time", 1994](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time)
+A brief look at Algebras and their components and methods is provided also.
 
 ## Imports
 
@@ -73,7 +138,7 @@ Image("Images/Edge_Notation_Meaning.png", width=300, height=100)
 
 
     
-![png](output_13_0.png)
+![png](output_31_0.png)
     
 
 
@@ -295,6 +360,129 @@ rcc8_net.get_constraint("Property1", "Road")
 
 
 By the way, the Network method, <b>set_constraint</b>, can be used to set or change the constraint on an edge.  Setting the constraint on an edge, [Tail, Head], will automatically, set the converse constraint on the edge, [Head, Tail]. Always run the <b>propogate</b> method on a Network after setting/changing constraints.
+
+### The Algebra "Inside" the Network
+
+<b>WARNING</b>: Don't try this at home, boys and girls.
+
+There really should be no reason for messing around with the algebra that a network is based on.  But we'll take a look at one here, just so we can see that it actually exists.
+
+So, to begin, we'll use an accessor to obtain the algebra, then we'll examine the algebra a bit.
+
+
+```python
+rcc8 = rcc8_net.algebra
+print(rcc8)
+```
+
+    <RCC8_Algebra: Region Connection Calculus 8 Algebra>
+
+
+Here are all of the algebra's elements:
+
+
+```python
+rcc8.elements
+```
+
+
+
+
+    relset(['DC', 'EC', 'EQ', 'NTPP', 'NTPPI', 'PO', 'TPP', 'TPPI'])
+
+
+
+The print representation of relsets is more compact and convenient:
+
+
+```python
+print(rcc8.elements)
+```
+
+    DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
+
+
+Here's an element summary:
+
+
+```python
+rcc8.element_summary('NTPP')
+```
+
+                      Symbol: NTPP
+                        Name: NonTangentialProperPart
+                      Domain: ['Region']
+                       Range: ['Region']
+                    Converse: NonTangentialProperPartInverse
+               Is Reflexive?: False
+               Is Symmetric?: False
+              Is Transitive?: True
+    Is an Equality Relation?: False
+
+
+We can create relsets from lists of elements:
+
+
+```python
+rs1 = rcc8.relset(["DC", "EC"])
+rs1
+```
+
+
+
+
+    relset(['DC', 'EC'])
+
+
+
+
+```python
+rs2 = rcc8.relset(["NTPP"])
+rs2
+```
+
+
+
+
+    relset(['NTPP'])
+
+
+
+
+```python
+print(rs1)
+print(rs2)
+```
+
+    DC|EC
+    NTPP
+
+
+Relsets can also be created from the more compact relset print representation:
+
+
+```python
+rcc8.relset('DC|EC')
+```
+
+
+
+
+    relset(['DC', 'EC'])
+
+
+
+Relsets can be composed as follows (also called <i>multiplication</i> in many papers):
+
+
+```python
+print(rcc8.compose(rs1, rs2))
+```
+
+    DC|EC|NTPP|PO|TPP
+
+
+Now, back to <b>Constraint Networks</b>.
 
 ## Perform Constraint Propagation
 
