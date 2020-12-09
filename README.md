@@ -9,21 +9,23 @@ Algebras and Networks in qualreas can be read from, or written to, <b>JSON</b> o
 ## How do I get set up?
 
 With respect the Python packages that <b>qualreas</b> depends on, here are the imports from the top of the source code file, <i>qualreas.py</i>:
-# BITSETS: https://bitsets.readthedocs.io/en/stable/
-from bitsets import bitset, bases
-import os
-import json
-import random
-import string
-# NETWORKX: https://networkx.github.io/
-import networkx as nx
-from functools import reduce
-from collections import abc, OrderedDict
-import numpy as np
+
+* from bitsets import bitset, bases  (https://bitsets.readthedocs.io/en/stable/)
+* import os
+* import json
+* import random
+* import string
+* import networkx as nx  (https://networkx.github.io/)
+* from functools import reduce
+* from collections import abc, OrderedDict
+* import numpy as np
+
 All but one of the dependencies, above, will be taken care of if the [Anaconda Python distribution for individuals](https://www.anaconda.com/products/individual) is used.
 
 The one additional dependency required is <b>bitsets</b>.  The [bitsets package](https://bitsets.readthedocs.io/en/stable/#) is not available in the Anaconda distribution, but it can be easily added by executing the following command:
-pip install bitsets
+
+> pip install bitsets
+
 Then, use <b>git</b> to clone the <b>qualreas</b> respository.
 
 ### Testing the installation
@@ -31,29 +33,30 @@ Then, use <b>git</b> to clone the <b>qualreas</b> respository.
 Setup an environment variable, <b>PYPROJ</b>, that points to the directory containing <b>qualreas</b>.
 
 Then <b>cd</b> into the directory, <b>PYPROJ/qualreas/Source</b>, and execute the following command:
-python qualreas.py
-This test will generate output that ends with the following lines:
-    ------------
-    END OF TESTS
-    ------------
+
+> python qualreas.py
+
+This test will generate output that ends with the words, END OF TESTS.
+
 ## Repository Description
 
 This is a brief description of the contents of each directory in this repository:
-Algebras/.................Relation Algebras in JSON format
-Docs/.....................INCOMPLETE (Don't look in here)
-Images/...................What the title says
-LICENSE...................same
-Misc/.....................Assorted junk (Don't look in here)
-Networks/.................Constraint Networks in JSON format
-Notebooks/................Jupyter Notebooks in wildly varying conditions (old, new, obsolete)
-Ontologies/...............The .ttl file updates the W3C.org ontology of time with definitions
-                          corresponding to the Extended_Linear_Interval_Algebra [Reich 1994]
-Papers/...................A collection of papers from the relevant literature
-README.md.................This file
-Source/...................Two files. The one that matters is "qualreas.py"
-Tests/....................INCOMPLETE (Don't look in here)
-Trash/....................For when I'm too paranoid to delete something I don't really need
-output_13_0.png...........A small figure used in the README
+
+* Algebras -- Relation Algebras in JSON format
+* Docs -- INCOMPLETE (Don't look in here)
+* Images -- What the title says
+* LICENSE -- same
+* Misc -- Assorted junk (Don't look in here)
+* Networks -- Constraint Networks in JSON format
+* Notebooks -- Jupyter Notebooks in wildly varying conditions (old, new, obsolete)
+*Ontologies -- The .ttl file updates the W3C.org ontology of time to correspond to the Extended_Linear_Interval_Algebra [Reich 1994]
+* Papers -- A collection of papers from the relevant literature
+* README.md -- This file
+* Source -- Two files. The one that matters is "qualreas.py"
+* Tests -- NCOMPLETE (Don't look in here)
+* Trash -- For when I'm too paranoid to delete something I don't really need
+* output_13_0.png -- A small figure used in the README
+
 
 ## References
 
@@ -138,7 +141,7 @@ Image("Images/Edge_Notation_Meaning.png", width=300, height=100)
 
 
     
-![png](output_31_0.png)
+![png](output_30_0.png)
     
 
 
