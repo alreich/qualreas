@@ -1,4 +1,3 @@
 bitsets>=0.7.16
-json>=2.0.9
 networkx>=2.5
 numpy>=1.19.2
