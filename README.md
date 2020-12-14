@@ -1,12 +1,36 @@
 # Qualitative Reasoning ("qualreas")
 
-The Python module, <b>qualreas</b>, provides a framework for working with the class of <b>Relation Algebras</b> similar to <b>Allen's Algebra of Time Intervals</b> and the <b>Region Connection Calculus (RCC)</b>.  Specifically, <i>qualreas</i> provides a representation of <b>Constraint Networks</b> where the nodes represent <b>Entities</b> (Spatial, Temporal, or whatever) and the edges are labelled with <b>Relation Sets</b> (<i>relsets</i>) that represent spatio-temporal constraints between the entities.
+The Python module, <b>qualreas</b>, provides a framework for working with the class of <b>Relation Algebras</b> like [Allen's Algebra of Time Intervals](https://en.wikipedia.org/wiki/Allen%27s_interval_algebra) and the [Region Connection Calculus (RCC)](https://en.wikipedia.org/wiki/Region_connection_calculus).  Specifically, <i>qualreas</i> provides a representation of <b>Constraint Networks</b> where the nodes represent <b>Entities</b> (Spatial, Temporal, or whatever) and the edges are labelled with <b>Relation Sets</b> (<i>relsets</i>) that represent spatio-temporal constraints between the entities.
 
 The constraint networks in qualreas can be <b>propagated</b> to achieve <b>path consistency</b> and they can be "factored" into <b>consistent singleton networks</b>.
 
 Algebras and Networks in qualreas can be read from, or written to, <b>JSON</b> or Python dictionary formats.
 
-## How do I get set up?
+## Table of Contents
+* [How do I get set up?](#setup)
+    * [Testing the Installation](#test_install)
+* [Repository Description](#repo_desc)
+* [References](#refs)
+* [EXAMPLES](#examples)
+    * [Imports](#imports)
+    * [Paths to Network & Algebra](#paths)
+    * [Constraint Network in JSON Format](#network_format)
+    * [Instantiate the Constraint Network Object](#instantiate)
+    * [Summarize the Network](#summarize)
+    * [Get Entity (Network Node)](#nodes)
+    * [Get Edge by Tail & Head Node IDs](#edges)
+    * [The Algebra "Inside" the Network](#algebra)
+    * [Perform Constraint Propagation](#prop)
+    * [Singleton Labelings of a Network](#labelings)
+    * [An Example of Temporal Reasoning](#temporal)
+    * [Converting Networks to/from Other Formats](#other_formats)
+        * [Network to Dictionary](#net_to_dict)
+        * [Dictionary to Network](#dict_to_net)
+        * [Network to JSON](#net_to_json)
+            * [Network to JSON File](#net_to_json_file)
+            * [Network to JSON String](#net_to_json_str)
+
+## How do I get set up? <a class="anchor" id="setup"></a>
 
 With respect the Python packages that <b>qualreas</b> depends on, here are the imports from the top of the source code file, <i>qualreas.py</i>:
 
@@ -28,7 +52,7 @@ The one additional dependency required is <b>bitsets</b>.  The [bitsets package]
 
 Then, use <b>git</b> to clone the <b>qualreas</b> respository.
 
-### Testing the installation
+### Testing the installation <a class="anchor" id="test_install"></a>
 
 Setup an environment variable, <b>PYPROJ</b>, that points to the directory containing <b>qualreas</b>.
 
@@ -38,7 +62,7 @@ Then <b>cd</b> into the directory, <b>PYPROJ/qualreas/Source</b>, and execute th
 
 This test will generate output that ends with the words, END OF TESTS.
 
-## Repository Description
+## Repository Description <a class="anchor" id="repo_desc"></a>
 
 This is a brief description of the contents of each directory in this repository.
 
@@ -60,13 +84,13 @@ There is a lot here that is old and even obsolete.  The important directories fo
 * output_13_0.png -- A small figure used in the README
 
 
-## References
+## References <a class="anchor" id="refs"></a>
 
 1. ["Maintaining Knowledge about Temporal Intervals" by James F. Allen](https://cse.unl.edu/~choueiry/Documents/Allen-CACM1983.pdf) - Allen's original paper (PDF)
 1. [Allen's Interval Algebra](https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html) or [here](https://thomasalspaugh.org/pub/fnd/allen.html) - summarizes Allen's algebra of proper time intervals
 1. ["Intervals, Points, and Branching Time" by A.J. Reich](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time) - basis for the point & branching time extensions to Allen's algebra
 
-## EXAMPLES
+## EXAMPLES <a class="anchor" id="examples"></a>
 
 In the following Jupyter Notebook examples, <b>two different types</b> of contraint algebras are demonstrated:
 1. The spatial constraint algebra, [Region Connection Calculus 8 (RCC8)](https://en.wikipedia.org/wiki/Region_connection_calculus)
@@ -83,7 +107,7 @@ The examples provide brief demonstrations of a <i>qualreas</i> <b>Constraint Net
 
 A brief look at Algebras and their components and methods is provided also.
 
-## Imports
+## Imports <a class="anchor" id="imports"></a>
 
 
 ```python
@@ -92,7 +116,7 @@ import os
 from IPython.display import Image
 ```
 
-## Path to Network & Algebra
+## Paths to Network & Algebra <a class="anchor" id="paths"></a>
 
 To begin, we will instantiate a Constraint Network and it's corresponding Algebra from two JSON files.
 
@@ -117,7 +141,7 @@ Networks, on the other hand, could be numerous and change often.  So, we need to
 rcc8_file = os.path.join(qr_path, "Networks", "rcc8_example.json")
 ```
 
-## Constraint Network in JSON Format
+## Constraint Network in JSON Format <a class="anchor" id="network_format"></a>
 
 Here's what a network looks like in JSON format.
 
@@ -143,12 +167,12 @@ Image("Images/Edge_Notation_Meaning.png", width=300, height=100)
 
 
     
-![png](output_30_0.png)
+![png](output_31_0.png)
     
 
 
 
-The network, shown in JSON format below, is the example from the Wikipedia page on the Region Connection Calculus (RCC8). The URL is in the "description" field.
+The network, shown in JSON format below, is the example from the [Wikipedia page on the Region Connection Calculus (RCC8)](https://en.wikipedia.org/wiki/Region_connection_calculus). The URL is also in the "description" field of the JSON format below.
 
 
 ```python
@@ -182,12 +206,12 @@ The network, shown in JSON format below, is the example from the Wikipedia page 
     }
 
 NOTES:
-1. The Wikipedia page on RCC8 represents disjunctions of constraints as sets, e.g., {DC, EC}, whereas QR represents this with the string "DC|EC".  Constraint sets represent disjunctions of relation statements, e.g., (Tail DC|EC Head) <==> (Tail DC Head) OR (Tail EC Head).
-1. For convenience, constraints can be abbreviated using a dictionary of abbreviations.  For example, the constraint "DC|EC", above, is abbreviated as "dec".  By the way, internally, the QR module stores and operates on constraint sets as [bitsets](https://bitsets.readthedocs.io/en/stable/).
+1. The Wikipedia page on RCC8 represents disjunctions of constraints as sets, e.g., {DC, EC}, whereas qualreas represents this with the string "DC|EC".  Constraint sets represent disjunctions of relation statements, e.g., (Tail DC|EC Head) <==> (Tail DC Head) OR (Tail EC Head).
+1. For convenience, constraints can be abbreviated using a dictionary of abbreviations.  For example, the constraint "DC|EC", above, is abbreviated as "dec".  By the way, internally, the qualreas module stores and operates on constraint sets as [bitsets](https://bitsets.readthedocs.io/en/stable/).
 1. No constraints are given for the Road-to-Property1 or Road-to-Property2 edges.  The meaning then is that all RCC8 relations are possible for those two edges.  This can be seen in the first summary of the network farther below.
-1. The Network object in QR is a subclass of [networkx.digraph](https://networkx.github.io/documentation/stable/reference/classes/digraph.html), which has functionality for loading/saving from/to JSON format. However, the JSON functionality in NetworkX is not easy to read, nor is it compact, and it is awkward to associate an Algebra with a Network using those formats.  So, the bespoke JSON format, described in this notebook, was developed for <i>qualreas</i>.
+1. The Network object in qualreas is a subclass of [networkx.digraph](https://networkx.github.io/documentation/stable/reference/classes/digraph.html), which has functionality for loading/saving from/to JSON format. However, the JSON functionality in NetworkX is not easy to read, nor is it compact, and it is awkward to associate an Algebra with a Network using those formats.  So, the bespoke JSON format, described in this notebook, was developed for <i>qualreas</i>.
 
-## Instantiate the Constraint Network Object
+## Instantiate the Constraint Network Object <a class="anchor" id="instantiate"></a>
 
 
 ```python
@@ -204,7 +228,7 @@ print(rcc8_net)
     <Network--Wikipedia RCC8 Example--RCC8_Algebra>
 
 
-## Summarize the Network
+## Summarize the Network <a class="anchor" id="summarize"></a>
 
 Below is a summary of the Network Object just instantiated.
 
@@ -293,7 +317,7 @@ rcc8_net.summary()
 
 The next two sections show how to obtain specific information about network nodes ("entities") and edges.
 
-### Get Entity
+### Get Entity (Network Nodes) <a class="anchor" id="nodes"></a>
 
 <b>get_entity</b> returns an entity object (e.g., TemporalEntity, SpatialEntity). Use the object's methods to access it's attributes.
 
@@ -334,7 +358,7 @@ entity.classes
 
 
 
-### Get Edge by Tail & Head Node IDs
+### Get Edge by Tail & Head Node IDs <a class="anchor" id="edges"></a>
 
 Given a Tail ID and Head ID, <b>get_edge</b> returns an edge in the form of a tuple of three things, in order: (Tail Node ID, Head Node ID, Constraint)
 
@@ -367,11 +391,9 @@ rcc8_net.get_constraint("Property1", "Road")
 
 By the way, the Network method, <b>set_constraint</b>, can be used to set or change the constraint on an edge.  Setting the constraint on an edge, [Tail, Head], will automatically, set the converse constraint on the edge, [Head, Tail]. Always run the <b>propogate</b> method on a Network after setting/changing constraints.
 
-### The Algebra "Inside" the Network
+### The Algebra "Inside" the Network <a class="anchor" id="algebra"></a>
 
-<b>WARNING</b>: Don't try this at home, boys and girls.
-
-There really should be no reason for messing around with the algebra that a network is based on.  But we'll take a look at one here, just so we can see that it actually exists.
+<b>WARNING</b>: There really should be no reason for messing around with the algebra that a network is based on.  But we'll take a look at one here, just so we can see that it actually exists.
 
 So, to begin, we'll use an accessor to obtain the algebra, then we'll examine the algebra a bit.
 
@@ -408,7 +430,7 @@ print(rcc8.elements)
     DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
 
 
-Here's an element summary:
+Here's an example summary of an individual element:
 
 
 ```python
@@ -458,12 +480,12 @@ Again, the relset print representation is more compact:
 
 
 ```python
-print(rs1)
-print(rs2)
+print(f"rs1 = {rs1}")
+print(f"rs2 = {rs2}")
 ```
 
-    DC|EC
-    NTPP
+    rs1 = DC|EC
+    rs2 = NTPP
 
 
 Relsets can also be created from the relset print representation:
@@ -480,14 +502,22 @@ rcc8.relset('DC|EC')
 
 
 
+
+```python
+print(rcc8.relset('DC|EC'))
+```
+
+    DC|EC
+
+
 In the literature on Relation Algebras, the semicolon (";") is used to represent the composition operator (also called <i>multiplication</i> in many papers).  In <i>qualreas</i>, composition can only be performed on relsets.  Here's an example:
 
 
 ```python
-print(f"{rs1};{rs2} = {rcc8.compose(rs1, rs2)}")
+print(f"{rs1} ; {rs2} = {rcc8.compose(rs1, rs2)}")
 ```
 
-    DC|EC;NTPP = DC|EC|NTPP|PO|TPP
+    DC|EC ; NTPP = DC|EC|NTPP|PO|TPP
 
 
 The meaning of the composition example, above, is that if S, R, and T are spatial entities (regions) per the RCC-8 algebra, then
@@ -497,7 +527,7 @@ The meaning of the composition example, above, is that if S, R, and T are spatia
 
 Now, back to <b>Constraint Networks</b>.
 
-## Perform Constraint Propagation
+## Perform Constraint Propagation <a class="anchor" id="prop"></a>
 
 After propagation, note the change in the constraints between the Road and the two Properties.
 
@@ -548,122 +578,7 @@ print(f"{road} {rcc8_net.get_constraint(road, prop2)} {prop2}")
     Road PO|TPP Property2
 
 
-## Converting Networks to/from Other Formats
-
-### Network to Dictionary
-
-Note: The only differences between JSON and the dictionary output by <b>to_dict</b> are the single quotes instead of double quotes required by JSON.
-
-
-```python
-rcc8_net_dict = rcc8_net.to_dict()
-
-rcc8_net_dict
-```
-
-
-
-
-    {'name': 'Wikipedia RCC8 Example',
-     'algebra': 'RCC8_Algebra',
-     'description': 'See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples',
-     'nodes': [['House1', ['Region']],
-      ['House2', ['Region']],
-      ['Property1', ['Region']],
-      ['Property2', ['Region']],
-      ['Road', ['Region']]],
-     'edges': [['House1', 'House2', 'DC'],
-      ['House1', 'Property1', 'NTPP|TPP'],
-      ['House1', 'Property2', 'DC|EC'],
-      ['House1', 'Road', 'EC'],
-      ['House2', 'Property1', 'DC'],
-      ['House2', 'Property2', 'NTPP'],
-      ['House2', 'Road', 'EC'],
-      ['Property1', 'Property2', 'DC|EC'],
-      ['Property1', 'Road', 'EC|PO'],
-      ['Property2', 'Road', 'PO|TPPI']]}
-
-
-
-### Dictionary to Network
-
-Instantiating a Network from a dictionary is similar to using the JSON format.  Although it is not shown below, we can define and use abbreviations for constraints, and we can leave the constraints off of edge definitions to indicate that all relations are possible.
-
-
-```python
-rcc8_net_from_dict = qr.Network(algebra_path=alg_dir, network_dict=rcc8_net_dict)
-
-print(rcc8_net_from_dict)
-
-rcc8_net_from_dict.summary(show_all=False)
-```
-
-    <Network--Wikipedia RCC8 Example--RCC8_Algebra>
-    
-    Wikipedia RCC8 Example: 5 nodes, 25 edges
-      Algebra: RCC8_Algebra
-      House1:['Region']
-        => House1: EQ
-        => House2: DC
-        => Property1: NTPP|TPP
-        => Property2: DC|EC
-        => Road: EC
-      House2:['Region']
-        => House2: EQ
-        => Property1: DC
-        => Property2: NTPP
-        => Road: EC
-      Property1:['Region']
-        => Property1: EQ
-        => Property2: DC|EC
-        => Road: EC|PO
-      Property2:['Region']
-        => Property2: EQ
-        => Road: PO|TPPI
-      Road:['Region']
-        => Road: EQ
-
-
-### Network to JSON
-
-A simple way to serialize a network in JSON format is to first convert it to a dictionary using <b>to_dict</b> and then use <b>json.dump()</b> or <b>json.dumps()</b> to write it out to a file or convert it to a string, respectively.
-
-However, either way, the resulting file or string are not pretty printed.
-
-#### Network to JSON File
-
-
-```python
-import json
-
-rcc8_json_file = os.path.join(qr_path, "Networks", "rcc8_test1.json")
-
-with open(rcc8_json_file, "w") as fout:
-    json.dump(rcc8_net_dict, fout)
-```
-
-
-```python
-!cat {rcc8_json_file}
-```
-
-    {"name": "Wikipedia RCC8 Example", "algebra": "RCC8_Algebra", "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples", "nodes": [["House1", ["Region"]], ["House2", ["Region"]], ["Property1", ["Region"]], ["Property2", ["Region"]], ["Road", ["Region"]]], "edges": [["House1", "House2", "DC"], ["House1", "Property1", "NTPP|TPP"], ["House1", "Property2", "DC|EC"], ["House1", "Road", "EC"], ["House2", "Property1", "DC"], ["House2", "Property2", "NTPP"], ["House2", "Road", "EC"], ["Property1", "Property2", "DC|EC"], ["Property1", "Road", "EC|PO"], ["Property2", "Road", "PO|TPPI"]]}
-
-#### Network to JSON String
-
-
-```python
-json.dumps(rcc8_net_dict)
-```
-
-
-
-
-    '{"name": "Wikipedia RCC8 Example", "algebra": "RCC8_Algebra", "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples", "nodes": [["House1", ["Region"]], ["House2", ["Region"]], ["Property1", ["Region"]], ["Property2", ["Region"]], ["Road", ["Region"]]], "edges": [["House1", "House2", "DC"], ["House1", "Property1", "NTPP|TPP"], ["House1", "Property2", "DC|EC"], ["House1", "Road", "EC"], ["House2", "Property1", "DC"], ["House2", "Property2", "NTPP"], ["House2", "Road", "EC"], ["Property1", "Property2", "DC|EC"], ["Property1", "Road", "EC|PO"], ["Property2", "Road", "PO|TPPI"]]}'
-
-
-
-## Singleton Labelings of a Network
+## Singleton Labelings of a Network <a class="anchor" id="labelings"></a>
 
 The constraints on the edges in a network can often involve multiple relations, representing disjunctions of single constraints. If we derive a network from that, where each constraint involves only a single relation, it is called a <b>Singleton Labelling</b>. It is possible for a singleton labeling to be inconsistent.  So, it's of great interest to derive <b>all possible consistent singleton labellings</b>.
 
@@ -988,7 +903,7 @@ for network in consistent_singleton_labelings:
      
 
 
-## An Example of Temporal Reasoning
+## An Example of Temporal Reasoning <a class="anchor" id="temporal"></a>
 
 Here we'll use the temporal interval & point algebra, <b>Extended_Linear_Interval_Algebra</b>, defined by Reich in ["Intervals, Points, and Branching Time", 1994](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time)
 
@@ -1114,3 +1029,120 @@ That is, <i>MondayMidnight</i> is the begin point (<i>PointStarts</i>) of the in
 We've also inferred the corresponding converses of these statements (i.e., using the relations <i>PFI</i> and <i>PSI</i>).
 
 Finally, although we defined <i>MondayMidnight</i> as being either a <i>ProperInterval</i> or a <i>Point</i>, after propagation it is determined that it can only be a <i>Point</i>.
+
+## Converting Networks to/from Other Formats <a class="anchor" id="other_formats"></a>
+
+In this section, we show how to convert Networks to/from JSON or Python dictionary formats.
+
+### Network to Dictionary <a class="anchor" id="net_to_dict"></a>
+
+Note: The only differences between JSON and the dictionary output by <b>to_dict</b> are the single quotes instead of double quotes required by JSON.
+
+
+```python
+rcc8_net_dict = rcc8_net.to_dict()
+
+rcc8_net_dict
+```
+
+
+
+
+    {'name': 'Wikipedia RCC8 Example',
+     'algebra': 'RCC8_Algebra',
+     'description': 'See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples',
+     'nodes': [['House1', ['Region']],
+      ['House2', ['Region']],
+      ['Property1', ['Region']],
+      ['Property2', ['Region']],
+      ['Road', ['Region']]],
+     'edges': [['House1', 'House2', 'DC'],
+      ['House1', 'Property1', 'NTPP|TPP'],
+      ['House1', 'Property2', 'DC|EC'],
+      ['House1', 'Road', 'EC'],
+      ['House2', 'Property1', 'DC'],
+      ['House2', 'Property2', 'NTPP'],
+      ['House2', 'Road', 'EC'],
+      ['Property1', 'Property2', 'DC|EC'],
+      ['Property1', 'Road', 'EC|PO'],
+      ['Property2', 'Road', 'PO|TPPI']]}
+
+
+
+### Dictionary to Network <a class="anchor" id="dict_to_net"></a>
+
+Instantiating a Network from a dictionary is similar to using the JSON format.  Although it is not shown below, we can define and use abbreviations for constraints, and we can leave the constraints off of edge definitions to indicate that all relations are possible.
+
+
+```python
+rcc8_net_from_dict = qr.Network(algebra_path=alg_dir, network_dict=rcc8_net_dict)
+
+print(rcc8_net_from_dict)
+
+rcc8_net_from_dict.summary(show_all=False)
+```
+
+    <Network--Wikipedia RCC8 Example--RCC8_Algebra>
+    
+    Wikipedia RCC8 Example: 5 nodes, 25 edges
+      Algebra: RCC8_Algebra
+      House1:['Region']
+        => House1: EQ
+        => House2: DC
+        => Property1: NTPP|TPP
+        => Property2: DC|EC
+        => Road: EC
+      House2:['Region']
+        => House2: EQ
+        => Property1: DC
+        => Property2: NTPP
+        => Road: EC
+      Property1:['Region']
+        => Property1: EQ
+        => Property2: DC|EC
+        => Road: EC|PO
+      Property2:['Region']
+        => Property2: EQ
+        => Road: PO|TPPI
+      Road:['Region']
+        => Road: EQ
+
+
+### Network to JSON <a class="anchor" id="net_to_json"></a>
+
+A simple way to serialize a network in JSON format is to first convert it to a dictionary using <b>to_dict</b> and then use <b>json.dump()</b> or <b>json.dumps()</b> to write it out to a file or convert it to a string, respectively.
+
+However, either way, the resulting file or string are not pretty printed.
+
+#### Network to JSON File <a class="anchor" id="net_to_json_file"></a>
+
+
+```python
+import json
+
+rcc8_json_file = os.path.join(qr_path, "Networks", "rcc8_test1.json")
+
+with open(rcc8_json_file, "w") as fout:
+    json.dump(rcc8_net_dict, fout)
+```
+
+
+```python
+!cat {rcc8_json_file}
+```
+
+    {"name": "Wikipedia RCC8 Example", "algebra": "RCC8_Algebra", "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples", "nodes": [["House1", ["Region"]], ["House2", ["Region"]], ["Property1", ["Region"]], ["Property2", ["Region"]], ["Road", ["Region"]]], "edges": [["House1", "House2", "DC"], ["House1", "Property1", "NTPP|TPP"], ["House1", "Property2", "DC|EC"], ["House1", "Road", "EC"], ["House2", "Property1", "DC"], ["House2", "Property2", "NTPP"], ["House2", "Road", "EC"], ["Property1", "Property2", "DC|EC"], ["Property1", "Road", "EC|PO"], ["Property2", "Road", "PO|TPPI"]]}
+
+#### Network to JSON String <a class="anchor" id="net_to_json_str"></a>
+
+
+```python
+json.dumps(rcc8_net_dict)
+```
+
+
+
+
+    '{"name": "Wikipedia RCC8 Example", "algebra": "RCC8_Algebra", "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples", "nodes": [["House1", ["Region"]], ["House2", ["Region"]], ["Property1", ["Region"]], ["Property2", ["Region"]], ["Road", ["Region"]]], "edges": [["House1", "House2", "DC"], ["House1", "Property1", "NTPP|TPP"], ["House1", "Property2", "DC|EC"], ["House1", "Road", "EC"], ["House2", "Property1", "DC"], ["House2", "Property2", "NTPP"], ["House2", "Road", "EC"], ["Property1", "Property2", "DC|EC"], ["Property1", "Road", "EC|PO"], ["Property2", "Road", "PO|TPPI"]]}'
+
+
