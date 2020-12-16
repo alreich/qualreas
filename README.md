@@ -15,12 +15,14 @@ Algebras and Networks in qualreas can be read from, or written to, <b>JSON</b> o
     * [Imports](#imports)
     * [Paths to Network & Algebra](#paths)
     * [Constraint Network in JSON Format](#network_format)
+        * [RCC-8's Spatial Relations](#rcc8_rels)
     * [Instantiate the Constraint Network Object](#instantiate)
     * [Summarize the Network](#summarize)
     * [Get Entity (Network Node)](#nodes)
     * [Get Edge by Tail & Head Node IDs](#edges)
     * [The Algebra "Inside" the Network](#algebra)
     * [Perform Constraint Propagation](#prop)
+        * [RCC8 Example Figures](#rcc8_figures)
     * [Singleton Labelings of a Network](#labelings)
     * [An Example of Temporal Reasoning](#temporal)
     * [Converting Networks to/from Other Formats](#other_formats)
@@ -172,7 +174,7 @@ Image("Images/Edge_Notation_Meaning.png", width=300, height=100)
 
 
 
-The network, shown in JSON format below, is the example from the [Wikipedia page on the Region Connection Calculus (RCC8)](https://en.wikipedia.org/wiki/Region_connection_calculus). The URL is also in the "description" field of the JSON format below.
+The network, shown in JSON format below, is the example from the [Wikipedia page on the Region Connection Calculus (RCC8)](https://en.wikipedia.org/wiki/Region_connection_calculus). The URL is also in the "description" field of the JSON format below. The network, below, is depicted as a [labeled graph near the end of this example](#rcc8_figures).
 
 
 ```python
@@ -210,6 +212,26 @@ NOTES:
 1. For convenience, constraints can be abbreviated using a dictionary of abbreviations.  For example, the constraint "DC|EC", above, is abbreviated as "dec".  By the way, internally, the qualreas module stores and operates on constraint sets as [bitsets](https://bitsets.readthedocs.io/en/stable/).
 1. No constraints are given for the Road-to-Property1 or Road-to-Property2 edges.  The meaning then is that all RCC8 relations are possible for those two edges.  This can be seen in the first summary of the network farther below.
 1. The Network object in qualreas is a subclass of [networkx.digraph](https://networkx.github.io/documentation/stable/reference/classes/digraph.html), which has functionality for loading/saving from/to JSON format. However, the JSON functionality in NetworkX is not easy to read, nor is it compact, and it is awkward to associate an Algebra with a Network using those formats.  So, the bespoke JSON format, described in this notebook, was developed for <i>qualreas</i>.
+
+### RCC-8's Spatial Relations <a class="anchor" id="rcc8_rels"></a>
+
+For convenient reference, here are the 8 spatial relations of RCC-8:
+
+
+```python
+Image("Images/640px-RCC8.jpg")
+```
+
+
+
+
+    
+![jpeg](output_37_0.jpg)
+    
+
+
+
+Attribution: CC BY-SA 3.0, https://en.wikipedia.org/w/index.php?curid=8614172
 
 ## Instantiate the Constraint Network Object <a class="anchor" id="instantiate"></a>
 
@@ -576,6 +598,24 @@ print(f"{road} {rcc8_net.get_constraint(road, prop2)} {prop2}")
 
     Road EC|PO Property1
     Road PO|TPP Property2
+
+
+### RCC8 Example Figures <a class="anchor" id="rcc8_figures"></a>
+
+The two figures below depict Wikipedia's RCC-8 example, where the first depicts the original input network, and the second depicts the network following constraint propagation by <i>qualreas</i>. Constraints that changed from the input after propagation are shown in red.
+
+
+```python
+Image("Images/wikipedia_rcc8_example.png")
+```
+
+
+
+
+    
+![png](output_89_0.png)
+    
+
 
 
 ## Singleton Labelings of a Network <a class="anchor" id="labelings"></a>
