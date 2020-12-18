@@ -1,0 +1,19 @@
+{
+    "name": "Figure 5 Allen 1983",
+    "algebra": "Linear_Interval_Algebra",
+    "description": "Fig. 5 in Maintaining Knowledge about Temporal Intervals by Allen",
+    "nodes": [
+        ["A", ["ProperInterval"]],
+        ["B", ["ProperInterval"]],
+        ["C", ["ProperInterval"]],
+        ["D", ["ProperInterval"]]
+    ],
+    "edges": [
+        ["A", "C", "F|FI"],
+        ["D", "A", "S|M"],
+        ["D", "C", "S|M"],
+        ["A", "B", "D|DI"],
+        ["B", "C", "D|DI"],
+        ["D", "B", "O"]
+    ]
+}
