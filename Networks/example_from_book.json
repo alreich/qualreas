@@ -1,0 +1,19 @@
+{
+    "name": "Example from book",
+    "algebra": "Linear_Interval_Algebra",
+    "description": "Example from book (but can't remember which book)",
+    "nodes": [
+        ["I", ["ProperInterval"]],
+        ["J", ["ProperInterval"]],
+        ["K", ["ProperInterval"]],
+        ["L", ["ProperInterval"]]
+    ],
+    "edges": [
+        ["I", "J", "F|FI"],
+        ["I", "L", "M|S"],
+        ["I", "K", "D|DI"],
+        ["J", "L", "MI|SI"],
+        ["J", "K", "D|DI"],
+        ["L", "K", "O"]
+    ]
+}
