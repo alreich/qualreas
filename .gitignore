@@ -106,6 +106,9 @@ venv.bak/
 # PyCharm
 .idea/
 
+# OSX (Apple)
+.DS_Store
+
 # Random files
 QR2_Prototyping.ipynb
 rcc8.text
