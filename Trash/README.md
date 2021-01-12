@@ -31,13 +31,6 @@ Algebras and Networks in qualreas can be read from, or written to, <b>JSON</b> o
         * [Network to JSON](#net_to_json)
             * [Network to JSON File](#net_to_json_file)
             * [Network to JSON String](#net_to_json_str)
-    * [Other Notebooks](#other_notebooks)
-        * [Introduction to Algebras](#alg_intro)
-        * [Derivation of Interval Algebras](#alg_deriv)
-            * [Algebra's Derived in Reich's 1994 Paper](#reich_1994)
-            * [Interval & Point BINARY Branching Time Algebras](#binary_branching)
-            * [PROPER INTERVAL Branching Time Algebras](#proper_int_branching)
-        * [Miscellaneous Examples](#misc_ex)
 
 ## How do I get set up? <a class="anchor" id="setup"></a>
 
@@ -83,7 +76,7 @@ There is a lot here that is old and even obsolete.  The important directories fo
 * LICENSE -- same
 * Misc -- Assorted junk (Don't look in here)
 * Networks -- Constraint Networks in JSON format
-* Notebooks -- Jupyter Notebooks; A description of each can be found at the end of this notebook
+* Notebooks -- Jupyter Notebooks in wildly varying conditions (old, new, obsolete)
 *Ontologies -- The .ttl file updates the W3C.org ontology of time to correspond to the Extended_Linear_Interval_Algebra [Reich 1994]
 * Papers -- A collection of papers from the relevant literature
 * README.md -- This file
@@ -95,9 +88,9 @@ There is a lot here that is old and even obsolete.  The important directories fo
 
 ## References <a class="anchor" id="refs"></a>
 
-1. [[Allen, 1983] "Maintaining Knowledge about Temporal Intervals" by James F. Allen](https://cse.unl.edu/~choueiry/Documents/Allen-CACM1983.pdf) - Allen's original paper (PDF)
+1. ["Maintaining Knowledge about Temporal Intervals" by James F. Allen](https://cse.unl.edu/~choueiry/Documents/Allen-CACM1983.pdf) - Allen's original paper (PDF)
 1. [Allen's Interval Algebra](https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html) or [here](https://thomasalspaugh.org/pub/fnd/allen.html) - summarizes Allen's algebra of proper time intervals
-1. [[Reich, 1994] "Intervals, Points, and Branching Time" by A.J. Reich](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time) - basis for the point & branching time extensions to Allen's algebra
+1. ["Intervals, Points, and Branching Time" by A.J. Reich](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time) - basis for the point & branching time extensions to Allen's algebra
 
 ## EXAMPLES <a class="anchor" id="examples"></a>
 
@@ -1193,74 +1186,3 @@ json.dumps(rcc8_net_dict)
     '{"name": "Wikipedia RCC8 Example", "algebra": "RCC8_Algebra", "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples", "nodes": [["House1", ["Region"]], ["House2", ["Region"]], ["Property1", ["Region"]], ["Property2", ["Region"]], ["Road", ["Region"]]], "edges": [["House1", "House2", "DC"], ["House1", "Property1", "NTPP|TPP"], ["House1", "Property2", "DC|EC"], ["House1", "Road", "EC"], ["House2", "Property1", "DC"], ["House2", "Property2", "NTPP"], ["House2", "Road", "EC"], ["Property1", "Property2", "DC|EC"], ["Property1", "Road", "EC|PO"], ["Property2", "Road", "PO|TPPI"]]}'
 
 
-
-## Other Notebooks <a class="anchor" id="other_notebooks"></a>
-
-The following tables describe other Jupyter Notebooks that provide examples that use <i>qualreas</i>.
-
-<b>These notebooks are contained in the Notebook directory.</b>
-
-### Introduction to Algebras <a class="anchor" id="alg_intro"></a>
-
-In the first notebook in the table, below, Allen's algebra of proper intervals is used to provide an introduction to how Algebra's work in <i>qualreas</i>. Basically, qualreas has an Algebra object that is instantiated from an algebra definition contained in JSON format (or Python dictionary format).
-
-The second notebook in the table, below, describes an extension to Allen's algebra in [Reich, 1994].  It permits <i>time points</i> in addition to proper time intervals via the addition of 5 extra relations, related to point-interval relationships.  The 13 original relations of Allen's algebra are also part of the algebra, but on closer examination, the domains and ranges of <i>before/after</i> and <i>during/contains</i> are no longer just proper intervals.
-
-Also the second notebook there are two further extensions that allow for time points and intervals, but situation in either left or right-branching time. Each of these algebras adds 6 new relations, related to branching time.  Any number of branches are allowed at a branch point in these 2 branching-time algebras.
-
-| Juypter Notebook | Description |
-|:-------|:-------|
-| intro1_Allens_Interval_Algebra | Intro to qualreas Algebras using Allen's algebra |
-| intro2_extended_interval_algebras | Intro to 3 extensions to Allen's algebra |
-
-### Derivation of Interval Algebras <a class="anchor" id="alg_deriv"></a>
-
-Interval Algebras can be obtained using Point Algebras.  For example, Allen's algebra of proper intervals can be obtain from a linear-time point algebra that uses the following three relations: <, =, >.  Time points can be integrated with proper intervals by using a point algebra based on the relations: $\le$, =, $\ge$.  Branching time can be included by adding the relation, <i>incomparable</i>, denoted by "~", where the composition of point relations are defined in either left or right-branching time as described in [Reich, 1994]
-
-The point algebras used in the derivations can be found in the Algebras directory:
-* Linear_Point_Algebra
-* Left_Branching_Point_Algebra
-* Right_Branching_Point_Algebra
-* Left_Binary_Branching_Point_Algebra
-* Right_Binary_Branching_Point_Algebra
-
-#### Algebra's Derived in Reich's 1994 Paper <a class="anchor" id="reich_1994"></a>
-
-The 4 notebooks in the table, below, contain derivations of the elements and composition tables for the 4 algebras descibed in the 2 introductory notebooks listed in the first table, above.
-
-| Juypter Notebook | Description |
-|:-------|:-------|
-| derive_allens_algebra | Derivation of Allen's proper interval algebra |
-| derive_extended_interval_algebra | Integrates points with proper intervals |
-| derive_left_branching_interval_algebra | Integrates points & intervals in left-branching time |
-| derive_right_branching_interval_algebra | Integrates points & intervals in right-branching time |
-
-
-#### Interval & Point BINARY Branching Time Algebras <a class="anchor" id="binary_branching"></a>
-
-The 2 algebras described in the notebooks listed in the table, below, are basically the same as the 2 branching algebras, described above, except that branching is assumed to be binary (i.e., only 2 branches are possible at any branch point).
-
-| Juypter Notebook | Description |
-|:-------|:-------|
-| derive_left_binary_branching_interval_algebra | Only binary left-branching allowed |
-| derive_right_binary_branching_interval_algebra | Only binary right-branching allowed |
-
-#### PROPER INTERVAL Branching Time Algebras <a class="anchor" id="proper_int_branching"></a>
-
-The algebras derived here are, essentially, the same as Allen's original algebra of proper time intervals, except that they are situated in branching time.
-
-| Juypter Notebook | Description |
-|:-------|:-------|
-| derive_left_branching_proper_interval_algebra | Proper intervals only in left-branching time |
-| derive_right_branching_proper_interval_algebra | Proper intervals only in right-branching time |
-
-### Miscellaneous Examples <a class="anchor" id="misc_ex"></a>
-
-These notebooks describe various examples, from other papers and books, in terms of the <i>qualreas</i> API.
-
-| Juypter Notebook | Description |
-|:-------|:-------|
-| Figure_5_Allen_1983 | Example in Fig 5 of Allen's 1983 paper |
-| Golumbic_and_Shamir_1993_Examples | Examples from Golumbic & Shamir's 1993 paper |
-| Janhunen_and_Sioutis_2019_Example | Example from Janhunen & Sioutis' 2019 paper |
-| example_from_book| I've forgotten where this example came from :-( |
