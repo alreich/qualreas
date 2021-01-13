@@ -1,6 +1,6 @@
 {
-    "Description": "Right-Branching Point Algebra", 
-    "Name": "Right_Branching_Point_Algebra",
+    "Description": "Right-Binary-Branching Point Algebra",
+    "Name": "Right_Binary_Branching_Point_Algebra",
     "Relations": {
         "<": {
             "Domain": ["Point"], 
