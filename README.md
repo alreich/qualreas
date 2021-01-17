@@ -31,7 +31,7 @@ Algebras and Networks in qualreas can be read from, or written to, <b>JSON</b> o
         * [Network to JSON](#net_to_json)
             * [Network to JSON File](#net_to_json_file)
             * [Network to JSON String](#net_to_json_str)
-    * [Other Notebooks](#other_notebooks)
+    * [Jupyter Notebooks](#jupyter_notebooks)
         * [Introduction to Algebras](#alg_intro)
         * [Derivation of Interval Algebras](#alg_deriv)
             * [Algebra's Derived in Reich's 1994 Paper](#reich_1994)
@@ -1194,11 +1194,11 @@ json.dumps(rcc8_net_dict)
 
 
 
-## Other Notebooks <a class="anchor" id="other_notebooks"></a>
+## Jupyter Notebooks <a class="anchor" id="jupyter_notebooks"></a>
 
-The following tables describe other Jupyter Notebooks that provide examples that use <i>qualreas</i>.
+The following tables describe Jupyter Notebooks that provide examples that use <i>qualreas</i>.
 
-<b>These notebooks are contained in the Notebook directory.</b>
+<b>The notebooks are contained in the Notebook directory.</b>
 
 ### Introduction to Algebras <a class="anchor" id="alg_intro"></a>
 
@@ -1206,12 +1206,15 @@ In the first notebook in the table, below, Allen's algebra of proper intervals i
 
 The second notebook in the table, below, describes an extension to Allen's algebra in [Reich, 1994].  It permits <i>time points</i> in addition to proper time intervals via the addition of 5 extra relations, related to point-interval relationships.  The 13 original relations of Allen's algebra are also part of the algebra, but on closer examination, the domains and ranges of <i>before/after</i> and <i>during/contains</i> are no longer just proper intervals.
 
-Also the second notebook there are two further extensions that allow for time points and intervals, but situation in either left or right-branching time. Each of these algebras adds 6 new relations, related to branching time.  Any number of branches are allowed at a branch point in these 2 branching-time algebras.
+Also described in the second notebook are two additional extensions that allow for time points and intervals, situated in either left or right-branching time. Each of these algebras adds 6 new relations, related to branching time.  Any number of branches are allowed at a branch point in these 2 branching-time algebras.
+
+The third notebook is a fundamental one, and perhaps the most important one, because it describes the time point algebras from which all of the interval algebras in qualreas are derived.  It also provides the axioms upon which linear and branching time are based.
 
 | Juypter Notebook | Description |
 |:-------|:-------|
 | intro1_Allens_Interval_Algebra | Intro to qualreas Algebras using Allen's algebra |
 | intro2_extended_interval_algebras | Intro to 3 extensions to Allen's algebra |
+| time_point_algebras | Describes linear and branching time point structures and algebras |
 
 ### Derivation of Interval Algebras <a class="anchor" id="alg_deriv"></a>
 
@@ -1223,6 +1226,8 @@ The point algebras used in the derivations can be found in the Algebras director
 * Right_Branching_Point_Algebra
 * Left_Binary_Branching_Point_Algebra
 * Right_Binary_Branching_Point_Algebra
+
+See the Jupyter Notebook, "time_point_algebras.ipynb" in the Notebooks folder for details about the point algebras listed above.
 
 #### Algebra's Derived in Reich's 1994 Paper <a class="anchor" id="reich_1994"></a>
 
