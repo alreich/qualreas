@@ -84,14 +84,13 @@ There is a lot here that is old and even obsolete.  The important directories fo
 * Misc -- Assorted junk (Don't look in here)
 * Networks -- Constraint Networks in JSON format
 * Notebooks -- Jupyter Notebooks; A description of each can be found at the end of this notebook
-*Ontologies -- The .ttl file updates the W3C.org ontology of time to correspond to the Extended_Linear_Interval_Algebra [Reich 1994]
+* Ontologies -- The .ttl file updates the W3C.org ontology of time to correspond to the Extended_Linear_Interval_Algebra [Reich 1994]
 * Papers -- A collection of papers from the relevant literature
 * README.md -- This file
 * Source -- Two files. The one that matters is "qualreas.py"
 * Tests -- NCOMPLETE (Don't look in here)
-* Trash -- For when I'm too paranoid to delete something I don't really need
-* output_13_0.png -- A small figure used in the README
-
+* Trash -- Because sometimes I want to backtrack w.r.t. something I wrote
+* output_*.png -- Figures used in the README
 
 ## References <a class="anchor" id="refs"></a>
 
@@ -668,27 +667,14 @@ Not counting converses--which, conveniently, are not shown in the summary, above
 
 ```python
 singleton_labelings = rcc8_net.all_singleton_labelings()
-```
-
-
-```python
-print(f"There are {len(singleton_labelings)} singleton labelings of Wikipedia's RCC8 example")
-```
-
-    There are 32 singleton labelings of Wikipedia's RCC8 example
-
-
-
-```python
 consistent_singleton_labelings = rcc8_net.consistent_singleton_labelings()
+
+print(f"There are {len(singleton_labelings)} singleton labelings of Wikipedia's RCC8 example,")
+print(f"but only {len(consistent_singleton_labelings)} of them are consistent.")
 ```
 
-
-```python
-print(f"But there are only {len(consistent_singleton_labelings)} consistent singleton labelings.")
-```
-
-    But there are only 9 consistent singleton labelings.
+    There are 32 singleton labelings of Wikipedia's RCC8 example,
+    but only 9 of them are consistent.
 
 
 Here are summaries of all 9 singleton labelings:
