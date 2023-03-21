@@ -13,22 +13,16 @@ intervals can be related to each other, as shown in the following
 `figure from
 Wikipedia <https://en.wikipedia.org/wiki/Allen%27s_interval_algebra#Relations>`__
 
+NOTE: Several of the relation symbols in qualreas differ from those in
+the Wikipedia figure, below: B instead of <, A instead of >, and E
+instead of =
+
 .. image:: _static/Allens_Interval_Relations.png
    :width: 400 px
    :height: 378 px
    :scale: 100 %
+   :alt: Allen's Interval Algebra
    :align: center
-
-
-
-(Note: A few of the relation symbols in this notebook differ from those
-in the figure: B instead of <, A instead of >, and E instead of =):
-
-.. raw:: html
-
-   </p>
-
-
 
 References
 ----------
