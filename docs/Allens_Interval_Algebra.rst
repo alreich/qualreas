@@ -13,9 +13,13 @@ intervals can be related to each other, as shown in the following
 `figure from
 Wikipedia <https://en.wikipedia.org/wiki/Allen%27s_interval_algebra#Relations>`__
 
-.. raw:: html
+.. image:: _static/Allens_Interval_Relations.png
+   :width: 400 px
+   :height: 378 px
+   :scale: 100 %
+   :align: center
 
-   <p>
+
 
 (Note: A few of the relation symbols in this notebook differ from those
 in the figure: B instead of <, A instead of >, and E instead of =):
