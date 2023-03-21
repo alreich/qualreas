@@ -1,6 +1,10 @@
 Allen’s Algebra of Proper Time Intervals
 ========================================
 
+.. code:: ipython3
+
+    from IPython.display import Image
+
 “Allen’s interval algebra is a calculus for temporal reasoning that was
 introduced by James F. Allen in 1983. The calculus defines possible
 relations between time intervals and provides a composition table that
@@ -17,12 +21,19 @@ NOTE: Several of the relation symbols in qualreas differ from those in
 the Wikipedia figure, below: B instead of <, A instead of >, and E
 instead of =
 
-.. image:: _static/Allens_Interval_Relations.png
-   :width: 400 px
-   :height: 378 px
-   :scale: 100 %
-   :alt: Allen's Interval Algebra
-   :align: center
+<img src="../docs/_static/Allens_Interval_Relations.png" width="400">
+
+.. code:: ipython3
+
+    Image(filename='../docs/_static/Allens_Interval_Relations.png', width="400") 
+
+
+
+
+.. image:: output_4_0.png
+   :width: 400px
+
+
 
 References
 ----------
