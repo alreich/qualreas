@@ -181,30 +181,20 @@ Jupyter Notebook, “Notebooks/derive_extended_interval_algebra.ipynb”)
      PInt = Proper Interval
 
 
-.. code:: ipython3
+-  EDITORS NOTE: The function call to
+   print_point_algebra_composition_table, below, causes issues with the
+   automated documentation system used here (Sphinx) because the
+   specific elements printed out (equality & inequality symbols)
+   “confuse” the system that parses reST (restructured text).
+   Consequently, the next cell is set to be “Raw NBConvert” instead of
+   “Code”, and then an image of its proper output (from a version of
+   this Jupyter notebook) is shown below it, to simulate how the output
+   should look. The same trick is applied to all 5 of the calls to
+   print_point_algebra_composition_table in this document. (Sorry for
+   the interruption.)
 
-    qr.print_point_algebra_composition_table(pt_alg)
+qr.print_point_algebra_composition_table(pt_alg) # SEE EDITOR'S NOTE, ABOVE
 
-
-.. parsed-literal::
-
-    Linear_Point_Algebra
-    Elements: <, =, >
-    ==============================
-     rel1 ; rel2 = composition
-    ==============================
-       <      <      <
-       <      =      <
-       <      >      <|=|>
-    ------------------------------
-       =      <      <
-       =      =      =
-       =      >      >
-    ------------------------------
-       >      <      <|=|>
-       >      =      >
-       >      >      >
-    ------------------------------
 
 
 Right-Branching Point Algebra
@@ -243,38 +233,8 @@ Notebook, “Notebooks/derive_right_branching_interval_algebra.ipynb”)
      PInt = Proper Interval
 
 
-.. code:: ipython3
+qr.print_point_algebra_composition_table(rb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
 
-    qr.print_point_algebra_composition_table(rb_pt_alg)
-
-
-.. parsed-literal::
-
-    Right_Branching_Point_Algebra
-    Elements: <, =, >, r~
-    ==============================
-     rel1 ; rel2 = composition
-    ==============================
-       <      <      <
-       <      =      <
-       <      >      <|=|>
-       <     r~      <|r~
-    ------------------------------
-       =      <      <
-       =      =      =
-       =      >      >
-       =     r~      r~
-    ------------------------------
-       >      <      <|=|>|r~
-       >      =      >
-       >      >      >
-       >     r~      r~
-    ------------------------------
-      r~      <      r~
-      r~      =      r~
-      r~      >      >|r~
-      r~     r~      <|=|>|r~
-    ------------------------------
 
 
 Left-Branching Point Algebra
@@ -313,38 +273,8 @@ Notebook, “Notebooks/derive_right_branching_interval_algebra.ipynb”)
      PInt = Proper Interval
 
 
-.. code:: ipython3
+qr.print_point_algebra_composition_table(lb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
 
-    qr.print_point_algebra_composition_table(lb_pt_alg)
-
-
-.. parsed-literal::
-
-    Left_Branching_Point_Algebra
-    Elements: <, =, >, l~
-    ==============================
-     rel1 ; rel2 = composition
-    ==============================
-       <      <      <
-       <      =      <
-       <      >      <|=|>|l~
-       <     l~      l~
-    ------------------------------
-       =      <      <
-       =      =      =
-       =      >      >
-       =     l~      l~
-    ------------------------------
-       >      <      <|=|>
-       >      =      >
-       >      >      >
-       >     l~      >|l~
-    ------------------------------
-      l~      <      <|l~
-      l~      =      l~
-      l~      >      l~
-      l~     l~      <|=|>|l~
-    ------------------------------
 
 
 Right-Binary-Branching Point Algebra
@@ -383,38 +313,8 @@ Jupyter Notebook,
      PInt = Proper Interval
 
 
-.. code:: ipython3
+qr.print_point_algebra_composition_table(rbb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
 
-    qr.print_point_algebra_composition_table(rbb_pt_alg)
-
-
-.. parsed-literal::
-
-    Right_Binary_Branching_Point_Algebra
-    Elements: <, =, >, r~
-    ==============================
-     rel1 ; rel2 = composition
-    ==============================
-       <      <      <
-       <      =      <
-       <      >      <|=|>
-       <     r~      <|r~
-    ------------------------------
-       =      <      <
-       =      =      =
-       =      >      >
-       =     r~      r~
-    ------------------------------
-       >      <      <|=|>|r~
-       >      =      >
-       >      >      >
-       >     r~      r~
-    ------------------------------
-      r~      <      r~
-      r~      =      r~
-      r~      >      >|r~
-      r~     r~      <|=|>
-    ------------------------------
 
 
 Left-Binary-Branching Point Algebra
@@ -453,36 +353,6 @@ Jupyter Notebook,
      PInt = Proper Interval
 
 
-.. code:: ipython3
+qr.print_point_algebra_composition_table(lbb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
 
-    qr.print_point_algebra_composition_table(lbb_pt_alg)
-
-
-.. parsed-literal::
-
-    Left_Binary_Branching_Point_Algebra
-    Elements: <, =, >, l~
-    ==============================
-     rel1 ; rel2 = composition
-    ==============================
-       <      <      <
-       <      =      <
-       <      >      <|=|>|l~
-       <     l~      l~
-    ------------------------------
-       =      <      <
-       =      =      =
-       =      >      >
-       =     l~      l~
-    ------------------------------
-       >      <      <|=|>
-       >      =      >
-       >      >      >
-       >     l~      >|l~
-    ------------------------------
-      l~      <      <|l~
-      l~      =      l~
-      l~      >      l~
-      l~     l~      <|=|>
-    ------------------------------
 

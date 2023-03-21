@@ -801,7 +801,7 @@ class Network(nx.DiGraph):
 class FourPointNet(Network):
     """Create four Temporal Entities that represent time points and use them
     to express two independent intervals. For example, (s1,e1) and (s2,e2),
-    where s1 < e1 and s2 < e2, represents two proper intervals.  Using '<|='
+    where s1 < e1 and s2 < e2, represents two proper intervals.  Using '<\|='
     instead of '<', would represent two intervals where one or both might
     be points.  Return the network and the four temporal entities."""
 
