@@ -6,8 +6,8 @@ User Guide
 .. toctree::
     :maxdepth: 3
 
-    Intro1_Allens_Interval_Algebra
-    intro2_extended_interval_algebras
+    Allens_Interval_Algebra
+    extended_interval_algebras
     time_point_algebras
 
 API Reference

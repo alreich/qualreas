@@ -217,8 +217,7 @@ A set of relations (“relset”) represents a disjunction.
 For example, if :math:`r_1, r_2, r_3` are relations, and :math:`A` &
 :math:`B` are proper time intervals, then:
 
-$ A {r_1,r_2,r_3} B :raw-latex:`\Leftrightarrow `(A r_1 B)
-:raw-latex:`\vee `(A r_2 B) :raw-latex:`\vee `(A r_3 B)$
+:math:`A\{r_1,r_2,r_3\}B \Leftrightarrow (A r_1 B) \vee (A r_2 B) \vee (A r_3 B)`
 
 There are two acceptable input formats for creating relation sets, the
 first of which, shown below, is also the print representation of a

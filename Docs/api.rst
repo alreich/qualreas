@@ -11,7 +11,6 @@ TemporalEntity
 
 .. autoclass:: qualreas.TemporalEntity
     :members:
-    :inherited-members:
     :undoc-members:
     :show-inheritance:
 
@@ -21,7 +20,6 @@ SpatialEntity
 
 .. autoclass:: qualreas.SpatialEntity
     :members:
-    :inherited-members:
     :undoc-members:
     :show-inheritance:
 
@@ -31,7 +29,6 @@ RelSet
 
 .. autoclass:: qualreas.RelSet
     :members:
-    :inherited-members:
     :undoc-members:
     :show-inheritance:
 
@@ -40,7 +37,6 @@ Algebra
 
 .. autoclass:: qualreas.Algebra
     :members:
-    :inherited-members:
     :undoc-members:
     :show-inheritance:
 
@@ -61,7 +57,6 @@ Network
 
 .. autoclass:: qualreas.Network
     :members:
-    :inherited-members:
     :undoc-members:
     :show-inheritance:
 
@@ -70,28 +65,25 @@ InconsistentNetwork
 
 .. autoclass:: qualreas.InconsistentNetwork
     :members:
-    :inherited-members:
     :undoc-members:
     :show-inheritance:
 
 Algebra Derivation Classes
 --------------------------
 
-FourPointNetwork
-----------------
+FourPointNet
+------------
 
-.. autoclass:: qualreas.FourPointNetwork
+.. autoclass:: qualreas.FourPointNet
     :members:
-    :inherited-members:
     :undoc-members:
     :show-inheritance:
 
-SixPointNetwork
----------------
+SixPointNet
+-----------
 
-.. autoclass:: qualreas.SixPointNetwork
+.. autoclass:: qualreas.SixPointNet
     :members:
-    :inherited-members:
     :undoc-members:
     :show-inheritance:
 
