@@ -33,6 +33,8 @@ Dependencies
 
     import qualreas as qr
     import os
+    
+    from IPython.display import Image  # Only needed to display figures here
 
 .. code:: ipython3
 
@@ -82,11 +84,31 @@ be proper intervals (“i”) or points (“p”) or both (“ip”). Where the
 subscript is “i” alone for both domain and range (X & Y) the original
 relations are unchanged.
 
+.. code:: ipython3
+
+    Image(filename='../docs/_static/Extension_of_Allens_Interval_Relations.png', width="400")
+
+
+
+
+.. image:: output_11_0.png
+   :width: 400px
+
 
 
 The 5 additional relations needed to integrate Points with Intervals are
 shown in Figure 2, below. The meaning of the subscripts remains the same
 as above.
+
+.. code:: ipython3
+
+    Image(filename='../docs/_static/Point_Interval_Relations.png', width="400") 
+
+
+
+
+.. image:: output_13_0.png
+   :width: 400px
 
 
 
@@ -281,6 +303,16 @@ addition to the 18 described above.
     B, BI, D, DI, E, F, FI, M, MI, O, OI, PE, PF, PFI, PS, PSI, RB, RBI, RO, ROI, RS, R~, S, SI
 
 
+.. code:: ipython3
+
+    Image(filename='../docs/_static/Right_Branching_Time_Relations.png', width="400")
+
+
+
+
+.. image:: output_27_0.png
+   :width: 400px
+
 
 
 .. code:: ipython3
@@ -352,6 +384,16 @@ Algebra.
     This algebra has the following 24 elements:
     B, BI, D, DI, E, F, FI, LB, LBI, LF, LO, LOI, L~, M, MI, O, OI, PE, PF, PFI, PS, PSI, S, SI
 
+
+.. code:: ipython3
+
+    Image(filename='../docs/_static/Left_Branching_Time_Relations.png', width="400")
+
+
+
+
+.. image:: output_32_0.png
+   :width: 400px
 
 
 
@@ -426,33 +468,33 @@ Here are a few element summaries:
 
 .. parsed-literal::
 
-                      Symbol: RBI
-                        Name: Right-After
+                      Symbol: E
+                        Name: Equals
+                      Domain: ['ProperInterval']
+                       Range: ['ProperInterval']
+                    Converse: Equals
+               Is Reflexive?: True
+               Is Symmetric?: True
+              Is Transitive?: True
+    Is an Equality Relation?: True
+    
+    
+                      Symbol: R~
+                        Name: Right-Incomparable
                       Domain: ['Point', 'ProperInterval']
-                       Range: ['ProperInterval']
-                    Converse: Right-Before
-               Is Reflexive?: False
-               Is Symmetric?: False
-              Is Transitive?: True
-    Is an Equality Relation?: False
-    
-    
-                      Symbol: RB
-                        Name: Right-Before
-                      Domain: ['ProperInterval']
                        Range: ['Point', 'ProperInterval']
-                    Converse: Right-After
+                    Converse: Right-Incomparable
                Is Reflexive?: False
-               Is Symmetric?: False
-              Is Transitive?: True
+               Is Symmetric?: True
+              Is Transitive?: False
     Is an Equality Relation?: False
     
     
-                      Symbol: OI
-                        Name: Overlapped-By
+                      Symbol: PSI
+                        Name: Point-Started-By
                       Domain: ['ProperInterval']
-                       Range: ['ProperInterval']
-                    Converse: Overlaps
+                       Range: ['Point']
+                    Converse: Point-Starts
                Is Reflexive?: False
                Is Symmetric?: False
               Is Transitive?: False

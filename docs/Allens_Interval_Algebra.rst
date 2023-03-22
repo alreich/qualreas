@@ -1,10 +1,6 @@
 Allen’s Algebra of Proper Time Intervals
 ========================================
 
-.. code:: ipython3
-
-    from IPython.display import Image
-
 “Allen’s interval algebra is a calculus for temporal reasoning that was
 introduced by James F. Allen in 1983. The calculus defines possible
 relations between time intervals and provides a composition table that
@@ -21,16 +17,16 @@ NOTE: Several of the relation symbols in qualreas differ from those in
 the Wikipedia figure, below: B instead of <, A instead of >, and E
 instead of =
 
-<img src="../docs/_static/Allens_Interval_Relations.png" width="400">
-
 .. code:: ipython3
 
+    from IPython.display import Image
+    
     Image(filename='../docs/_static/Allens_Interval_Relations.png', width="400") 
 
 
 
 
-.. image:: output_4_0.png
+.. image:: output_2_0.png
    :width: 400px
 
 
@@ -138,31 +134,31 @@ Here are a few random individual element summaries:
 .. parsed-literal::
 
     --------------------------------------------------
-                      Symbol: S
-                        Name: Starts
+                      Symbol: FI
+                        Name: Finished-by
                       Domain: ['ProperInterval']
                        Range: ['ProperInterval']
-                    Converse: Started-By
+                    Converse: Finishes
                Is Reflexive?: False
                Is Symmetric?: False
               Is Transitive?: True
     Is an Equality Relation?: False
     --------------------------------------------------
-                      Symbol: DI
-                        Name: Contains
+                      Symbol: B
+                        Name: Before
                       Domain: ['ProperInterval']
                        Range: ['ProperInterval']
-                    Converse: During
+                    Converse: After
                Is Reflexive?: False
                Is Symmetric?: False
               Is Transitive?: True
     Is an Equality Relation?: False
     --------------------------------------------------
-                      Symbol: F
-                        Name: Finishes
+                      Symbol: SI
+                        Name: Started-By
                       Domain: ['ProperInterval']
                        Range: ['ProperInterval']
-                    Converse: Finished-by
+                    Converse: Starts
                Is Reflexive?: False
                Is Symmetric?: False
               Is Transitive?: True

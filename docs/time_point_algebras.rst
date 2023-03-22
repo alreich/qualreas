@@ -5,6 +5,8 @@ Time Point Algebras
 
     import os
     import qualreas as qr
+    
+    from IPython.display import Image  # Only needed to display figures here
 
 .. code:: ipython3
 
@@ -28,6 +30,16 @@ The Structures of Linear and Branching Time
 The point (and interval) algebras of time, supported by qualreas,
 consider the structure of time to be either linear or branching as shown
 in the figures below.
+
+.. code:: ipython3
+
+    Image(filename='../docs/_static/global_structures_of_time.png', width="400")
+
+
+
+
+.. image:: output_7_0.png
+   :width: 400px
 
 
 
@@ -113,6 +125,16 @@ has the property of Left Linearity:
 
    </p>
 
+.. code:: ipython3
+
+    Image(filename='../docs/_static/left_linearity_in_right_branching_time.png', width="300")
+
+
+
+
+.. image:: output_18_0.png
+   :width: 300px
+
 
 
 Left-Branching Point Structure
@@ -188,12 +210,21 @@ Jupyter Notebook, “Notebooks/derive_extended_interval_algebra.ipynb”)
    “confuse” the system that parses reST (restructured text).
    Consequently, the next cell is set to be “Raw NBConvert” instead of
    “Code”, and then an image of its proper output (from a version of
-   this Jupyter notebook) is shown below it, to simulate how the output
+   this Jupyter notebook) is shown below it, to depict how the output
    should look. The same trick is applied to all 5 of the calls to
    print_point_algebra_composition_table in this document. (Sorry for
    the interruption.)
 
 qr.print_point_algebra_composition_table(pt_alg) # SEE EDITOR'S NOTE, ABOVE
+
+.. code:: ipython3
+
+    Image(filename='../docs/_static/Linear_Pt_Alg_Elements.png')
+
+
+
+
+.. image:: output_28_0.png
 
 
 
@@ -235,6 +266,15 @@ Notebook, “Notebooks/derive_right_branching_interval_algebra.ipynb”)
 
 qr.print_point_algebra_composition_table(rb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
 
+.. code:: ipython3
+
+    Image(filename='../docs/_static/Rt_Branching_Pt_Alg_Elements.png')
+
+
+
+
+.. image:: output_34_0.png
+
 
 
 Left-Branching Point Algebra
@@ -274,6 +314,15 @@ Notebook, “Notebooks/derive_right_branching_interval_algebra.ipynb”)
 
 
 qr.print_point_algebra_composition_table(lb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
+
+.. code:: ipython3
+
+    Image(filename='../docs/_static/Lf_Branching_Pt_Alg_Elements.png')
+
+
+
+
+.. image:: output_40_0.png
 
 
 
@@ -315,6 +364,15 @@ Jupyter Notebook,
 
 qr.print_point_algebra_composition_table(rbb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
 
+.. code:: ipython3
+
+    Image(filename='../docs/_static/Rt_Bin_Branching_Pt_Alg_Elements.png')
+
+
+
+
+.. image:: output_46_0.png
+
 
 
 Left-Binary-Branching Point Algebra
@@ -354,5 +412,14 @@ Jupyter Notebook,
 
 
 qr.print_point_algebra_composition_table(lbb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
+
+.. code:: ipython3
+
+    Image(filename='../docs/_static/Lf_Bin_Branching_Pt_Alg_Elements.png')
+
+
+
+
+.. image:: output_52_0.png
 
 
