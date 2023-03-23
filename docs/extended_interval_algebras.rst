@@ -438,12 +438,12 @@ Algebra.
      PInt = Proper Interval
 
 
-Pick one of the branching algebras to use for examples
-------------------------------------------------------
+Pick one of the algebras to use for examples
+--------------------------------------------
 
 .. code:: ipython3
 
-    >>> alg = algR  # Other choice is algL
+    >>> alg = algR  # Other choices are algX & algL
 
 Algebra Element Summary
 -----------------------
@@ -467,36 +467,36 @@ Here are a few element summaries:
 
 .. parsed-literal::
 
-                      Symbol: OI
-                        Name: Overlapped-By
-                      Domain: ['ProperInterval']
+                      Symbol: PF
+                        Name: Point-Finishes
+                      Domain: ['Point']
                        Range: ['ProperInterval']
-                    Converse: Overlaps
+                    Converse: Point-Finished-By
                Is Reflexive?: False
                Is Symmetric?: False
               Is Transitive?: False
     Is an Equality Relation?: False
     
     
-                      Symbol: PFI
-                        Name: Point-Finished-By
+                      Symbol: ROI
+                        Name: Right-Overlapped-By
                       Domain: ['ProperInterval']
-                       Range: ['Point']
-                    Converse: Point-Finishes
+                       Range: ['ProperInterval']
+                    Converse: Right-Overlaps
                Is Reflexive?: False
                Is Symmetric?: False
               Is Transitive?: False
     Is an Equality Relation?: False
     
     
-                      Symbol: RBI
-                        Name: Right-After
-                      Domain: ['Point', 'ProperInterval']
+                      Symbol: PS
+                        Name: Point-Starts
+                      Domain: ['Point']
                        Range: ['ProperInterval']
-                    Converse: Right-Before
+                    Converse: Point-Started-By
                Is Reflexive?: False
                Is Symmetric?: False
-              Is Transitive?: True
+              Is Transitive?: False
     Is an Equality Relation?: False
     
     
@@ -884,14 +884,14 @@ and returns True if all pairs check out.
 
 .. code:: ipython3
 
-    >>> algX.check_composition_identity(verbose=True)
+    >>> alg.check_composition_identity(verbose=True)
 
 
 .. parsed-literal::
 
     
-    Extended_Linear_Interval_Algebra -- Composition Identity Check:
-    PASSED . 324 products tested.
+    Right_Branching_Interval_Algebra -- Composition Identity Check:
+    PASSED . 576 products tested.
 
 
 
