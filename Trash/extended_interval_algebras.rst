@@ -467,36 +467,36 @@ Here are a few element summaries:
 
 .. parsed-literal::
 
-                      Symbol: OI
-                        Name: Overlapped-By
+                      Symbol: ROI
+                        Name: Right-Overlapped-By
                       Domain: ['ProperInterval']
                        Range: ['ProperInterval']
-                    Converse: Overlaps
+                    Converse: Right-Overlaps
                Is Reflexive?: False
                Is Symmetric?: False
               Is Transitive?: False
     Is an Equality Relation?: False
     
     
-                      Symbol: PFI
-                        Name: Point-Finished-By
-                      Domain: ['ProperInterval']
-                       Range: ['Point']
-                    Converse: Point-Finishes
+                      Symbol: PF
+                        Name: Point-Finishes
+                      Domain: ['Point']
+                       Range: ['ProperInterval']
+                    Converse: Point-Finished-By
                Is Reflexive?: False
                Is Symmetric?: False
               Is Transitive?: False
     Is an Equality Relation?: False
     
     
-                      Symbol: RBI
-                        Name: Right-After
+                      Symbol: R~
+                        Name: Right-Incomparable
                       Domain: ['Point', 'ProperInterval']
-                       Range: ['ProperInterval']
-                    Converse: Right-Before
+                       Range: ['Point', 'ProperInterval']
+                    Converse: Right-Incomparable
                Is Reflexive?: False
-               Is Symmetric?: False
-              Is Transitive?: True
+               Is Symmetric?: True
+              Is Transitive?: False
     Is an Equality Relation?: False
     
     
@@ -952,22 +952,20 @@ algebra found in the paper by `Reich,
 1994 <https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time>`__,
 where ProperIntervals and Points are integrated.
 
-.. code:: ipython3
-
-    # All relations have a domain and a range.  If D1, R1, D2, and R2 are the domains and ranges
-    # of relations r1 & r2, resp., then the composition of r1 and r2 (written r1;r2 in algebraic
-    # logic literature) requires that the intersection of R1 and D2 be non-empty.  To see why,
-    # consider what the composition means wrt the associated Temporal Entities, teA, teB, and
-    # teC, where (teA r1 teB) and (teB r2 teC).  The ontological classes that teB belongs to
-    # must include the range of r1 (R1) and the domain of r2 (D2) for r1;r2 to make sense.
-    #
-    #                r1         r2
-    #          teA -----> teB -----> teC
-    #           D1       R1,D2        R2
-    #            |                    ^
-    #            |                    |
-    #            +--------------------+
-    #                     r1;r2
-    #
-    # Matrix multiplication, M x N, provides an analogy: the number of columns of M must
-    # match the number of rows of N.
+# All relations have a domain and a range.  If D1, R1, D2, and R2 are the domains and ranges
+# of relations r1 & r2, resp., then the composition of r1 and r2 (written r1;r2 in algebraic
+# logic literature) requires that the intersection of R1 and D2 be non-empty.  To see why,
+# consider what the composition means wrt the associated Temporal Entities, teA, teB, and
+# teC, where (teA r1 teB) and (teB r2 teC).  The ontological classes that teB belongs to
+# must include the range of r1 (R1) and the domain of r2 (D2) for r1;r2 to make sense.
+#
+#                r1         r2
+#          teA -----> teB -----> teC
+#           D1       R1,D2        R2
+#            |                    ^
+#            |                    |
+#            +--------------------+
+#                     r1;r2
+#
+# Matrix multiplication, M x N, provides an analogy: the number of columns of M must
+# match the number of rows of N.

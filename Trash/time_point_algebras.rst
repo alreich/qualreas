@@ -221,7 +221,7 @@ Jupyter Notebook, “Notebooks/derive_extended_interval_algebra.ipynb”)
 
 
 
-.. image:: output_271_0.png
+.. image:: output_57_0.png
 
 
 
@@ -268,7 +268,7 @@ Notebook, “Notebooks/derive_right_branching_interval_algebra.ipynb”)
 
 
 
-.. image:: output_321_0.png
+.. image:: output_82_0.png
 
 
 
