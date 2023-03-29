@@ -3,7 +3,7 @@ Derive Extended Interval Algebra
 
 NOTE: From a derivation point-of-view, what distinquishes this algebra
 from Allen’s algebra it the definition of less than used to define
-intervals. In particular, this derivation uses ‘=|<’ rather than ‘<’,
+intervals. In particular, this derivation uses ‘=\|<’ rather than ‘<’,
 which allows intervals to be degenerate (i.e., equal a point). See the
 section, below, titled, “Derive the Extended Interval Algebra as a
 Dictionary”.
@@ -101,13 +101,13 @@ Extended Point Algebra
     ==============================
        <      <      <
        <      =      <
-       <      >      <|=|>
+       <      >      <\|=\|>
     ------------------------------
        =      <      <
        =      =      =
        =      >      >
     ------------------------------
-       >      <      <|=|>
+       >      <      <\|=\|>
        >      =      >
        >      >      >
     ------------------------------
@@ -117,7 +117,7 @@ Derive the Extended Interval Algebra as a Dictionary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The definition of less than, below, either restricts intervals to be
-proper (‘<’) or allows intervals to be degenerate (‘=|<’) (i.e.,
+proper (‘<’) or allows intervals to be degenerate (‘=\|<’) (i.e.,
 integrates points and intervals).
 
 .. code:: ipython3
@@ -141,10 +141,10 @@ integrates points and intervals).
     <,<,<,<
     B
     (['Point', 'ProperInterval'], ['Point', 'ProperInterval'])
-    [['=' '<|=' '<' '<']
-     ['=|>' '=' '<' '<']
-     ['>' '>' '=' '<|=']
-     ['>' '>' '=|>' '=']]
+    [['=' '<\|=' '<' '<']
+     ['=\|>' '=' '<' '<']
+     ['>' '>' '=' '<\|=']
+     ['>' '>' '=\|>' '=']]
     ==========================
     <,<,=,<
     M
@@ -183,8 +183,8 @@ integrates points and intervals).
     (['ProperInterval'], ['Point', 'ProperInterval'])
     [['=' '<' '<' '<']
      ['>' '=' '>' '>']
-     ['>' '<' '=' '<|=']
-     ['>' '<' '=|>' '=']]
+     ['>' '<' '=' '<\|=']
+     ['>' '<' '=\|>' '=']]
     ==========================
     =,<,=,<
     PS
@@ -237,8 +237,8 @@ integrates points and intervals).
     >,<,>,<
     D
     (['Point', 'ProperInterval'], ['ProperInterval'])
-    [['=' '<|=' '>' '<']
-     ['=|>' '=' '>' '<']
+    [['=' '<\|=' '>' '<']
+     ['=\|>' '=' '>' '<']
      ['<' '<' '=' '<']
      ['>' '>' '>' '=']]
     ==========================
@@ -277,10 +277,10 @@ integrates points and intervals).
     >,>,>,>
     BI
     (['Point', 'ProperInterval'], ['Point', 'ProperInterval'])
-    [['=' '<|=' '>' '>']
-     ['=|>' '=' '>' '>']
-     ['<' '<' '=' '<|=']
-     ['<' '<' '=|>' '=']]
+    [['=' '<\|=' '>' '>']
+     ['=\|>' '=' '>' '>']
+     ['<' '<' '=' '<\|=']
+     ['<' '<' '=\|>' '=']]
     
     18 consistent networks
     CPU times: user 11 s, sys: 644 ms, total: 11.7 s
@@ -425,76 +425,76 @@ integrates points and intervals).
        'Symmetric': False,
        'Transitive': True}},
      'TransTable': {'B': {'B': 'B',
-       'BI': 'B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|S|SI',
-       'D': 'B|D|M|O|PS|S',
+       'BI': 'B\|BI\|D\|DI\|E\|F\|FI\|M\|MI\|O\|OI\|PE\|PF\|PFI\|PS\|PSI\|S\|SI',
+       'D': 'B\|D\|M\|O\|PS\|S',
        'DI': 'B',
        'E': 'B',
-       'F': 'B|D|M|O|PS|S',
+       'F': 'B\|D\|M\|O\|PS\|S',
        'FI': 'B',
        'M': 'B',
-       'MI': 'B|D|M|O|PS|S',
+       'MI': 'B\|D\|M\|O\|PS\|S',
        'O': 'B',
-       'OI': 'B|D|M|O|PS|S',
+       'OI': 'B\|D\|M\|O\|PS\|S',
        'PE': 'B',
-       'PF': 'B|D|M|O|PS|S',
+       'PF': 'B\|D\|M\|O\|PS\|S',
        'PFI': 'B',
        'PS': 'B',
        'PSI': 'B',
        'S': 'B',
        'SI': 'B'},
-      'BI': {'B': 'B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|S|SI',
+      'BI': {'B': 'B\|BI\|D\|DI\|E\|F\|FI\|M\|MI\|O\|OI\|PE\|PF\|PFI\|PS\|PSI\|S\|SI',
        'BI': 'BI',
-       'D': 'BI|D|F|MI|OI|PF',
+       'D': 'BI\|D\|F\|MI\|OI\|PF',
        'DI': 'BI',
        'E': 'BI',
        'F': 'BI',
        'FI': 'BI',
-       'M': 'BI|D|F|MI|OI|PF',
+       'M': 'BI\|D\|F\|MI\|OI\|PF',
        'MI': 'BI',
-       'O': 'BI|D|F|MI|OI|PF',
+       'O': 'BI\|D\|F\|MI\|OI\|PF',
        'OI': 'BI',
        'PE': 'BI',
        'PF': 'BI',
        'PFI': 'BI',
-       'PS': 'BI|D|F|MI|OI|PF',
+       'PS': 'BI\|D\|F\|MI\|OI\|PF',
        'PSI': 'BI',
-       'S': 'BI|D|F|MI|OI|PF',
+       'S': 'BI\|D\|F\|MI\|OI\|PF',
        'SI': 'BI'},
       'D': {'B': 'B',
        'BI': 'BI',
        'D': 'D',
-       'DI': 'B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|S|SI',
+       'DI': 'B\|BI\|D\|DI\|E\|F\|FI\|M\|MI\|O\|OI\|PE\|PF\|PFI\|PS\|PSI\|S\|SI',
        'E': 'D',
        'F': 'D',
-       'FI': 'B|D|M|O|PS|S',
+       'FI': 'B\|D\|M\|O\|PS\|S',
        'M': 'B',
        'MI': 'BI',
-       'O': 'B|D|M|O|PS|S',
-       'OI': 'BI|D|F|MI|OI|PF',
+       'O': 'B\|D\|M\|O\|PS\|S',
+       'OI': 'BI\|D\|F\|MI\|OI\|PF',
        'PE': '',
        'PF': '',
        'PFI': 'B',
        'PS': '',
        'PSI': 'BI',
        'S': 'D',
-       'SI': 'BI|D|F|MI|OI|PF'},
-      'DI': {'B': 'B|DI|FI|M|O|PFI',
-       'BI': 'BI|DI|MI|OI|PSI|SI',
-       'D': 'D|DI|E|F|FI|O|OI|S|SI',
+       'SI': 'BI\|D\|F\|MI\|OI\|PF'},
+      'DI': {'B': 'B\|DI\|FI\|M\|O\|PFI',
+       'BI': 'BI\|DI\|MI\|OI\|PSI\|SI',
+       'D': 'D\|DI\|E\|F\|FI\|O\|OI\|S\|SI',
        'DI': 'DI',
        'E': 'DI',
-       'F': 'DI|OI|SI',
+       'F': 'DI\|OI\|SI',
        'FI': 'DI',
-       'M': 'DI|FI|O',
-       'MI': 'DI|OI|SI',
-       'O': 'DI|FI|O',
-       'OI': 'DI|OI|SI',
+       'M': 'DI\|FI\|O',
+       'MI': 'DI\|OI\|SI',
+       'O': 'DI\|FI\|O',
+       'OI': 'DI\|OI\|SI',
        'PE': 'DI',
-       'PF': 'DI|OI|SI',
+       'PF': 'DI\|OI\|SI',
        'PFI': 'DI',
-       'PS': 'DI|FI|O',
+       'PS': 'DI\|FI\|O',
        'PSI': 'DI',
-       'S': 'DI|FI|O',
+       'S': 'DI\|FI\|O',
        'SI': 'DI'},
       'E': {'B': 'B',
        'BI': 'BI',
@@ -517,32 +517,32 @@ integrates points and intervals).
       'F': {'B': 'B',
        'BI': 'BI',
        'D': 'D',
-       'DI': 'BI|DI|MI|OI|PSI|SI',
+       'DI': 'BI\|DI\|MI\|OI\|PSI\|SI',
        'E': 'F',
        'F': 'F',
-       'FI': 'E|F|FI',
+       'FI': 'E\|F\|FI',
        'M': 'M',
        'MI': 'BI',
-       'O': 'D|O|S',
-       'OI': 'BI|MI|OI',
+       'O': 'D\|O\|S',
+       'OI': 'BI\|MI\|OI',
        'PE': '',
        'PF': '',
        'PFI': 'PFI',
        'PS': '',
        'PSI': 'BI',
        'S': 'D',
-       'SI': 'BI|MI|OI'},
+       'SI': 'BI\|MI\|OI'},
       'FI': {'B': 'B',
-       'BI': 'BI|DI|MI|OI|PSI|SI',
-       'D': 'D|O|S',
+       'BI': 'BI\|DI\|MI\|OI\|PSI\|SI',
+       'D': 'D\|O\|S',
        'DI': 'DI',
        'E': 'FI',
-       'F': 'E|F|FI',
+       'F': 'E\|F\|FI',
        'FI': 'FI',
        'M': 'M',
-       'MI': 'DI|OI|SI',
+       'MI': 'DI\|OI\|SI',
        'O': 'O',
-       'OI': 'DI|OI|SI',
+       'OI': 'DI\|OI\|SI',
        'PE': '',
        'PF': '',
        'PFI': 'PFI',
@@ -551,16 +551,16 @@ integrates points and intervals).
        'S': 'O',
        'SI': 'DI'},
       'M': {'B': 'B',
-       'BI': 'BI|DI|MI|OI|PSI|SI',
-       'D': 'D|O|S',
+       'BI': 'BI\|DI\|MI\|OI\|PSI\|SI',
+       'D': 'D\|O\|S',
        'DI': 'B',
        'E': 'M',
-       'F': 'D|O|S',
+       'F': 'D\|O\|S',
        'FI': 'B',
        'M': 'B',
-       'MI': 'E|F|FI',
+       'MI': 'E\|F\|FI',
        'O': 'B',
-       'OI': 'D|O|S',
+       'OI': 'D\|O\|S',
        'PE': '',
        'PF': '',
        'PFI': 'B',
@@ -568,60 +568,60 @@ integrates points and intervals).
        'PSI': 'PFI',
        'S': 'M',
        'SI': 'M'},
-      'MI': {'B': 'B|DI|FI|M|O|PFI',
+      'MI': {'B': 'B\|DI\|FI\|M\|O\|PFI',
        'BI': 'BI',
-       'D': 'D|F|OI',
+       'D': 'D\|F\|OI',
        'DI': 'BI',
        'E': 'MI',
        'F': 'MI',
        'FI': 'MI',
-       'M': 'E|S|SI',
+       'M': 'E\|S\|SI',
        'MI': 'BI',
-       'O': 'D|F|OI',
+       'O': 'D\|F\|OI',
        'OI': 'BI',
        'PE': '',
        'PF': '',
        'PFI': 'PSI',
        'PS': '',
        'PSI': 'BI',
-       'S': 'D|F|OI',
+       'S': 'D\|F\|OI',
        'SI': 'BI'},
       'O': {'B': 'B',
-       'BI': 'BI|DI|MI|OI|PSI|SI',
-       'D': 'D|O|S',
-       'DI': 'B|DI|FI|M|O|PFI',
+       'BI': 'BI\|DI\|MI\|OI\|PSI\|SI',
+       'D': 'D\|O\|S',
+       'DI': 'B\|DI\|FI\|M\|O\|PFI',
        'E': 'O',
-       'F': 'D|O|S',
-       'FI': 'B|M|O',
+       'F': 'D\|O\|S',
+       'FI': 'B\|M\|O',
        'M': 'B',
-       'MI': 'DI|OI|SI',
-       'O': 'B|M|O',
-       'OI': 'D|DI|E|F|FI|O|OI|S|SI',
+       'MI': 'DI\|OI\|SI',
+       'O': 'B\|M\|O',
+       'OI': 'D\|DI\|E\|F\|FI\|O\|OI\|S\|SI',
        'PE': '',
        'PF': '',
        'PFI': 'B',
        'PS': '',
        'PSI': 'DI',
        'S': 'O',
-       'SI': 'DI|FI|O'},
-      'OI': {'B': 'B|DI|FI|M|O|PFI',
+       'SI': 'DI\|FI\|O'},
+      'OI': {'B': 'B\|DI\|FI\|M\|O\|PFI',
        'BI': 'BI',
-       'D': 'D|F|OI',
-       'DI': 'BI|DI|MI|OI|PSI|SI',
+       'D': 'D\|F\|OI',
+       'DI': 'BI\|DI\|MI\|OI\|PSI\|SI',
        'E': 'OI',
        'F': 'OI',
-       'FI': 'DI|OI|SI',
-       'M': 'DI|FI|O',
+       'FI': 'DI\|OI\|SI',
+       'M': 'DI\|FI\|O',
        'MI': 'BI',
-       'O': 'D|DI|E|F|FI|O|OI|S|SI',
-       'OI': 'BI|MI|OI',
+       'O': 'D\|DI\|E\|F\|FI\|O\|OI\|S\|SI',
+       'OI': 'BI\|MI\|OI',
        'PE': '',
        'PF': '',
        'PFI': 'DI',
        'PS': '',
        'PSI': 'BI',
-       'S': 'D|F|OI',
-       'SI': 'BI|MI|OI'},
+       'S': 'D\|F\|OI',
+       'SI': 'BI\|MI\|OI'},
       'PE': {'B': 'B',
        'BI': 'BI',
        'D': 'D',
@@ -659,8 +659,8 @@ integrates points and intervals).
        'S': 'D',
        'SI': 'BI'},
       'PFI': {'B': 'B',
-       'BI': 'BI|DI|MI|OI|PSI|SI',
-       'D': 'D|O|S',
+       'BI': 'BI\|DI\|MI\|OI\|PSI\|SI',
+       'D': 'D\|O\|S',
        'DI': '',
        'E': '',
        'F': '',
@@ -670,7 +670,7 @@ integrates points and intervals).
        'O': '',
        'OI': '',
        'PE': 'PFI',
-       'PF': 'E|F|FI',
+       'PF': 'E\|F\|FI',
        'PFI': '',
        'PS': 'M',
        'PSI': '',
@@ -694,9 +694,9 @@ integrates points and intervals).
        'PSI': 'PE',
        'S': 'PS',
        'SI': 'PS'},
-      'PSI': {'B': 'B|DI|FI|M|O|PFI',
+      'PSI': {'B': 'B\|DI\|FI\|M\|O\|PFI',
        'BI': 'BI',
-       'D': 'D|F|OI',
+       'D': 'D\|F\|OI',
        'DI': '',
        'E': '',
        'F': '',
@@ -708,45 +708,45 @@ integrates points and intervals).
        'PE': 'PSI',
        'PF': 'MI',
        'PFI': '',
-       'PS': 'E|S|SI',
+       'PS': 'E\|S\|SI',
        'PSI': '',
        'S': '',
        'SI': ''},
       'S': {'B': 'B',
        'BI': 'BI',
        'D': 'D',
-       'DI': 'B|DI|FI|M|O|PFI',
+       'DI': 'B\|DI\|FI\|M\|O\|PFI',
        'E': 'S',
        'F': 'D',
-       'FI': 'B|M|O',
+       'FI': 'B\|M\|O',
        'M': 'B',
        'MI': 'MI',
-       'O': 'B|M|O',
-       'OI': 'D|F|OI',
+       'O': 'B\|M\|O',
+       'OI': 'D\|F\|OI',
        'PE': '',
        'PF': '',
        'PFI': 'B',
        'PS': '',
        'PSI': 'PSI',
        'S': 'S',
-       'SI': 'E|S|SI'},
-      'SI': {'B': 'B|DI|FI|M|O|PFI',
+       'SI': 'E\|S\|SI'},
+      'SI': {'B': 'B\|DI\|FI\|M\|O\|PFI',
        'BI': 'BI',
-       'D': 'D|F|OI',
+       'D': 'D\|F\|OI',
        'DI': 'DI',
        'E': 'SI',
        'F': 'OI',
        'FI': 'DI',
-       'M': 'DI|FI|O',
+       'M': 'DI\|FI\|O',
        'MI': 'MI',
-       'O': 'DI|FI|O',
+       'O': 'DI\|FI\|O',
        'OI': 'OI',
        'PE': '',
        'PF': '',
        'PFI': 'DI',
        'PS': '',
        'PSI': 'PSI',
-       'S': 'E|S|SI',
+       'S': 'E\|S\|SI',
        'SI': 'SI'}}}
 
 
@@ -798,13 +798,13 @@ Instantiate an Algebra Object from JSON File
 
       Algebra Name: Derived_Extended_Interval_Algebra
        Description: Extended linear interval algebra derived from point relations
-     Equality Rels: E|PE
+     Equality Rels: E\|PE
          Relations:
                 NAME (SYMBOL)         CONVERSE (ABBREV)  REFLEXIVE  SYMMETRIC TRANSITIVE   DOMAIN        RANGE
-                 Before (  B)               After ( BI)    False      False       True    Pt|PInt       Pt|PInt
-                  After ( BI)              Before (  B)    False      False       True    Pt|PInt       Pt|PInt
-                 During (  D)            Contains ( DI)    False      False       True    Pt|PInt          PInt
-               Contains ( DI)              During (  D)    False      False       True       PInt       Pt|PInt
+                 Before (  B)               After ( BI)    False      False       True    Pt\|PInt       Pt\|PInt
+                  After ( BI)              Before (  B)    False      False       True    Pt\|PInt       Pt\|PInt
+                 During (  D)            Contains ( DI)    False      False       True    Pt\|PInt          PInt
+               Contains ( DI)              During (  D)    False      False       True       PInt       Pt\|PInt
                  Equals (  E)              Equals (  E)     True       True       True       PInt          PInt
                Finishes (  F)         Finished-by ( FI)    False      False       True       PInt          PInt
             Finished-by ( FI)            Finishes (  F)    False      False       True       PInt          PInt
@@ -882,13 +882,13 @@ Load Original Extended Interval Algebra
 
       Algebra Name: Extended_Linear_Interval_Algebra
        Description: Extension of Allen's algebra to include points and intervals
-     Equality Rels: E|PE
+     Equality Rels: E\|PE
          Relations:
                 NAME (SYMBOL)         CONVERSE (ABBREV)  REFLEXIVE  SYMMETRIC TRANSITIVE   DOMAIN        RANGE
-                 Before (  B)               After ( BI)    False      False       True    Pt|PInt       Pt|PInt
-                  After ( BI)              Before (  B)    False      False       True    Pt|PInt       Pt|PInt
-                 During (  D)            Contains ( DI)    False      False       True    Pt|PInt          PInt
-               Contains ( DI)              During (  D)    False      False       True       PInt       Pt|PInt
+                 Before (  B)               After ( BI)    False      False       True    Pt\|PInt       Pt\|PInt
+                  After ( BI)              Before (  B)    False      False       True    Pt\|PInt       Pt\|PInt
+                 During (  D)            Contains ( DI)    False      False       True    Pt\|PInt          PInt
+               Contains ( DI)              During (  D)    False      False       True       PInt       Pt\|PInt
                  Equals (  E)              Equals (  E)     True       True       True       PInt          PInt
                Finishes (  F)         Finished-by ( FI)    False      False       True       PInt          PInt
             Finished-by ( FI)            Finishes (  F)    False      False       True       PInt          PInt

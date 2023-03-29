@@ -100,7 +100,7 @@ LBB Point Algebra
     ==============================
        <      <      <
        <      =      <
-       <      >      <|=|>|l~
+       <      >      <\|=\|>\|l~
        <     l~      l~
     ------------------------------
        =      <      <
@@ -108,15 +108,15 @@ LBB Point Algebra
        =      >      >
        =     l~      l~
     ------------------------------
-       >      <      <|=|>
+       >      <      <\|=\|>
        >      =      >
        >      >      >
-       >     l~      >|l~
+       >     l~      >\|l~
     ------------------------------
-      l~      <      <|l~
+      l~      <      <\|l~
       l~      =      l~
       l~      >      l~
-      l~     l~      <|=|>
+      l~     l~      <\|=\|>
     ------------------------------
 
 
@@ -124,7 +124,7 @@ Derive LBB Algebra as a Dictionary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The definition of less than, below, either restricts intervals to be
-proper (‘<’) or allows intervals to be degenerate (‘=|<’) (i.e.,
+proper (‘<’) or allows intervals to be degenerate (‘=\|<’) (i.e.,
 integrates points and intervals).
 
 .. code:: ipython3

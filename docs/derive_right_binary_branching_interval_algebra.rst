@@ -100,23 +100,23 @@ RBB Point Algebra
     ==============================
        <      <      <
        <      =      <
-       <      >      <|=|>
-       <     r~      <|r~
+       <      >      <\|=\|>
+       <     r~      <\|r~
     ------------------------------
        =      <      <
        =      =      =
        =      >      >
        =     r~      r~
     ------------------------------
-       >      <      <|=|>|r~
+       >      <      <\|=\|>\|r~
        >      =      >
        >      >      >
        >     r~      r~
     ------------------------------
       r~      <      r~
       r~      =      r~
-      r~      >      >|r~
-      r~     r~      <|=|>
+      r~      >      >\|r~
+      r~     r~      <\|=\|>
     ------------------------------
 
 
@@ -124,7 +124,7 @@ Derive RBB Algebra as a Dictionary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The definition of less than, below, either restricts intervals to be
-proper (‘<’) or allows intervals to be degenerate (‘=|<’) (i.e.,
+proper (‘<’) or allows intervals to be degenerate (‘=\|<’) (i.e.,
 integrates points and intervals).
 
 .. code:: ipython3
