@@ -128,7 +128,8 @@ class SpatialEntity:
 # constructors.
 class_type_dict = {"ProperInterval": TemporalEntity,
                    "Point": TemporalEntity,
-                   "Region": SpatialEntity}
+                   "Region": SpatialEntity,
+                   "2DPoint": SpatialEntity}
 
 
 # Abbreviations used by the Algebra Summary method:
@@ -138,7 +139,8 @@ def abbrev(term_list):
     abbrev_dict = {"Point": "Pt",
                    "ProperInterval": "PInt",
                    "Interval": "Int",
-                   "Region": "Reg"}
+                   "Region": "Reg",
+                   "2DPoint": "2DPt"}
     return '|'.join([abbrev_dict[term] for term in term_list])
 
 
