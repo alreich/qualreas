@@ -27,6 +27,7 @@ Derivation of Algebras
 .. toctree::
     :maxdepth: 2
 
+    derive_point_algebras
     derive_allens_algebra
     derive_extended_interval_algebra
     derive_left_binary_branching_interval_algebra
