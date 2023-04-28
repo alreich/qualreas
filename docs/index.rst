@@ -34,6 +34,7 @@ Derivation of Algebras
     derive_left_branching_proper_interval_algebra
     derive_right_binary_branching_interval_algebra
     derive_right_branching_proper_interval_algebra
+    derive_rectangle_algebra
 
 API Reference
 =============
