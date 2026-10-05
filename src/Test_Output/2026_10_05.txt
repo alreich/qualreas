@@ -1,0 +1,442 @@
+
+=======================================================================
+
+-------------------------------------
+Check algebra composition identity
+-------------------------------------
+
+Linear_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|S|SI
+Composition Identity OK
+
+Extended_Linear_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|S|SI
+Composition Identity OK
+
+Left_Branching_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|LB|LBI|LF|LO|LOI|L~|M|MI|O|OI|PE|PF|PFI|PS|PSI|S|SI
+Composition Identity OK
+
+Right_Branching_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|RB|RBI|RO|ROI|RS|R~|S|SI
+Composition Identity OK
+
+RCC8_Algebra:
+Relations: DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
+Composition Identity OK
+
+Linear_Point_Algebra:
+Relations: <|=|>
+Composition Identity OK
+
+Right_Branching_Point_Algebra:
+Relations: <|=|>|r~
+Composition Identity OK
+
+Left_Branching_Point_Algebra:
+Relations: <|=|>|l~
+Composition Identity OK
+
+---------------------------
+Check algebra associativity
+---------------------------
+
+Linear_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|S|SI
+TEST SUMMARY: 2197 OK, 0 Skipped, 0 Failed (2197 Total)
+Linear_Interval_Algebra is associative.
+
+Extended_Linear_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|S|SI
+TEST SUMMARY: 3609 OK, 2223 Skipped, 0 Failed (5832 Total)
+Extended_Linear_Interval_Algebra is associative.
+
+Left_Branching_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|LB|LBI|LF|LO|LOI|L~|M|MI|O|OI|PE|PF|PFI|PS|PSI|S|SI
+TEST SUMMARY: 9772 OK, 4052 Skipped, 0 Failed (13824 Total)
+Left_Branching_Interval_Algebra is associative.
+
+Right_Branching_Interval_Algebra:
+Relations: B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|RB|RBI|RO|ROI|RS|R~|S|SI
+TEST SUMMARY: 9772 OK, 4052 Skipped, 0 Failed (13824 Total)
+Right_Branching_Interval_Algebra is associative.
+
+RCC8_Algebra:
+Relations: DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
+TEST SUMMARY: 512 OK, 0 Skipped, 0 Failed (512 Total)
+RCC8_Algebra is associative.
+
+Linear_Point_Algebra:
+Relations: <|=|>
+TEST SUMMARY: 27 OK, 0 Skipped, 0 Failed (27 Total)
+Linear_Point_Algebra is associative.
+
+Right_Branching_Point_Algebra:
+Relations: <|=|>|r~
+TEST SUMMARY: 64 OK, 0 Skipped, 0 Failed (64 Total)
+Right_Branching_Point_Algebra is associative.
+
+Left_Branching_Point_Algebra:
+Relations: <|=|>|l~
+TEST SUMMARY: 64 OK, 0 Skipped, 0 Failed (64 Total)
+Left_Branching_Point_Algebra is associative.
+
+-----------------------------------------------
+Check network propagation for interval algebras
+-----------------------------------------------
+
+--------------------------------------------------
+Algebra: Linear_Interval_Algebra
+
+Network-Linear_Interval_Algebra: 3 nodes, 7 edges
+  Algebra: Linear_Interval_Algebra
+  X:['ProperInterval']
+    => X: E
+    => Y: B
+  Y:['ProperInterval']
+    => Y: E
+    => Z: D
+  Z:['ProperInterval']
+    => Z: E
+Constraint Added: X Z ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'S', 'SI']
+Constraint Added: Z X ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'S', 'SI']
+Number of iterations: 2
+
+Network-Linear_Interval_Algebra: 3 nodes, 9 edges
+  Algebra: Linear_Interval_Algebra
+  X:['ProperInterval']
+    => X: E
+    => Y: B
+    => Z: B|D|M|O|S
+  Y:['ProperInterval']
+    => Y: E
+    => Z: D
+  Z:['ProperInterval']
+    => Z: E
+
+--------------------------------------------------
+Algebra: Extended_Linear_Interval_Algebra
+
+Network-Extended_Linear_Interval_Algebra: 3 nodes, 7 edges
+  Algebra: Extended_Linear_Interval_Algebra
+  X:['ProperInterval']
+    => X: E
+    => Y: B
+  Y:['ProperInterval']
+    => Y: E
+    => Z: D
+  Z:['ProperInterval']
+    => Z: E
+Constraint Added: X Z ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'S', 'SI']
+Constraint Added: Z X ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'S', 'SI']
+Number of iterations: 2
+
+Network-Extended_Linear_Interval_Algebra: 3 nodes, 9 edges
+  Algebra: Extended_Linear_Interval_Algebra
+  X:['ProperInterval']
+    => X: E
+    => Y: B
+    => Z: B|D|M|O|S
+  Y:['ProperInterval']
+    => Y: E
+    => Z: D
+  Z:['ProperInterval']
+    => Z: E
+
+--------------------------------------------------
+Algebra: Left_Branching_Interval_Algebra
+
+Network-Left_Branching_Interval_Algebra: 3 nodes, 7 edges
+  Algebra: Left_Branching_Interval_Algebra
+  X:['ProperInterval']
+    => X: E
+    => Y: B
+  Y:['ProperInterval']
+    => Y: E
+    => Z: D
+  Z:['ProperInterval']
+    => Z: E
+Constraint Added: X Z ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'LB', 'LBI', 'LF', 'LO', 'LOI', 'L~', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'S', 'SI']
+Constraint Added: Z X ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'LB', 'LBI', 'LF', 'LO', 'LOI', 'L~', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'S', 'SI']
+Number of iterations: 2
+
+Network-Left_Branching_Interval_Algebra: 3 nodes, 9 edges
+  Algebra: Left_Branching_Interval_Algebra
+  X:['ProperInterval']
+    => X: E
+    => Y: B
+    => Z: B|D|LB|LO|M|O|S
+  Y:['ProperInterval']
+    => Y: E
+    => Z: D
+  Z:['ProperInterval']
+    => Z: E
+
+--------------------------------------------------
+Algebra: Right_Branching_Interval_Algebra
+
+Network-Right_Branching_Interval_Algebra: 3 nodes, 7 edges
+  Algebra: Right_Branching_Interval_Algebra
+  X:['ProperInterval']
+    => X: E
+    => Y: B
+  Y:['ProperInterval']
+    => Y: E
+    => Z: D
+  Z:['ProperInterval']
+    => Z: E
+Constraint Added: X Z ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'RB', 'RBI', 'RO', 'ROI', 'RS', 'R~', 'S', 'SI']
+Constraint Added: Z X ['B', 'BI', 'D', 'DI', 'E', 'F', 'FI', 'M', 'MI', 'O', 'OI', 'PE', 'PF', 'PFI', 'PS', 'PSI', 'RB', 'RBI', 'RO', 'ROI', 'RS', 'R~', 'S', 'SI']
+Number of iterations: 2
+
+Network-Right_Branching_Interval_Algebra: 3 nodes, 9 edges
+  Algebra: Right_Branching_Interval_Algebra
+  X:['ProperInterval']
+    => X: E
+    => Y: B
+    => Z: B|D|M|O|S
+  Y:['ProperInterval']
+    => Y: E
+    => Z: D
+  Z:['ProperInterval']
+    => Z: E
+
+--------------------------------------------------
+Algebra: Linear_Point_Algebra
+
+Network-Linear_Point_Algebra: 3 nodes, 7 edges
+  Algebra: Linear_Point_Algebra
+  X:['Point']
+    => X: =
+    => Y: <
+  Y:['Point']
+    => Y: =
+    => Z: <
+  Z:['Point']
+    => Z: =
+
+Network-Linear_Point_Algebra: 3 nodes, 9 edges
+  Algebra: Linear_Point_Algebra
+  X:['Point']
+    => X: =
+    => Y: <
+    => Z: <
+  Y:['Point']
+    => Y: =
+    => Z: <
+  Z:['Point']
+    => Z: =
+
+--------------------------------------------------
+Algebra: Right_Branching_Point_Algebra
+
+Network-Right_Branching_Point_Algebra: 3 nodes, 7 edges
+  Algebra: Right_Branching_Point_Algebra
+  X:['Point']
+    => X: =
+    => Y: <
+  Y:['Point']
+    => Y: =
+    => Z: <
+  Z:['Point']
+    => Z: =
+
+Network-Right_Branching_Point_Algebra: 3 nodes, 9 edges
+  Algebra: Right_Branching_Point_Algebra
+  X:['Point']
+    => X: =
+    => Y: <
+    => Z: <
+  Y:['Point']
+    => Y: =
+    => Z: <
+  Z:['Point']
+    => Z: =
+
+--------------------------------------------------
+Algebra: Left_Branching_Point_Algebra
+
+Network-Left_Branching_Point_Algebra: 3 nodes, 7 edges
+  Algebra: Left_Branching_Point_Algebra
+  X:['Point']
+    => X: =
+    => Y: <
+  Y:['Point']
+    => Y: =
+    => Z: <
+  Z:['Point']
+    => Z: =
+
+Network-Left_Branching_Point_Algebra: 3 nodes, 9 edges
+  Algebra: Left_Branching_Point_Algebra
+  X:['Point']
+    => X: =
+    => Y: <
+    => Z: <
+  Y:['Point']
+    => Y: =
+    => Z: <
+  Z:['Point']
+    => Z: =
+
+--------------------------------------------------
+Algebra: RCC8_Algebra
+
+Network-RCC8_Algebra: 3 nodes, 7 edges
+  Algebra: RCC8_Algebra
+  X:['Region']
+    => X: EQ
+    => Y: NTPP
+  Y:['Region']
+    => Y: EQ
+    => Z: NTPP
+  Z:['Region']
+    => Z: EQ
+
+Network-RCC8_Algebra: 3 nodes, 9 edges
+  Algebra: RCC8_Algebra
+  X:['Region']
+    => X: EQ
+    => Y: NTPP
+    => Z: NTPP
+  Y:['Region']
+    => Y: EQ
+    => Z: NTPP
+  Z:['Region']
+    => Z: EQ
+
+---------------------------------------------------------------
+Example in book on constraint processing for temporal reasoning
+---------------------------------------------------------------
+
+Book Example: 4 nodes, 16 edges
+  Algebra: Linear_Interval_Algebra
+  I:['ProperInterval']
+    => I: E
+    => J: F|FI
+    => L: M|S
+    => K: D|DI
+  J:['ProperInterval']
+    => J: E
+    => L: MI|SI
+    => K: D|DI
+  L:['ProperInterval']
+    => L: E
+    => K: O
+  K:['ProperInterval']
+    => K: E
+
+Book Example: 4 nodes, 16 edges
+  Algebra: Linear_Interval_Algebra
+  I:['ProperInterval']
+    => I: E
+    => J: 
+    => L: M|S
+    => K: D|DI
+  J:['ProperInterval']
+    => J: E
+    => L: MI|SI
+    => K: D|DI
+  L:['ProperInterval']
+    => L: E
+    => K: O
+  K:['ProperInterval']
+    => K: E
+
+Book Example Extended: 4 nodes, 16 edges
+  Algebra: Extended_Linear_Interval_Algebra
+  I:['Point', 'ProperInterval']
+    => I: E|PE
+    => J: F|FI
+    => L: M|S
+    => K: D|DI
+  J:['Point', 'ProperInterval']
+    => J: E|PE
+    => L: MI|SI
+    => K: D|DI
+  L:['Point', 'ProperInterval']
+    => L: E|PE
+    => K: O
+  K:['Point', 'ProperInterval']
+    => K: E|PE
+Propagation suspended; the network is inconsistent.
+
+Book Example Extended: 4 nodes, 16 edges
+  Algebra: Extended_Linear_Interval_Algebra
+  I:['Point', 'ProperInterval']
+    => I: E
+    => J: 
+    => L: M|S
+    => K: D|DI
+  J:['Point', 'ProperInterval']
+    => J: E|PE
+    => L: MI|SI
+    => K: D|DI
+  L:['Point', 'ProperInterval']
+    => L: E|PE
+    => K: O
+  K:['Point', 'ProperInterval']
+    => K: E|PE
+
+----------------------------------------------
+Region Connection Calculus 8
+Example from http://en.wikipedia.org/wiki/RCC8
+----------------------------------------------
+
+Wikipedia RCC8 Example: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:['Region']
+    => House1: EQ
+    => House2: DC
+    => Property1: NTPP|TPP
+    => Property2: DC|EC
+    => Road: EC
+  House2:['Region']
+    => House2: EQ
+    => Property1: DC|EC
+    => Property2: NTPP
+    => Road: EC
+  Property1:['Region']
+    => Property1: EQ
+    => Property2: DC|EC
+    => Road: DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
+  Property2:['Region']
+    => Property2: EQ
+    => Road: DC|EC|EQ|NTPP|NTPPI|PO|TPP|TPPI
+  Road:['Region']
+    => Road: EQ
+
+Wikipedia RCC8 Example: 5 nodes, 25 edges
+  Algebra: RCC8_Algebra
+  House1:['Region']
+    => House1: EQ
+    => House2: DC
+    => Property1: NTPP|TPP
+    => Property2: DC|EC
+    => Road: EC
+  House2:['Region']
+    => House2: EQ
+    => Property1: DC
+    => Property2: NTPP
+    => Road: EC
+  Property1:['Region']
+    => Property1: EQ
+    => Property2: DC|EC
+    => Road: EC|PO
+  Property2:['Region']
+    => Property2: EQ
+    => Road: PO|TPPI
+  Road:['Region']
+    => Road: EQ
+
+Note on example above:
+    According to Wikipedia,
+    https://en.wikipedia.org/wiki/Region_connection_calculus#Examples,
+    the correct constraints
+    between 'road' and 'property1', and
+    between 'road' and 'property2' are:
+      road property1 EC|PO
+      road property2 PO|TPP
+    ------------
+    END OF TESTS
+    ------------
