@@ -1,0 +1,17 @@
+{%- extends 'rst/index.rst.j2' -%}
+
+{#- Write text output as a literal block. Unlike "parsed-literal", a literal block
+    does not interpret reST inline markup, so characters such as | * ` < > ~ in
+    printed output cannot trigger Sphinx/docutils errors. -#}
+
+{% block stream %}
+.. code-block:: text
+
+{{ output.text | indent }}
+{% endblock stream %}
+
+{% block data_text scoped %}
+.. code-block:: text
+
+{{ output.data['text/plain'] | indent }}
+{% endblock data_text %}

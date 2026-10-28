@@ -37,7 +37,7 @@ in the figures below.
 
 
 
-.. image:: output_7_0.png
+.. image:: time_point_algebras_files/time_point_algebras_7_0.png
    :width: 400px
 
 
@@ -104,8 +104,8 @@ relation with itself (:math:`\sim;\sim`) depending on whether only two
 branches are allowed at a branch point (binary-branching) or more than
 two branches are allowed (poly-branching).
 
--  binary-branching: :math:`(\sim ; \sim) = \{\prec, =, \succ\}`
--  poly-branching: :math:`(\sim ; \sim) = \{\prec, =, \succ, \sim\}`
+- binary-branching: :math:`(\sim ; \sim) = \{\prec, =, \succ\}`
+- poly-branching: :math:`(\sim ; \sim) = \{\prec, =, \succ, \sim\}`
 
 Right-Branching Point Structure
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -131,7 +131,7 @@ has the property of Left Linearity:
 
 
 
-.. image:: output_18_0.png
+.. image:: time_point_algebras_files/time_point_algebras_18_0.png
    :width: 300px
 
 
@@ -184,7 +184,7 @@ Jupyter Notebook, “notebooks/derive_extended_interval_algebra.ipynb”)
     >>> pt_alg.summary()
 
 
-.. parsed-literal::
+.. code-block:: text
 
       Algebra Name: Linear_Point_Algebra
        Description: Linear Point Algebra
@@ -200,17 +200,17 @@ Jupyter Notebook, “notebooks/derive_extended_interval_algebra.ipynb”)
      PInt = Proper Interval
 
 
--  EDITORS NOTE: The function call to
-   print_point_algebra_composition_table, below, causes issues with the
-   automated documentation system used here (Sphinx) because the
-   specific elements printed out (equality & inequality symbols)
-   “confuse” the system that parses reST (restructured text).
-   Consequently, the next cell is set to be “Raw NBConvert” instead of
-   “Code”, and then an image of its proper output (from a version of
-   this Jupyter notebook) is shown below it, to depict how the output
-   should look. The same trick is applied to all 5 of the calls to
-   print_point_algebra_composition_table in this document. (Sorry for
-   the interruption.)
+- EDITORS NOTE: The function call to
+  print_point_algebra_composition_table, below, causes issues with the
+  automated documentation system used here (Sphinx) because the specific
+  elements printed out (equality & inequality symbols) “confuse” the
+  system that parses reST (restructured text). Consequently, the next
+  cell is set to be “Raw NBConvert” instead of “Code”, and then an image
+  of its proper output (from a version of this Jupyter notebook) is
+  shown below it, to depict how the output should look. The same trick
+  is applied to all 5 of the calls to
+  print_point_algebra_composition_table in this document. (Sorry for the
+  interruption.)
 
 >>> qr.print_point_algebra_composition_table(pt_alg) # SEE EDITOR'S NOTE, ABOVE
 
@@ -221,7 +221,7 @@ Jupyter Notebook, “notebooks/derive_extended_interval_algebra.ipynb”)
 
 
 
-.. image:: output_271_0.png
+.. image:: time_point_algebras_files/time_point_algebras_27_0.png
 
 
 
@@ -242,7 +242,7 @@ Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
     >>> rb_pt_alg.summary()
 
 
-.. parsed-literal::
+.. code-block:: text
 
       Algebra Name: Right_Branching_Point_Algebra
        Description: Right-Branching Point Algebra
@@ -268,7 +268,7 @@ Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
 
 
 
-.. image:: output_321_0.png
+.. image:: time_point_algebras_files/time_point_algebras_32_0.png
 
 
 
@@ -289,7 +289,7 @@ Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
     >>> lb_pt_alg.summary()
 
 
-.. parsed-literal::
+.. code-block:: text
 
       Algebra Name: Left_Branching_Point_Algebra
        Description: Left-Branching Point Algebra
@@ -315,7 +315,7 @@ Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
 
 
 
-.. image:: output_37_0.png
+.. image:: time_point_algebras_files/time_point_algebras_37_0.png
 
 
 
@@ -336,7 +336,7 @@ Jupyter Notebook,
     >>> rbb_pt_alg.summary()
 
 
-.. parsed-literal::
+.. code-block:: text
 
       Algebra Name: Right_Binary_Branching_Point_Algebra
        Description: Right-Binary-Branching Point Algebra
@@ -362,7 +362,7 @@ Jupyter Notebook,
 
 
 
-.. image:: output_42_0.png
+.. image:: time_point_algebras_files/time_point_algebras_42_0.png
 
 
 
@@ -383,7 +383,7 @@ Jupyter Notebook,
     >>> lbb_pt_alg.summary()
 
 
-.. parsed-literal::
+.. code-block:: text
 
       Algebra Name: Left_Binary_Branching_Point_Algebra
        Description: Left-Binary-Branching Point Algebra
@@ -409,6 +409,6 @@ Jupyter Notebook,
 
 
 
-.. image:: output_47_0.png
+.. image:: time_point_algebras_files/time_point_algebras_47_0.png
 
 
