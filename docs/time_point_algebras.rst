@@ -8,7 +8,7 @@ Time Point Algebras
 
 .. code:: ipython3
 
-    >>> path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+    >>> path = os.path.dirname(qr.DATA_DIR)
 
 References
 ----------
@@ -170,16 +170,16 @@ This algebra is based on the Linear Point Structure,
 :math:`(\mathbb{R},<)`, and is used to derive Allen’s algebra of proper
 time intervals [Allen, 1983]–known in qualreas as the “Linear Interval
 Algebra”. (See the Jupyter Notebook,
-“Notebooks/derive_allens_algebra.ipynb”)
+“notebooks/derive_allens_algebra.ipynb”)
 
 An extension to Allen’s algebra, the “Extended Linear Interval Algebra”
 [Reich, 1994], integrates proper time intervals with time points by
 using the Linear Point Structure, :math:`(\mathbb{R},\le)`. (See the
-Jupyter Notebook, “Notebooks/derive_extended_interval_algebra.ipynb”)
+Jupyter Notebook, “notebooks/derive_extended_interval_algebra.ipynb”)
 
 .. code:: ipython3
 
-    >>> pt_alg = qr.Algebra(os.path.join(path, "Algebras/Linear_Point_Algebra.json"))
+    >>> pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Linear_Point_Algebra.json"))
     
     >>> pt_alg.summary()
 
@@ -233,11 +233,11 @@ An extension to Allen’s algebra, the “Right-Branching Interval Algebra”
 poly-branching, right-branching time structure, by using the
 Right-Branching Point Structure,
 :math:`(\mathbb{R},\le, \underset{R}{\sim})`, below. (See the Jupyter
-Notebook, “Notebooks/derive_right_branching_interval_algebra.ipynb”)
+Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
 
 .. code:: ipython3
 
-    >>> rb_pt_alg = qr.Algebra(os.path.join(path, "Algebras/Right_Branching_Point_Algebra.json"))
+    >>> rb_pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Right_Branching_Point_Algebra.json"))
     
     >>> rb_pt_alg.summary()
 
@@ -280,11 +280,11 @@ An extension to Allen’s algebra, the “Left-Branching Interval Algebra”
 poly-branching, left-branching time structure, by using the
 Left-Branching Point Structure,
 :math:`(\mathbb{R},\le, \underset{L}{\sim})`, below. (See the Jupyter
-Notebook, “Notebooks/derive_right_branching_interval_algebra.ipynb”)
+Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
 
 .. code:: ipython3
 
-    >>> lb_pt_alg = qr.Algebra(os.path.join(path, "Algebras/Left_Branching_Point_Algebra.json"))
+    >>> lb_pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Left_Branching_Point_Algebra.json"))
     
     >>> lb_pt_alg.summary()
 
@@ -327,11 +327,11 @@ proper intervals, situated in a binary-branching, right-branching time
 structure, and is derived using the Right-Binary-Branching Point
 Structure, :math:`(\mathbb{R},\le, \underset{L}{\sim})`, below. (See the
 Jupyter Notebook,
-“Notebooks/derive_right_binary_branching_interval_algebra.ipynb”)
+“notebooks/derive_right_binary_branching_interval_algebra.ipynb”)
 
 .. code:: ipython3
 
-    >>> rbb_pt_alg = qr.Algebra(os.path.join(path, "Algebras/Right_Binary_Branching_Point_Algebra.json"))
+    >>> rbb_pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Right_Binary_Branching_Point_Algebra.json"))
     
     >>> rbb_pt_alg.summary()
 
@@ -374,11 +374,11 @@ proper intervals, situated in a binary-branching, left-branching time
 structure, and is derived using the Left-Binary-Branching Point
 Structure, :math:`(\mathbb{R},\le, \underset{L}{\sim})`, below. (See the
 Jupyter Notebook,
-“Notebooks/derive_left_binary_branching_interval_algebra.ipynb”)
+“notebooks/derive_left_binary_branching_interval_algebra.ipynb”)
 
 .. code:: ipython3
 
-    >>> lbb_pt_alg = qr.Algebra(os.path.join(path, "Algebras/Left_Binary_Branching_Point_Algebra.json"))
+    >>> lbb_pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Left_Binary_Branching_Point_Algebra.json"))
     
     >>> lbb_pt_alg.summary()
 

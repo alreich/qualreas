@@ -6,8 +6,8 @@ Temporal Reasoning about Time Intervals and Time Points
     import qualreas as qr
     import os
     
-    qr_path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
-    alg_dir = os.path.join(qr_path, "Algebras")
+    qr_path = os.path.dirname(qr.DATA_DIR)
+    alg_dir = os.path.join(qr_path, "data", "algebras")
 
 An Example of Temporal Reasoning 
 ---------------------------------

@@ -16,7 +16,7 @@ an environment variable:
 
 .. code:: ipython3
 
-    qr_path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+    qr_path = os.path.dirname(qr.DATA_DIR)
 
 Once defined, an Algebra’s JSON format should remain unchanged. The name
 of the Algebra used by a Network can then be stored in the Network’s
@@ -26,14 +26,14 @@ Algebra files:
 
 .. code:: ipython3
 
-    alg_dir = os.path.join(qr_path, "Algebras")
+    alg_dir = os.path.join(qr_path, "data", "algebras")
 
 Networks, on the other hand, could be numerous and change often. So, we
 need to provide the full path to the Network’s JSON file.
 
 .. code:: ipython3
 
-    rcc8_file = os.path.join(qr_path, "Networks", "rcc8_example.json")
+    rcc8_file = os.path.join(qr_path, "data", "networks", "rcc8_example.json")
 
 Constraint Network in JSON Format 
 ----------------------------------
@@ -1057,7 +1057,7 @@ Network to JSON File
 
     import json
     
-    rcc8_json_file = os.path.join(qr_path, "Networks", "rcc8_test1.json")
+    rcc8_json_file = os.path.join(qr_path, "data", "networks", "rcc8_test1.json")
     
     with open(rcc8_json_file, "w") as fout:
         json.dump(rcc8_net_dict, fout)

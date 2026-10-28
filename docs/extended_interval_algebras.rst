@@ -36,7 +36,7 @@ Dependencies
 
 .. code:: ipython3
 
-    >>> path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+    >>> path = os.path.dirname(qr.DATA_DIR)
 
 1. Linear Interval and Point Algebra
 ------------------------------------
@@ -58,7 +58,7 @@ ranges of 4 of the original 13 relations.
 .. code:: ipython3
 
     # Instantiate algebra and print some basic info about it
-    >>> algX = qr.Algebra(os.path.join(path, "Algebras/Extended_Linear_Interval_Algebra.json"))
+    >>> algX = qr.Algebra(os.path.join(path, "data/algebras/Extended_Linear_Interval_Algebra.json"))
     >>> print(algX.name)
     >>> print(algX.description)
     >>> algX_num_elements = len(algX.elements)
@@ -286,7 +286,7 @@ addition to the 18 described above.
 .. code:: ipython3
 
     # Instantiate algebra and print some basic info about it
-    >>> algR = qr.Algebra(os.path.join(path, "Algebras/Right_Branching_Interval_Algebra.json"))
+    >>> algR = qr.Algebra(os.path.join(path, "data/algebras/Right_Branching_Interval_Algebra.json"))
     >>> print(algR.name)
     >>> print(algR.description)
     >>> algR_num_elements = len(algR.elements)
@@ -368,7 +368,7 @@ Algebra.
 .. code:: ipython3
 
     # Instantiate algebra and print some basic info about it
-    >>> algL = qr.Algebra(os.path.join(path, "Algebras/Left_Branching_Interval_Algebra.json"))
+    >>> algL = qr.Algebra(os.path.join(path, "data/algebras/Left_Branching_Interval_Algebra.json"))
     >>> print(algL.name)
     >>> print(algL.description)
     >>> algL_num_elements = len(algL.elements)

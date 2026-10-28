@@ -1005,9 +1005,9 @@ and the composition identity.
 
     import os
     
-    path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+    path = os.path.dirname(qr.DATA_DIR)
     
-    alg = qr.Algebra(os.path.join(path, "Algebras/2D_Point_Algebra.json"))
+    alg = qr.Algebra(os.path.join(path, "data/algebras/2D_Point_Algebra.json"))
 
 .. code:: ipython3
 

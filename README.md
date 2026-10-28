@@ -63,11 +63,13 @@ Then, use <b>git</b> to clone the <b>qualreas</b> respository.
 
 ### Testing the installation <a class="anchor" id="test_install"></a>
 
-Setup an environment variable, <b>PYPROJ</b>, that points to the directory containing <b>qualreas</b>.
+From the top-level <b>qualreas</b> directory (the one containing <i>pyproject.toml</i>), install <b>qualreas</b> in editable mode:
 
-Then <b>cd</b> into the directory, <b>PYPROJ/qualreas/Source</b>, and execute the following command:
+> pip install -e .
 
-> python qualreas.py
+After that, <b>import qualreas as qr</b> works from any directory; no environment variables are needed.  Then execute the following command to run a quick test:
+
+> python src/qualreas.py
 
 This test will generate output that ends with the words, END OF TESTS.
 
@@ -75,22 +77,21 @@ This test will generate output that ends with the words, END OF TESTS.
 
 This is a brief description of the contents of each directory in this repository.
 
-There is a lot here that is old and even obsolete.  The important directories for now are: <b>Algebras, Networks, Notebooks, Papers, and Sources</b>.  Because much has been in flux, testing & documentation has mostly been done using the notebooks (Jupyter notebooks), but not all of the notebooks have been kept up-to-date. This readme is one of the notebooks, exported to <i>markdown (md).</i>
+There is a lot here that is old and even obsolete.  The important directories for now are: <b>data, notebooks, src, and docs</b>.  Because much has been in flux, testing & documentation has mostly been done using the notebooks (Jupyter notebooks), but not all of the notebooks have been kept up-to-date. This readme is one of the notebooks, exported to <i>markdown (md).</i>
 
-* Algebras -- Relation Algebras in JSON format
-* Docs -- INCOMPLETE (Don't look in here)
-* Images -- What the title says
+* data/algebras -- Relation Algebras in JSON format
+* data/images -- What the title says
+* data/networks -- Constraint Networks in JSON format
+* data/ontologies -- The .ttl file updates the W3C.org ontology of time to correspond to the Extended_Linear_Interval_Algebra [Reich 1994]
+* docs -- The Read the Docs documentation, including an annotated bibliography
 * LICENSE -- same
-* Misc -- Assorted junk (Don't look in here)
-* Networks -- Constraint Networks in JSON format
-* Notebooks -- Jupyter Notebooks; A description of each can be found at the end of this notebook
-* Ontologies -- The .ttl file updates the W3C.org ontology of time to correspond to the Extended_Linear_Interval_Algebra [Reich 1994]
-* Papers -- A collection of papers from the relevant literature
+* misc -- Assorted junk (Don't look in here)
+* notebooks -- Jupyter Notebooks; A description of each can be found at the end of this notebook
+* pyproject.toml -- Packaging information, needed to install qualreas with pip
 * README.md -- This file
-* Source -- Two files. The one that matters is "qualreas.py"
-* Tests -- NCOMPLETE (Don't look in here)
-* Trash -- Because sometimes I want to backtrack w.r.t. something I wrote
-* output_*.png -- Figures used in the README
+* src -- The module, "qualreas.py"
+* tests -- INCOMPLETE (Don't look in here)
+* trash -- Because sometimes I want to backtrack w.r.t. something I wrote
 
 ## References <a class="anchor" id="refs"></a>
 
@@ -128,25 +129,25 @@ from IPython.display import Image
 
 To begin, we will instantiate a Constraint Network and it's corresponding Algebra from two JSON files.
 
-Each are kept in separate directories, 'Networks' and 'Algebras', within a top-level 'qualreas' directory, with the full path defined here using an environment variable:
+Each are kept in separate directories, 'networks' and 'algebras', within the 'data' directory of the top-level 'qualreas' directory.  The location of 'data' is available as <i>qr.DATA_DIR</i>, so the top-level path can be defined without an environment variable:
 
 
 ```python
-qr_path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+qr_path = os.path.dirname(qr.DATA_DIR)
 ```
 
 Once defined, an Algebra's JSON format should remain unchanged. The name of the Algebra used by a Network can then be stored in the Network's definition (in JSON) regardless of where the Network's JSON file resides.  So, we only need provide the path to the directory containing Algebra files:
 
 
 ```python
-alg_dir = os.path.join(qr_path, "Algebras")
+alg_dir = os.path.join(qr_path, "data", "algebras")
 ```
 
 Networks, on the other hand, could be numerous and change often.  So, we need to provide the full path to the Network's JSON file.
 
 
 ```python
-rcc8_file = os.path.join(qr_path, "Networks", "rcc8_example.json")
+rcc8_file = os.path.join(qr_path, "data", "networks", "rcc8_example.json")
 ```
 
 ## Constraint Network in JSON Format <a class="anchor" id="network_format"></a>
@@ -1153,7 +1154,7 @@ However, either way, the resulting file or string are not pretty printed.
 ```python
 import json
 
-rcc8_json_file = os.path.join(qr_path, "Networks", "rcc8_test1.json")
+rcc8_json_file = os.path.join(qr_path, "data", "networks", "rcc8_test1.json")
 
 with open(rcc8_json_file, "w") as fout:
     json.dump(rcc8_net_dict, fout)
@@ -1213,7 +1214,7 @@ The point algebras used in the derivations can be found in the Algebras director
 * Left_Binary_Branching_Point_Algebra
 * Right_Binary_Branching_Point_Algebra
 
-See the Jupyter Notebook, "time_point_algebras.ipynb" in the Notebooks folder for details about the point algebras listed above.
+See the Jupyter Notebook, "time_point_algebras.ipynb" in the notebooks folder for details about the point algebras listed above.
 
 #### Algebra's Derived in Reich's 1994 Paper <a class="anchor" id="reich_1994"></a>
 

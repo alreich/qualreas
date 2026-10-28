@@ -54,7 +54,7 @@ Dependencies
 
 .. code:: ipython3
 
-    path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+    path = os.path.dirname(qr.DATA_DIR)
 
 Deriving Extended Interval Algebra from Extended Point Algebra
 --------------------------------------------------------------
@@ -64,7 +64,7 @@ Extended Point Algebra
 
 .. code:: ipython3
 
-    pt_alg = qr.Algebra(os.path.join(path, "Algebras/Linear_Point_Algebra.json"))
+    pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Linear_Point_Algebra.json"))
 
 .. code:: ipython3
 
@@ -756,7 +756,7 @@ Save Algebra Dictionary to JSON File
 
 .. code:: ipython3
 
-    test_ext_json_path = os.path.join(path, "Algebras/test_derived_extended_interval_algebra.json")
+    test_ext_json_path = os.path.join(path, "data/algebras/test_derived_extended_interval_algebra.json")
     test_ext_json_path
 
 
@@ -861,7 +861,7 @@ Load Original Extended Interval Algebra
 
 .. code:: ipython3
 
-    ext_alg = qr.Algebra(os.path.join(path, "Algebras/Extended_Linear_Interval_Algebra.json"))
+    ext_alg = qr.Algebra(os.path.join(path, "data/algebras/Extended_Linear_Interval_Algebra.json"))
     ext_alg
 
 

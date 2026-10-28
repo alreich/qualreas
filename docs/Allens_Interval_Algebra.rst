@@ -54,7 +54,7 @@ Dependencies
 
 .. code:: ipython3
 
-    >>> path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+    >>> path = os.path.dirname(qr.DATA_DIR)
 
 Instantiate an Algebra
 ----------------------
@@ -65,7 +65,7 @@ Algebra” and is instantiated as follows:
 
 .. code:: ipython3
 
-    >>> alg = qr.Algebra(os.path.join(path, "Algebras/Linear_Interval_Algebra.json"))
+    >>> alg = qr.Algebra(os.path.join(path, "data/algebras/Linear_Interval_Algebra.json"))
 
 Algebra Summary
 ---------------

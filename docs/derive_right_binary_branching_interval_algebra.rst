@@ -52,7 +52,7 @@ Dependencies
 
 .. code:: ipython3
 
-    path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+    path = os.path.dirname(qr.DATA_DIR)
 
 Deriving the Right-Binary-Branching (RBB) Interval Algebra from RBB Point Algebra
 ---------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ RBB Point Algebra
 
 .. code:: ipython3
 
-    pt_alg = qr.Algebra(os.path.join(path, "Algebras/Right_Binary_Branching_Point_Algebra.json"))
+    pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Right_Binary_Branching_Point_Algebra.json"))
 
 .. code:: ipython3
 
@@ -155,7 +155,7 @@ Save RBB Algebra Dictionary to JSON File
 
 .. code:: ipython3
 
-    test_rbb_json_path = os.path.join(path, "Algebras/test_derived_right_binary_branching_interval_algebra.json")
+    test_rbb_json_path = os.path.join(path, "data/algebras/test_derived_right_binary_branching_interval_algebra.json")
     test_rbb_json_path
 
 .. code:: ipython3

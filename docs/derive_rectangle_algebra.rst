@@ -7,7 +7,7 @@ Rectangle Algebra
     import os
     import numpy as np
     
-    path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+    path = os.path.dirname(qr.DATA_DIR)
 
 Load the 2D Point Algebra
 -------------------------
@@ -19,7 +19,7 @@ derived in the second half of the Jupyter notebook,
 
 .. code:: ipython3
 
-    ptalg2d = qr.Algebra(os.path.join(path, "Algebras/2D_Point_Algebra.json"))
+    ptalg2d = qr.Algebra(os.path.join(path, "data/algebras/2D_Point_Algebra.json"))
 
 .. code:: ipython3
 

@@ -50,7 +50,7 @@ Dependencies
 
 .. code:: ipython3
 
-    path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+    path = os.path.dirname(qr.DATA_DIR)
 
 Deriving Allen’s Interval Algebra from Basic Point Algebra
 ----------------------------------------------------------
@@ -60,7 +60,7 @@ Basic Point Algebra
 
 .. code:: ipython3
 
-    pt_alg = qr.Algebra(os.path.join(path, "Algebras/Linear_Point_Algebra.json"))
+    pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Linear_Point_Algebra.json"))
 
 .. code:: ipython3
 
@@ -522,7 +522,7 @@ Save Algebra Dictionary to JSON File
 
 .. code:: ipython3
 
-    test_allen_json_path = os.path.join(path, "Algebras/test_derived_allen_algebra.json")
+    test_allen_json_path = os.path.join(path, "data/algebras/test_derived_allen_algebra.json")
     test_allen_json_path
 
 
@@ -622,7 +622,7 @@ Load Original Allen’s Algebra
 
 .. code:: ipython3
 
-    allen_alg = qr.Algebra(os.path.join(path, "Algebras/Linear_Interval_Algebra.json"))
+    allen_alg = qr.Algebra(os.path.join(path, "data/algebras/Linear_Interval_Algebra.json"))
     allen_alg
 
 

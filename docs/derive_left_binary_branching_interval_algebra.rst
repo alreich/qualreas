@@ -52,7 +52,7 @@ Dependencies
 
 .. code:: ipython3
 
-    path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+    path = os.path.dirname(qr.DATA_DIR)
 
 Deriving the Left-Binary-Branching (LBB) Interval Algebra from LBB Point Algebra
 --------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ LBB Point Algebra
 
 .. code:: ipython3
 
-    pt_alg = qr.Algebra(os.path.join(path, "Algebras/Left_Binary_Branching_Point_Algebra.json"))
+    pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Left_Binary_Branching_Point_Algebra.json"))
 
 .. code:: ipython3
 
@@ -155,7 +155,7 @@ Save RBB Algebra Dictionary to JSON File
 
 .. code:: ipython3
 
-    test_lbb_json_path = os.path.join(path, "Algebras/test_derived_left_binary_branching_interval_algebra.json")
+    test_lbb_json_path = os.path.join(path, "data/algebras/test_derived_left_binary_branching_interval_algebra.json")
     test_lbb_json_path
 
 .. code:: ipython3

@@ -56,7 +56,7 @@ Dependencies
 
 .. code:: ipython3
 
-    path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
+    path = os.path.dirname(qr.DATA_DIR)
 
 Deriving the RB Proper Interval Algebra from RB Point Algebra
 -------------------------------------------------------------
@@ -66,7 +66,7 @@ Right-Branching Point Algebra
 
 .. code:: ipython3
 
-    pt_alg = qr.Algebra(os.path.join(path, "Algebras/Right_Branching_Point_Algebra.json"))
+    pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Right_Branching_Point_Algebra.json"))
 
 .. code:: ipython3
 
@@ -665,7 +665,7 @@ Save Right-Branching Proper Interval Algebra Dictionary to JSON File
 
 .. code:: ipython3
 
-    test_rb_proper_json_path = os.path.join(path, "Algebras/test_derived_right_branching_proper_interval_algebra.json")
+    test_rb_proper_json_path = os.path.join(path, "data/algebras/test_derived_right_branching_proper_interval_algebra.json")
     test_rb_proper_json_path
 
 
