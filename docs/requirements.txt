@@ -1,0 +1,5 @@
+sphinx
+sphinx_rtd_theme
+bitsets>=0.7.16
+networkx>=2.2
+numpy>=1.19.2
