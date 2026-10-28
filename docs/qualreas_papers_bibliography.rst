@@ -286,13 +286,14 @@ tree-like time, and two-sorted point-interval theories.
   In S. D. Goodwin & H. J. Hamilton (Eds.), *Proceedings of the TIME-94
   International Workshop on Temporal Reasoning* (pp. 121–133).
   University of Regina.
-| 📄 `Semantic Scholar
+| 🟢 :download:`PDF <reference/1994 Reich - Intervals Points and Branching Time.pdf>`  ·  📄 `Semantic Scholar
   record <https://www.semanticscholar.org/paper/Intervals%2C-Points%2C-and-Branching-Time-Reich/a12eca974573c812d696f3d0a58bccb171a8c39d>`__
    ·  📄 `ResearchGate
   record† <https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time>`__
 | Note: The paper on which ``qualreas`` is based. Venue and pages as
-  cited in the qualreas documentation. A PDF and tables in text format
-  are available at the ‘qualreas’ github repo.
+  cited in the qualreas documentation. The transitivity tables from the
+  paper are also available as a text file: :download:`Algebra
+  Transitivity Tables <reference/1994 Reich - Algebra Transitivity Tables.txt>`.
 
 | **[C4]** Cukierman, D. R., & Delgrande, J. P. (2004). A theory for
   convex interval relations including unbounded intervals. In
