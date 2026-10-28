@@ -44,6 +44,14 @@ API Reference
 
     api
 
+Annotated Bibliography
+======================
+
+..toctree::
+    :maxdepth 2
+
+    qualreas_papers_bibliography
+
 Project Info
 ============
 
