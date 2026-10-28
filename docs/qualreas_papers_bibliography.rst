@@ -20,35 +20,43 @@ so and cites the published one.
 1. Categories
 -------------
 
-+-----------------------+--------------------------------------------------------------------+-----------------------+
-|                       | Category                                                           | Works                 |
-+=======================+====================================================================+=======================+
-| **A**                 | `Allen Interval Algebra Foundations and                            | 15                    |
-|                       | Complexity <#Allen-Interval-Algebra-Foundations-and-Complexity>`__ |                       |
-+-----------------------+--------------------------------------------------------------------+-----------------------+
-| **B**                 | `Metric and Disjunctive Temporal                                   | 4                     |
-|                       | Constraints <#Metric-and-Disjunctive-Temporal-Constraints>`__      |                       |
-+-----------------------+--------------------------------------------------------------------+-----------------------+
-| **C**                 | `Extensions of the Interval                                        | 6                     |
-|                       | Algebra <#Extensions-of-the-Interval-Algebra>`__                   |                       |
-+-----------------------+--------------------------------------------------------------------+-----------------------+
-| **D**                 | `Relation Algebras and Time                                        | 8                     |
-|                       | Ontologies <#Relation-Algebras-and-Time-Ontologies>`__             |                       |
-+-----------------------+--------------------------------------------------------------------+-----------------------+
-| **E**                 | `Qualitative Spatial Reasoning <#Qualitative-Spatial-Reasoning>`__ | 9                     |
-+-----------------------+--------------------------------------------------------------------+-----------------------+
-| **F**                 | `Software and Implementations <#Software-and-Implementations>`__   | 8                     |
-+-----------------------+--------------------------------------------------------------------+-----------------------+
-| **G**                 | `Applications and Cognitive                                        | 5                     |
-|                       | Studies <#Applications-and-Cognitive-Studies>`__                   |                       |
-+-----------------------+--------------------------------------------------------------------+-----------------------+
-| **H**                 | `Temporal Reasoning in Natural Language                            | 4                     |
-|                       | Processing <#Temporal-Reasoning-in-Natural-Language-Processing>`__ |                       |
-+-----------------------+--------------------------------------------------------------------+-----------------------+
-| **I**                 | `Surveys and Overviews <#Surveys-and-Overviews>`__                 | 7                     |
-+-----------------------+--------------------------------------------------------------------+-----------------------+
-|                       | **Total**                                                          | **66**                |
-+-----------------------+--------------------------------------------------------------------+-----------------------+
+.. list-table::
+   :header-rows: 1
+   :widths: 8 72 20
+
+   * -
+     - Category
+     - Works
+   * - **A**
+     - `Allen Interval Algebra Foundations and Complexity`_
+     - 15
+   * - **B**
+     - `Metric and Disjunctive Temporal Constraints`_
+     - 4
+   * - **C**
+     - `Extensions of the Interval Algebra`_
+     - 6
+   * - **D**
+     - `Relation Algebras and Time Ontologies`_
+     - 8
+   * - **E**
+     - `Qualitative Spatial Reasoning`_
+     - 9
+   * - **F**
+     - `Software and Implementations`_
+     - 8
+   * - **G**
+     - `Applications and Cognitive Studies`_
+     - 5
+   * - **H**
+     - `Temporal Reasoning in Natural Language Processing`_
+     - 4
+   * - **I**
+     - `Surveys and Overviews`_
+     - 7
+   * -
+     - **Total**
+     - **66**
 
 Category **I** (surveys) is a form of publication rather than a subject,
 so it cuts across the others; each survey is listed there rather than
