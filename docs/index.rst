@@ -47,8 +47,8 @@ API Reference
 Annotated Bibliography
 ======================
 
-..toctree::
-    :maxdepth 2
+.. toctree::
+    :maxdepth: 2
 
     qualreas_papers_bibliography
 
