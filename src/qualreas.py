@@ -18,6 +18,15 @@ import numpy as np
 __author__ = 'Alfred J. Reich'
 __version__ = '0.5.0'
 
+# Locations of the data that ships with the repository (algebras, networks, ontologies, images).
+# These are found relative to this file, so no environment variable is needed. They work when
+# qualreas is installed in editable mode from a clone of the repository ("pip install -e .").
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+ALGEBRA_DIR = os.path.join(DATA_DIR, "algebras")
+NETWORK_DIR = os.path.join(DATA_DIR, "networks")
+ONTOLOGY_DIR = os.path.join(DATA_DIR, "ontologies")
+IMAGE_DIR = os.path.join(DATA_DIR, "images")
+
 
 def make_name(name=None, prefix="Network:", size=8):
     """If no name, then return a random name; otherwise return name."""
@@ -1150,16 +1159,14 @@ if __name__ == '__main__':
 
     print("\n=======================================================================")
 
-    path = os.path.join(os.getenv('PYPROJ'), 'qualreas')
-
-    alg = [Algebra(os.path.join(path, "Algebras/Linear_Interval_Algebra.json")),
-           Algebra(os.path.join(path, "Algebras/Extended_Linear_Interval_Algebra.json")),
-           Algebra(os.path.join(path, "Algebras/Left_Branching_Interval_Algebra.json")),
-           Algebra(os.path.join(path, "Algebras/Right_Branching_Interval_Algebra.json")),
-           Algebra(os.path.join(path, "Algebras/RCC8_Algebra.json")),
-           Algebra(os.path.join(path, "Algebras/Linear_Point_Algebra.json")),
-           Algebra(os.path.join(path, "Algebras/Right_Branching_Point_Algebra.json")),
-           Algebra(os.path.join(path, "Algebras/Left_Branching_Point_Algebra.json"))
+    alg = [Algebra(os.path.join(ALGEBRA_DIR, "Linear_Interval_Algebra.json")),
+           Algebra(os.path.join(ALGEBRA_DIR, "Extended_Linear_Interval_Algebra.json")),
+           Algebra(os.path.join(ALGEBRA_DIR, "Left_Branching_Interval_Algebra.json")),
+           Algebra(os.path.join(ALGEBRA_DIR, "Right_Branching_Interval_Algebra.json")),
+           Algebra(os.path.join(ALGEBRA_DIR, "RCC8_Algebra.json")),
+           Algebra(os.path.join(ALGEBRA_DIR, "Linear_Point_Algebra.json")),
+           Algebra(os.path.join(ALGEBRA_DIR, "Right_Branching_Point_Algebra.json")),
+           Algebra(os.path.join(ALGEBRA_DIR, "Left_Branching_Point_Algebra.json"))
            ]
 
     print("\n-------------------------------------")
@@ -1290,13 +1297,13 @@ if __name__ == '__main__':
     # print(f"Alg path = {alg_path}")
     # json_fname = os.path.join(path, "Networks/rcc8_example.json")
     # print(f"JSON path = {json_fname}")
-    rcc8x = Network(algebra_path=os.path.join(path, "Algebras"),
-                    json_file_name=os.path.join(path, "Networks/rcc8_example.json"))
+    rcc8x = Network(algebra_path=ALGEBRA_DIR,
+                    json_file_name=os.path.join(NETWORK_DIR, "rcc8_example.json"))
     rcc8x.summary()
     rcc8x.propagate()
     rcc8x.summary()
 
-    # # alg4 = Algebra(os.path.join(path, "Algebras/RCC8_Algebra.json"))
+    # # alg4 = Algebra(os.path.join(ALGEBRA_DIR, "RCC8_Algebra.json"))
     # alg4 = alg[4]
     #
     # house1 = SpatialEntity(["Region"], "house1")

@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qualreas"
+dynamic = ["version"]
+description = "Qualitative reasoning with relation algebras, such as Allen's interval algebra and RCC8"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Alfred J. Reich" }]
+dependencies = [
+    "bitsets>=0.7.16",
+    "networkx>=2.2",
+    "numpy>=1.19.2",
+]
+
+[project.urls]
+Homepage = "https://github.com/alreich/qualreas"
+Documentation = "https://qualreas.readthedocs.io"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+py-modules = ["qualreas"]
+
+[tool.setuptools.dynamic]
+version = { attr = "qualreas.__version__" }
