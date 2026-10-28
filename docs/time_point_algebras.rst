@@ -37,7 +37,7 @@ in the figures below.
 
 
 
-.. image:: time_point_algebras_files/time_point_algebras_7_0.png
+.. image:: output_7_0.png
    :width: 400px
 
 
@@ -131,7 +131,7 @@ has the property of Left Linearity:
 
 
 
-.. image:: time_point_algebras_files/time_point_algebras_18_0.png
+.. image:: output_18_0.png
    :width: 300px
 
 
@@ -184,7 +184,7 @@ Jupyter Notebook, “notebooks/derive_extended_interval_algebra.ipynb”)
     >>> pt_alg.summary()
 
 
-.. code-block:: text
+.. parsed-literal::
 
       Algebra Name: Linear_Point_Algebra
        Description: Linear Point Algebra
@@ -200,29 +200,30 @@ Jupyter Notebook, “notebooks/derive_extended_interval_algebra.ipynb”)
      PInt = Proper Interval
 
 
-- EDITORS NOTE: The function call to
-  print_point_algebra_composition_table, below, causes issues with the
-  automated documentation system used here (Sphinx) because the specific
-  elements printed out (equality & inequality symbols) “confuse” the
-  system that parses reST (restructured text). Consequently, the next
-  cell is set to be “Raw NBConvert” instead of “Code”, and then an image
-  of its proper output (from a version of this Jupyter notebook) is
-  shown below it, to depict how the output should look. The same trick
-  is applied to all 5 of the calls to
-  print_point_algebra_composition_table in this document. (Sorry for the
-  interruption.)
-
->>> qr.print_point_algebra_composition_table(pt_alg) # SEE EDITOR'S NOTE, ABOVE
-
 .. code:: ipython3
 
-    Image(filename='../docs/_static/Linear_Pt_Alg_Elements.png')
+    >>> qr.print_point_algebra_composition_table(pt_alg)
 
 
+.. parsed-literal::
 
-
-.. image:: time_point_algebras_files/time_point_algebras_27_0.png
-
+    Linear_Point_Algebra
+    Elements: <, =, >
+    ==============================
+     rel1 ; rel2 = composition
+    ==============================
+       <      <      <
+       <      =      <
+       <      >      <|=|>
+    ------------------------------
+       =      <      <
+       =      =      =
+       =      >      >
+    ------------------------------
+       >      <      <|=|>
+       >      =      >
+       >      >      >
+    ------------------------------
 
 
 Right-Branching Point Algebra
@@ -242,7 +243,7 @@ Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
     >>> rb_pt_alg.summary()
 
 
-.. code-block:: text
+.. parsed-literal::
 
       Algebra Name: Right_Branching_Point_Algebra
        Description: Right-Branching Point Algebra
@@ -259,17 +260,38 @@ Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
      PInt = Proper Interval
 
 
->>> qr.print_point_algebra_composition_table(rb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
-
 .. code:: ipython3
 
-    Image(filename='../docs/_static/Rt_Branching_Pt_Alg_Elements.png')
+    >>> qr.print_point_algebra_composition_table(rb_pt_alg)
 
 
+.. parsed-literal::
 
-
-.. image:: time_point_algebras_files/time_point_algebras_32_0.png
-
+    Right_Branching_Point_Algebra
+    Elements: <, =, >, r~
+    ==============================
+     rel1 ; rel2 = composition
+    ==============================
+       <      <      <
+       <      =      <
+       <      >      <|=|>
+       <     r~      <|r~
+    ------------------------------
+       =      <      <
+       =      =      =
+       =      >      >
+       =     r~      r~
+    ------------------------------
+       >      <      <|=|>|r~
+       >      =      >
+       >      >      >
+       >     r~      r~
+    ------------------------------
+      r~      <      r~
+      r~      =      r~
+      r~      >      >|r~
+      r~     r~      <|=|>|r~
+    ------------------------------
 
 
 Left-Branching Point Algebra
@@ -289,7 +311,7 @@ Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
     >>> lb_pt_alg.summary()
 
 
-.. code-block:: text
+.. parsed-literal::
 
       Algebra Name: Left_Branching_Point_Algebra
        Description: Left-Branching Point Algebra
@@ -306,17 +328,38 @@ Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
      PInt = Proper Interval
 
 
->>> qr.print_point_algebra_composition_table(lb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
-
 .. code:: ipython3
 
-    Image(filename='../docs/_static/Lf_Branching_Pt_Alg_Elements.png')
+    >>> qr.print_point_algebra_composition_table(lb_pt_alg)
 
 
+.. parsed-literal::
 
-
-.. image:: time_point_algebras_files/time_point_algebras_37_0.png
-
+    Left_Branching_Point_Algebra
+    Elements: <, =, >, l~
+    ==============================
+     rel1 ; rel2 = composition
+    ==============================
+       <      <      <
+       <      =      <
+       <      >      <|=|>|l~
+       <     l~      l~
+    ------------------------------
+       =      <      <
+       =      =      =
+       =      >      >
+       =     l~      l~
+    ------------------------------
+       >      <      <|=|>
+       >      =      >
+       >      >      >
+       >     l~      >|l~
+    ------------------------------
+      l~      <      <|l~
+      l~      =      l~
+      l~      >      l~
+      l~     l~      <|=|>|l~
+    ------------------------------
 
 
 Right-Binary-Branching Point Algebra
@@ -336,7 +379,7 @@ Jupyter Notebook,
     >>> rbb_pt_alg.summary()
 
 
-.. code-block:: text
+.. parsed-literal::
 
       Algebra Name: Right_Binary_Branching_Point_Algebra
        Description: Right-Binary-Branching Point Algebra
@@ -353,17 +396,38 @@ Jupyter Notebook,
      PInt = Proper Interval
 
 
->>> qr.print_point_algebra_composition_table(rbb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
-
 .. code:: ipython3
 
-    Image(filename='../docs/_static/Rt_Bin_Branching_Pt_Alg_Elements.png')
+    >>> qr.print_point_algebra_composition_table(rbb_pt_alg)
 
 
+.. parsed-literal::
 
-
-.. image:: time_point_algebras_files/time_point_algebras_42_0.png
-
+    Right_Binary_Branching_Point_Algebra
+    Elements: <, =, >, r~
+    ==============================
+     rel1 ; rel2 = composition
+    ==============================
+       <      <      <
+       <      =      <
+       <      >      <|=|>
+       <     r~      <|r~
+    ------------------------------
+       =      <      <
+       =      =      =
+       =      >      >
+       =     r~      r~
+    ------------------------------
+       >      <      <|=|>|r~
+       >      =      >
+       >      >      >
+       >     r~      r~
+    ------------------------------
+      r~      <      r~
+      r~      =      r~
+      r~      >      >|r~
+      r~     r~      <|=|>
+    ------------------------------
 
 
 Left-Binary-Branching Point Algebra
@@ -383,7 +447,7 @@ Jupyter Notebook,
     >>> lbb_pt_alg.summary()
 
 
-.. code-block:: text
+.. parsed-literal::
 
       Algebra Name: Left_Binary_Branching_Point_Algebra
        Description: Left-Binary-Branching Point Algebra
@@ -400,15 +464,36 @@ Jupyter Notebook,
      PInt = Proper Interval
 
 
->>> qr.print_point_algebra_composition_table(lbb_pt_alg) # SEE EDITOR'S NOTE, ABOVE
-
 .. code:: ipython3
 
-    Image(filename='../docs/_static/Lf_Bin_Branching_Pt_Alg_Elements.png')
+    >>> qr.print_point_algebra_composition_table(lbb_pt_alg)
 
 
+.. parsed-literal::
 
-
-.. image:: time_point_algebras_files/time_point_algebras_47_0.png
-
+    Left_Binary_Branching_Point_Algebra
+    Elements: <, =, >, l~
+    ==============================
+     rel1 ; rel2 = composition
+    ==============================
+       <      <      <
+       <      =      <
+       <      >      <|=|>|l~
+       <     l~      l~
+    ------------------------------
+       =      <      <
+       =      =      =
+       =      >      >
+       =     l~      l~
+    ------------------------------
+       >      <      <|=|>
+       >      =      >
+       >      >      >
+       >     l~      >|l~
+    ------------------------------
+      l~      <      <|l~
+      l~      =      l~
+      l~      >      l~
+      l~     l~      <|=|>
+    ------------------------------
 
