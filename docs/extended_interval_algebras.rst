@@ -85,7 +85,7 @@ relations are unchanged.
 .. code:: ipython3
 
     from IPython.display import Image  # Only needed to display figures here
-    Image(filename='../docs/_static/Extension_of_Allens_Interval_Relations.png', width="400")
+    Image(filename='../data/images/Extension_of_Allens_Interval_Relations.png', width="400")
 
 
 
@@ -101,7 +101,7 @@ as above.
 
 .. code:: ipython3
 
-    Image(filename='../docs/_static/Point_Interval_Relations.png', width="400") 
+    Image(filename='../data/images/Point_Interval_Relations.png', width="400") 
 
 
 
@@ -304,7 +304,7 @@ addition to the 18 described above.
 
 .. code:: ipython3
 
-    Image(filename='../docs/_static/Right_Branching_Time_Relations.png', width="400")
+    Image(filename='../data/images/Right_Branching_Time_Relations.png', width="400")
 
 
 
@@ -386,7 +386,7 @@ Algebra.
 
 .. code:: ipython3
 
-    Image(filename='../docs/_static/Left_Branching_Time_Relations.png', width="400")
+    Image(filename='../data/images/Left_Branching_Time_Relations.png', width="400")
 
 
 

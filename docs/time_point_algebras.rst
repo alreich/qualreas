@@ -32,7 +32,7 @@ in the figures below.
 .. code:: ipython3
 
     from IPython.display import Image  # Only needed to display figures here
-    Image(filename='../docs/_static/global_structures_of_time.png', width="400")
+    Image(filename='../data/images/global_structures_of_time.png', width="400")
 
 
 
@@ -126,7 +126,7 @@ has the property of Left Linearity:
 
 .. code:: ipython3
 
-    Image(filename='../docs/_static/left_linearity_in_right_branching_time.png', width="300")
+    Image(filename='../data/images/left_linearity_in_right_branching_time.png', width="300")
 
 
 

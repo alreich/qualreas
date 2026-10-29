@@ -20,7 +20,7 @@ instead of =
 .. code:: ipython3
 
     from IPython.display import Image  # Only needed to display figures here
-    Image(filename='../docs/_static/Allens_Interval_Relations.png', width="400") 
+    Image(filename='../data/images/Allens_Interval_Relations.png', width="400") 
 
 
 

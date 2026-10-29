@@ -169,7 +169,7 @@ See graphical depiction below:
 
 
 ```python
-Image("Images/Edge_Notation_Meaning.png", width=300, height=100)
+Image("data/images/Edge_Notation_Meaning.png", width=300, height=100)
 ```
 
 
@@ -226,7 +226,7 @@ For convenient reference, here are the 8 spatial relations of RCC-8:
 
 
 ```python
-Image("Images/640px-RCC8.jpg")
+Image("data/images/640px-RCC8.jpg")
 ```
 
 
@@ -613,7 +613,7 @@ The two figures below depict Wikipedia's RCC-8 example, where the first depicts 
 
 
 ```python
-Image("Images/wikipedia_rcc8_example.png")
+Image("data/images/wikipedia_rcc8_example.png")
 ```
 
 

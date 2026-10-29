@@ -62,7 +62,7 @@ See graphical depiction below:
 
 .. code:: ipython3
 
-    Image("Images/Edge_Notation_Meaning.png", width=300, height=100)
+    Image("../data/images/Edge_Notation_Meaning.png", width=300, height=100)
 
 
 
@@ -140,7 +140,7 @@ For convenient reference, here are the 8 spatial relations of RCC-8:
 
 .. code:: ipython3
 
-    Image("Images/640px-RCC8.jpg")
+    Image("../data/images/640px-RCC8.jpg")
 
 
 
@@ -610,7 +610,7 @@ from the input after propagation are shown in red.
 
 .. code:: ipython3
 
-    Image("Images/wikipedia_rcc8_example.png")
+    Image("../data/images/wikipedia_rcc8_example.png")
 
 
 
