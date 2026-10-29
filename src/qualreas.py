@@ -326,15 +326,15 @@ class Algebra:
                         print("FAIL:")
                         print(f"      r    = {r_rs}")
                         print(f"      s    = {s_rs}")
-                        print(f"( r *  s)  = {prod1}")
-                        print(f"(si * ri)i = {prod2}")
+                        print(f"( r ;  s)  = {prod1}")
+                        print(f"(si ; ri)i = {prod2}")
                         print(f"{prod1} != {prod2}")
                     result = False
         if verbose:
             print(f"\n{self.name} -- Composition Identity Check:")
         if result:
             if verbose:
-                print(f"PASSED . {count} products tested.")
+                print(f"PASSED . {count} compositions tested.")
         else:
             if verbose:
                 print("FAILED. See FAILURE output above.")
