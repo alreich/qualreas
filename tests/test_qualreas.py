@@ -1,338 +1,203 @@
-#from unittest import TestCase
-import unittest
-import qualreas as qr
+"""Unit tests for qualreas.
+
+These are the checks that used to follow the ``if __name__ == '__main__'`` statement at the
+end of src/qualreas.py, turned into unit tests:
+
+  * every algebra loads, has the expected relations, and passes the composition-identity
+    and associativity checks
+  * constraint propagation gives the expected results in the interval, point and RCC8 algebras
+  * the book example (interval algebra, and its extension to points) is detected as inconsistent
+  * the Wikipedia RCC8 example is read from its JSON file and propagated
+
+Run from anywhere, once qualreas is installed (pip install -e .):
+
+    python -m unittest discover -s tests -v        # or just:  pytest tests
+"""
+import contextlib
+import io
 import os
+import unittest
+
+import qualreas as qr
 
 __author__ = 'Alfred J. Reich'
 
 
-# class MyTestCase(unittest.TestCase):
-#    def test_something(self):
-#        self.assertEqual(True, False)
-
-class TestRelation(unittest.TestCase):
-    def setUp(self):
-        self.test_relation = qr.Relation('AAA', 'a', 'b', 'testDomain', 'testRange', is_transitive=True)
-        self.test_relation_converse = qr.Relation('BBB', 'b', 'a', 'testRange', 'testDomain', is_transitive=True)
-        self.test_EQ_relation = qr.Relation("EEE", 'e', 'e', 'testDomain', 'testDomain', is_reflexive=True,
-                                            is_symmetric=True, is_transitive=True)
-        self.test_relation.set_converse(self.test_relation_converse)
-        self.test_relation_converse.set_converse(self.test_relation)
-        self.test_EQ_relation.set_converse(self.test_EQ_relation)
-
-    def test_converse_name(self):
-        self.assertEqual(self.test_relation.converse_name, 'b')
-
-    def test_converse(self):
-        self.assertEqual(self.test_relation.converse, self.test_relation_converse)
-        self.assertEqual(self.test_relation_converse.converse, self.test_relation)
-
-    def test_name(self):
-        self.assertEqual(self.test_relation.short_name, 'a')
-
-    def test_fullname(self):
-        self.assertEqual(self.test_relation.long_name, 'AAA')
-
-    def test_is_reflexive(self):
-        self.assertEqual(self.test_relation.is_reflexive, False)
-
-    def test_is_symmetric(self):
-        self.assertEqual(self.test_relation.is_symmetric, False)
-
-    def test_is_transitive(self):
-        self.assertEqual(self.test_relation.is_transitive, True)
-
-    def test_is_equality(self):
-        self.assertEqual(self.test_relation.is_equality, False)
-        self.assertEqual(self.test_EQ_relation.is_equality, True)
-
-    def test_domain(self):
-        self.assertEqual(self.test_relation.domain, 'testDomain')
-        self.assertEqual(self.test_relation_converse.domain, 'testRange')
-
-    def test_range(self):
-        self.assertEqual(self.test_relation.range, 'testRange')
-
-
-class TestRelationSet(unittest.TestCase):
-    def setUp(self):
-        self.AAA = qr.Relation('AAA', 'A', 'a', 'testDomain', 'testRange', is_transitive=True)
-        self.BBB = qr.Relation('BBB', 'B', 'b', 'testRange', 'testDomain', is_transitive=True)
-        self.aaa = qr.Relation('aaa', 'a', 'A', 'testDomain', 'testRange')
-        self.bbb = qr.Relation('bbb', 'b', 'B', 'testRange', 'testDomain')
-
-        self.AAA.set_converse(self.aaa)  # AAA & aaa are each others' converses
-        self.BBB.set_converse(self.bbb)  # BBB & bbb are each others' converses
-        self.aaa.set_converse(self.AAA)
-        self.bbb.set_converse(self.BBB)
-
-        self.relset_ABa = qr.RelationSet([self.BBB, self.AAA, self.aaa])
-        self.relset_Bab = qr.RelationSet([self.aaa, self.bbb, self.BBB])
-
-    def test_addition(self):
-        # 'Addition' is the same as set intersection
-        self.assertEqual(self.relset_ABa + self.relset_Bab, qr.RelationSet([self.BBB, self.aaa]))
-
-    def test_contains_1(self):
-        self.assertEqual(self.AAA in self.relset_ABa, True)
-
-    def test_contains_2(self):
-        self.assertEqual(self.bbb in self.relset_ABa, False)
-
-    def test_eq_1(self):
-        self.assertEqual(self.relset_ABa == qr.RelationSet([self.aaa, self.BBB, self.AAA]), True)
-
-    def test_eq_2(self):
-        self.assertEqual(self.relset_ABa == qr.RelationSet([self.bbb, self.BBB, self.AAA]), False)
-
-    def test_iter(self):
-        names = set()
-        for elem in self.relset_ABa:
-            names.add(elem.short_name)
-        self.assertEqual(names, {'A', 'B', 'a'})
-
-    def test_len(self):
-        self.assertEqual(len(self.relset_ABa), 3)
-
-    #    def test_mul(self):
-    #        '''N/A: The relations have to be part of an algebra to test multiplication'''
-
-    def test_ne_1(self):
-        self.assertEqual(self.relset_ABa != qr.RelationSet([self.aaa, self.BBB, self.AAA]), False)
-
-    def test_ne_2(self):
-        self.assertEqual(self.relset_ABa != qr.RelationSet([self.bbb, self.BBB, self.AAA]), True)
-
-    # def test_repr(self):
-    #     self.assertEqual(self.relsetABC.__repr__(), '<RelationSet([a, b, c])>')
-
-    def test_union(self):
-        self.assertEqual(self.relset_ABa.union(self.relset_Bab),
-                         qr.RelationSet([self.AAA, self.BBB, self.aaa, self.bbb]))
-
-    # def test_printSorted(self):
-    #     self.fail()
-
-    def test_elements(self):
-        self.assertEqual(self.relset_ABa.elements, frozenset([self.AAA, self.BBB, self.aaa]))
-
-    # def test_algebra(self):
-    #     self.fail()
-
-    def test_converse(self):
-        self.assertEqual(self.relset_ABa.converse, qr.RelationSet([self.aaa, self.bbb, self.AAA]))
-
-    def test_names(self):
-        self.assertEqual(self.relset_ABa.short_names, ['A', 'B', 'a'])
-
-    def test_fullnames(self):
-        self.assertEqual(self.relset_ABa.long_names, ['AAA', 'BBB', 'aaa'])
-
-
-class TestAlgebra(unittest.TestCase):
-
-    def setUp(self):
-        """
-        Load all of the existing algebras
-        """
-        path = os.path.join(os.getenv('PYPROJ'), 'qualreas/Algebras')
-        self.alg0 = qr.Algebra(os.path.join(path, 'LinearIntervalAlgebra.json'))
-        self.alg1 = qr.Algebra(os.path.join(path, 'ExtendedLinearIntervalAlgebra.json'))
-        self.alg2 = qr.Algebra(os.path.join(path, 'LeftBranchingIntervalAlgebra.json'))
-        self.alg3 = qr.Algebra(os.path.join(path, 'RightBranchingIntervalAlgebra.json'))
-        self.alg4 = qr.Algebra(os.path.join(path, 'RCC8Algebra.json'))
-
-    # Interval Algebra
-    def test_identity_relset0(self):
-        allrelsnames0 = map(lambda x: x.short_name, self.alg0.identity)
-        self.assertEqual(set(allrelsnames0),
-                         {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI'})
-
-    # Interval and Point Algebra
-    def test_identity_relset1(self):
-        allrelsnames1 = map(lambda x: x.short_name, self.alg1.identity)
-        self.assertEqual(set(allrelsnames1),
-                         {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI', 'PE', 'PF', 'PFI',
-                          'PS', 'PSI'})
-
-    # Left-Branching Interval and Point Algebra
-    def test_identity_relset2(self):
-        allrelsnames2 = map(lambda x: x.short_name, self.alg2.identity)
-        self.assertEqual(set(allrelsnames2),
-                         {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI', 'PE', 'PF', 'PFI',
-                          'PS', 'PSI', 'LB', 'LBI', 'LF', 'LO', 'LOI', 'L~'})
-
-    # Right-Branching Interval and Point Algebra
-    def test_identity_relset3(self):
-        allrelsnames3 = map(lambda x: x.short_name, self.alg3.identity)
-        self.assertEqual(set(allrelsnames3),
-                         {'B', 'E', 'D', 'OI', 'F', 'MI', 'DI', 'M', 'BI', 'O', 'S', 'FI', 'SI', 'PE', 'PF', 'PFI',
-                          'PS', 'PSI', 'RB', 'RBI', 'RO', 'ROI', 'RS', 'R~'})
-
-    # Region Connection Calculus 8
-    def test_identity_relset4(self):
-        allrelsnames4 = map(lambda x: x.short_name, self.alg4.identity)
-        self.assertEqual(set(allrelsnames4),
-                         {'DC', 'EC', 'EQ', 'NTPP', 'NTPPI', 'PO', 'TPP', 'TPPI'})
-
-    # def test_mult(self):
-    #     self.fail()
-
-    # def test_add(self):
-    #     self.fail()
-
-    def test_name(self):
-        self.assertEqual(self.alg0.name, 'LinearTimeAlgebra')
-
-    def test_relations(self):
-        self.assertEqual(self.alg0.relations['B'].short_name, 'B')
-
-    def test_equality_relations0(self):
-        self.assertEqual(set(map(lambda x: x.short_name, self.alg0.all_equality_relations)), {'E'})
-
-    def test_equality_relations1(self):
-        self.assertEqual(set(map(lambda x: x.short_name, self.alg1.all_equality_relations)), {'E', 'PE'})
-
-    def test_equality_relations2(self):
-        self.assertEqual(set(map(lambda x: x.short_name, self.alg2.all_equality_relations)), {'E', 'PE'})
-
-    def test_equality_relations3(self):
-        self.assertEqual(set(map(lambda x: x.short_name, self.alg3.all_equality_relations)), {'E', 'PE'})
-
-    def test_equality_relations4(self):
-        self.assertEqual(set(map(lambda x: x.short_name, self.alg4.all_equality_relations)), {'EQ'})
-
-    def test_relset0(self):
-        self.assertEqual(set(map(lambda x: x.short_name, self.alg0.relset(['B', 'D', 'O']))), {'B', 'D', 'O'})
-
-    def test_relset1(self):
-        self.assertEqual(set(map(lambda x: x.short_name,
-                                 self.alg1.relset(['B', 'D', 'O', 'PF']))), {'B', 'D', 'O', 'PF'})
-
-    def test_relset2(self):
-        self.assertEqual(set(map(lambda x: x.short_name,
-                                 self.alg2.relset(['B', 'D', 'O', 'LB']))), {'B', 'D', 'O', 'LB'})
-
-    def test_relset3(self):
-        self.assertEqual(set(map(lambda x: x.short_name,
-                                 self.alg3.relset(['B', 'D', 'O', 'RB']))), {'B', 'D', 'O', 'RB'})
-
-    def test_relset4(self):
-        self.assertEqual(set(map(lambda x: x.short_name,
-                                 self.alg4.relset(['DC', 'NTPP', 'TPPI']))), {'DC', 'NTPP', 'TPPI'})
-
-    def test_trans_table0(self):
-        self.assertEqual(len(self.alg0.transitivity_table), 13)
-
-    def test_trans_table1(self):
-        self.assertEqual(len(self.alg1.transitivity_table), 18)
-
-    def test_trans_table2(self):
-        self.assertEqual(len(self.alg2.transitivity_table), 24)
-
-    def test_trans_table3(self):
-        self.assertEqual(len(self.alg3.transitivity_table), 24)
-
-    def test_trans_table4(self):
-        self.assertEqual(len(self.alg4.transitivity_table), 8)
-
-    def test_check_mult_identity0(self):
-        self.assertEqual(self.alg0.check_composition_identity(), True)
-
-    def test_check_mult_identity1(self):
-        self.assertEqual(self.alg1.check_composition_identity(), True)
-
-    def test_check_mult_identity2(self):
-        self.assertEqual(self.alg2.check_composition_identity(), True)
-
-    def test_check_mult_identity3(self):
-        self.assertEqual(self.alg3.check_composition_identity(), True)
-
-    def test_check_mult_identity4(self):
-        self.assertEqual(self.alg4.check_composition_identity(), True)
-
-    def test_is_associative0(self):
-        self.assertEqual(self.alg0.is_associative(), True)
-
-    # def test_is_associative1(self):
-    #     self.assertEqual(self.alg1.is_associative(verbose=True), True)
-
-    # def test_is_associative2(self):
-    #     self.assertEqual(self.alg2.is_associative(), False)
-    #
-    # def test_is_associative3(self):
-    #     self.assertEqual(self.alg3.is_associative(), False)
-    #
-    # def test_is_associative4(self):
-    #     self.assertEqual(self.alg4.is_associative(), True)
-
-
-class TestNetwork(unittest.TestCase):
-
-    # def __init__(self, methodName='runTest'):
-    #     super().__init__(methodName='runTest')
-    #     self.D = None
-
-    def setUp(self):
-        """
-        Load all of the existing algebras
-        """
-        path = os.path.join(os.getenv('PYPROJ'), 'qualreas/Algebras')
-
-        self.alg0 = qr.Algebra(os.path.join(path, 'LinearIntervalAlgebra.json'))
-        self.alg1 = qr.Algebra(os.path.join(path, 'ExtendedLinearIntervalAlgebra.json'))
-        self.alg2 = qr.Algebra(os.path.join(path, 'LeftBranchingIntervalAlgebra.json'))
-        self.alg3 = qr.Algebra(os.path.join(path, 'RightBranchingIntervalAlgebra.json'))
-        self.alg4 = qr.Algebra(os.path.join(path, 'RCC8Algebra.json'))
-
-        self.e1 = qr.TemporalObject(["ProperInterval"], "X")
-        self.e2 = qr.TemporalObject(["ProperInterval"], "Y")
-        self.e3 = qr.TemporalObject(["ProperInterval"], "Z")
-
-        self.int_A = qr.TemporalObject(["ProperInterval"], "Int A")
-        self.int_B = qr.TemporalObject(["ProperInterval"], "Int B")
-        self.int_C = qr.TemporalObject(["ProperInterval"], "Int C")
-        self.int_D = qr.TemporalObject(["ProperInterval"], "Int D")
-
-        self.net0 = qr.Network(self.alg0)
-        self.net1 = qr.Network(self.alg0)
-
-    def test_constraint_0(self):
-        r12_0 = self.alg0.relations["O"]
-        r23_0 = self.alg0.relations["O"]
-        self.net0.constraint(self.e1, self.e2, [r12_0])
-        self.net0.constraint(self.e2, self.e3, [r23_0])
-        self.net0.constraint(self.e1, self.e3)
-        print(self.net0.print_constraints())
-        self.net0.propagate()
-        print(self.net0.print_constraints())
-
-    def test_constraint_1(self):
-        # This is the "inconsistent labeling" network from Figure 5 of Allen's original 1983 paper
-        rel_D  = self.alg0.relations["D"]
-        rel_DI = self.alg0.relations["DI"]
-        rel_F  = self.alg0.relations["F"]
-        rel_FI = self.alg0.relations["FI"]
-        rel_M  = self.alg0.relations["M"]
-        rel_O  = self.alg0.relations["O"]
-        rel_S  = self.alg0.relations["S"]
-        self.net1.constraint(self.int_A, self.int_B, [rel_D, rel_DI])
-        self.net1.constraint(self.int_D, self.int_A, [rel_M, rel_S])
-        self.net1.constraint(self.int_D, self.int_B, [rel_O])
-        self.net1.constraint(self.int_D, self.int_C, [rel_M, rel_S])
-        self.net1.constraint(self.int_B, self.int_C, [rel_D, rel_DI])
-
-        self.net1.constraint(self.int_A, self.int_C, [rel_F, rel_FI])
-        # self.net1.constraint(self.int_A, self.int_C, [rel_F])
-        # self.net1.constraint(self.int_A, self.int_C, [rel_FI])
-
-        print(self.net1.print_constraints())
-        self.net1.propagate()
-        print(self.net1.print_constraints())
-
-    # def test_propagate(self):
-    #     self.net0.propagate()
-    #     print(self.net0.print_constraints())
+def quietly(func, *args, **kwargs):
+    """Call func, discarding anything it prints (e.g., is_associative prints a test summary)."""
+    with contextlib.redirect_stdout(io.StringIO()):
+        return func(*args, **kwargs)
+
+
+def relations(relset):
+    """The relations in a RelSet (or a string such as 'B|D|M') as a set of names."""
+    text = str(relset)
+    return set(text.split('|')) if text else set()
+
+
+# (algebra file name (without .json), number of relations in the algebra)
+INTERVAL_ALGEBRAS = [("Linear_Interval_Algebra", 13),
+                     ("Extended_Linear_Interval_Algebra", 18),
+                     ("Left_Branching_Interval_Algebra", 24),
+                     ("Right_Branching_Interval_Algebra", 24)]
+POINT_ALGEBRAS = [("Linear_Point_Algebra", 3),
+                  ("Right_Branching_Point_Algebra", 4),
+                  ("Left_Branching_Point_Algebra", 4)]
+RCC8_ALGEBRA = [("RCC8_Algebra", 8)]
+ALL_ALGEBRAS = INTERVAL_ALGEBRAS + RCC8_ALGEBRA + POINT_ALGEBRAS
+
+
+def load_algebra(name):
+    return qr.Algebra(os.path.join(qr.ALGEBRA_DIR, name + ".json"))
+
+
+class TestDataLocations(unittest.TestCase):
+    """The package finds its data files, wherever the tests are run from."""
+
+    def test_data_directories_exist(self):
+        for d in (qr.DATA_DIR, qr.ALGEBRA_DIR, qr.NETWORK_DIR):
+            self.assertTrue(os.path.isdir(d), d)
+
+    def test_data_files_exist(self):
+        for name, _ in ALL_ALGEBRAS:
+            path = os.path.join(qr.ALGEBRA_DIR, name + ".json")
+            self.assertTrue(os.path.isfile(path), path)
+        self.assertTrue(os.path.isfile(os.path.join(qr.NETWORK_DIR, "rcc8_example.json")))
+
+
+class TestAlgebras(unittest.TestCase):
+    """Properties that every algebra must have."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.algebras = {name: load_algebra(name) for name, _ in ALL_ALGEBRAS}
+
+    def test_name_and_number_of_relations(self):
+        for name, size in ALL_ALGEBRAS:
+            with self.subTest(algebra=name):
+                alg = self.algebras[name]
+                self.assertEqual(alg.name, name)
+                self.assertEqual(len(relations(alg.elements)), size)
+
+    def test_composition_identity(self):
+        for name, _ in ALL_ALGEBRAS:
+            with self.subTest(algebra=name):
+                self.assertTrue(quietly(self.algebras[name].check_composition_identity))
+
+    def test_associativity(self):
+        for name, _ in ALL_ALGEBRAS:
+            with self.subTest(algebra=name):
+                self.assertTrue(quietly(self.algebras[name].is_associative))
+
+
+class TestIntervalNetworks(unittest.TestCase):
+    """X B Y and Y D Z, propagated, in each of the interval algebras."""
+
+    # Expected constraint from X to Z.  The left-branching algebra adds LB and LO.
+    EXPECTED = {"Linear_Interval_Algebra": {"B", "D", "M", "O", "S"},
+                "Extended_Linear_Interval_Algebra": {"B", "D", "M", "O", "S"},
+                "Left_Branching_Interval_Algebra": {"B", "D", "LB", "LO", "M", "O", "S"},
+                "Right_Branching_Interval_Algebra": {"B", "D", "M", "O", "S"}}
+
+    def test_propagation(self):
+        for name, _ in INTERVAL_ALGEBRAS:
+            with self.subTest(algebra=name):
+                alg = load_algebra(name)
+                x = qr.TemporalEntity(["ProperInterval"], "X")
+                y = qr.TemporalEntity(["ProperInterval"], "Y")
+                z = qr.TemporalEntity(["ProperInterval"], "Z")
+                net = qr.Network(alg, f"Network-{name}")
+                net.add_constraint(x, y, "B")
+                net.add_constraint(y, z, "D")
+                self.assertTrue(quietly(net.propagate))
+                self.assertEqual(relations(net.get_constraint("X", "Y")), {"B"})
+                self.assertEqual(relations(net.get_constraint("Y", "Z")), {"D"})
+                self.assertEqual(relations(net.get_constraint("X", "Z")), self.EXPECTED[name])
+
+
+class TestPointNetworks(unittest.TestCase):
+    """X < Y and Y < Z, propagated, in each of the point algebras, implies X < Z."""
+
+    def test_propagation(self):
+        for name, _ in POINT_ALGEBRAS:
+            with self.subTest(algebra=name):
+                alg = load_algebra(name)
+                x = qr.TemporalEntity(["Point"], "X")
+                y = qr.TemporalEntity(["Point"], "Y")
+                z = qr.TemporalEntity(["Point"], "Z")
+                net = qr.Network(alg, f"Network-{name}")
+                net.add_constraint(x, y, "<")
+                net.add_constraint(y, z, "<")
+                self.assertTrue(quietly(net.propagate))
+                self.assertEqual(relations(net.get_constraint("X", "Z")), {"<"})
+
+
+class TestRCC8Networks(unittest.TestCase):
+
+    def test_ntpp_is_transitive(self):
+        alg = load_algebra("RCC8_Algebra")
+        x = qr.SpatialEntity(["Region"], "X")
+        y = qr.SpatialEntity(["Region"], "Y")
+        z = qr.SpatialEntity(["Region"], "Z")
+        net = qr.Network(alg, "Network-RCC8_Algebra")
+        net.add_constraint(x, y, "NTPP")
+        net.add_constraint(y, z, "NTPP")
+        self.assertTrue(quietly(net.propagate))
+        self.assertEqual(relations(net.get_constraint("X", "Z")), {"NTPP"})
+
+    def test_wikipedia_example(self):
+        """Example from http://en.wikipedia.org/wiki/RCC8, read from a JSON file."""
+        net = qr.Network(algebra_path=qr.ALGEBRA_DIR,
+                         json_file_name=os.path.join(qr.NETWORK_DIR, "rcc8_example.json"))
+        self.assertEqual(len(net.nodes), 5)
+        # Before propagation, the constraints between the road and the properties are unknown
+        self.assertEqual(len(relations(net.get_constraint("Property1", "Road"))), 8)
+        self.assertEqual(len(relations(net.get_constraint("Property2", "Road"))), 8)
+
+        self.assertTrue(quietly(net.propagate))
+
+        # Constraints that were given are unchanged, or were narrowed
+        self.assertEqual(relations(net.get_constraint("House1", "House2")), {"DC"})
+        self.assertEqual(relations(net.get_constraint("House1", "Property1")), {"NTPP", "TPP"})
+        self.assertEqual(relations(net.get_constraint("House1", "Road")), {"EC"})
+        self.assertEqual(relations(net.get_constraint("House2", "Property1")), {"DC"})
+        self.assertEqual(relations(net.get_constraint("House2", "Property2")), {"NTPP"})
+        # Constraints inferred by propagation.  The Wikipedia article gives
+        #   road property1: EC|PO      road property2: PO|TPP
+        self.assertEqual(relations(net.get_constraint("Property1", "Road")), {"EC", "PO"})
+        self.assertEqual(relations(net.get_constraint("Property2", "Road")), {"PO", "TPPI"})
+        self.assertEqual(relations(net.get_constraint("Road", "Property1")), {"EC", "PO"})
+        self.assertEqual(relations(net.get_constraint("Road", "Property2")), {"PO", "TPP"})
+
+
+class TestBookExample(unittest.TestCase):
+    """Example from the book on constraint processing for temporal reasoning.
+    The constraints are inconsistent, and propagation detects that."""
+
+    CONSTRAINTS = [("I", "J", "F|FI"), ("I", "L", "S|M"), ("L", "J", "S|M"),
+                   ("K", "I", "D|DI"), ("K", "J", "D|DI"), ("L", "K", "O")]
+
+    def make_network(self, algebra_name, classes):
+        ents = {n: qr.TemporalEntity(list(classes), n) for n in "IJKL"}
+        net = qr.Network(load_algebra(algebra_name), "Book Example")
+        for tail, head, rels in self.CONSTRAINTS:
+            net.add_constraint(ents[tail], ents[head], rels)
+        return net
+
+    def test_constraints_before_propagation(self):
+        net = self.make_network("Linear_Interval_Algebra", ["ProperInterval"])
+        self.assertEqual(len(net.nodes), 4)
+        self.assertEqual(relations(net.get_constraint("I", "J")), {"F", "FI"})
+        self.assertEqual(relations(net.get_constraint("I", "L")), {"S", "M"})
+        self.assertEqual(relations(net.get_constraint("L", "K")), {"O"})
+
+    def test_interval_algebra_is_inconsistent(self):
+        net = self.make_network("Linear_Interval_Algebra", ["ProperInterval"])
+        self.assertFalse(quietly(net.propagate))
+
+    def test_extended_algebra_is_inconsistent(self):
+        net = self.make_network("Extended_Linear_Interval_Algebra", ["Point", "ProperInterval"])
+        self.assertFalse(quietly(net.propagate))
 
 
 if __name__ == '__main__':

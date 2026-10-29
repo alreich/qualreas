@@ -10,12 +10,12 @@ class TestAlgebra(unittest.TestCase):
         """
         Load all of the existing algebras
         """
-        path = os.path.join( os.getenv('PYPROJ'), 'qualreas/Algebras' )
-        self.alg0 = qr.Algebra(os.path.join(path, 'LinearIntervalAlgebra.json'))
-        self.alg1 = qr.Algebra(os.path.join(path, 'ExtendedLinearIntervalAlgebra.json'))
-        self.alg2 = qr.Algebra(os.path.join(path, 'LeftBranchingIntervalAlgebra.json'))
-        self.alg3 = qr.Algebra(os.path.join(path, 'RightBranchingIntervalAlgebra.json'))
-        self.alg4 = qr.Algebra(os.path.join(path, 'RCC8Algebra.json'))
+        path = qr.ALGEBRA_DIR
+        self.alg0 = qr.Algebra(os.path.join(path, 'Linear_Interval_Algebra.json'))
+        self.alg1 = qr.Algebra(os.path.join(path, 'Extended_Linear_Interval_Algebra.json'))
+        self.alg2 = qr.Algebra(os.path.join(path, 'Left_Branching_Interval_Algebra.json'))
+        self.alg3 = qr.Algebra(os.path.join(path, 'Right_Branching_Interval_Algebra.json'))
+        self.alg4 = qr.Algebra(os.path.join(path, 'RCC8_Algebra.json'))
 
     # Interval Algebra
     def test_identity_relset0(self):
