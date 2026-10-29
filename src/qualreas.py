@@ -810,7 +810,7 @@ class Network(nx.DiGraph):
 # It has no other intended purpose.
 
 class FourPointNet(Network):
-    """Create four Temporal Entities that represent time points and use them
+    r"""Create four Temporal Entities that represent time points and use them
     to express two independent intervals. For example, (s1,e1) and (s2,e2),
     where s1 < e1 and s2 < e2, represents two proper intervals.  Using '<\|='
     instead of '<', would represent two intervals where one or both might
@@ -1157,189 +1157,193 @@ def print_point_algebra_composition_table(pt_alg):
 
 if __name__ == '__main__':
 
-    print("\n=======================================================================")
+    print("Smoke Test:")
+    alg = Algebra(os.path.join(ALGEBRA_DIR, "Linear_Interval_Algebra.json"))
+    print(f"qualreas {__version__}: loaded {alg.name} with {len(alg.elements)} relations")
 
-    alg = [Algebra(os.path.join(ALGEBRA_DIR, "Linear_Interval_Algebra.json")),
-           Algebra(os.path.join(ALGEBRA_DIR, "Extended_Linear_Interval_Algebra.json")),
-           Algebra(os.path.join(ALGEBRA_DIR, "Left_Branching_Interval_Algebra.json")),
-           Algebra(os.path.join(ALGEBRA_DIR, "Right_Branching_Interval_Algebra.json")),
-           Algebra(os.path.join(ALGEBRA_DIR, "RCC8_Algebra.json")),
-           Algebra(os.path.join(ALGEBRA_DIR, "Linear_Point_Algebra.json")),
-           Algebra(os.path.join(ALGEBRA_DIR, "Right_Branching_Point_Algebra.json")),
-           Algebra(os.path.join(ALGEBRA_DIR, "Left_Branching_Point_Algebra.json"))
-           ]
-
-    print("\n-------------------------------------")
-    print("Check algebra composition identity")
-    print("-------------------------------------")
-
-    verbosity = False
-
-    for a in alg:
-        print(f"\n{a.name}:")
-        print(f"Relations: {a.elements}")
-        if a.check_composition_identity():
-            print("Composition Identity OK")
-        else:
-            print("Composition Identity Failed")
-
-    print("\n---------------------------")
-    print("Check algebra associativity")
-    print("---------------------------")
-
-    for a in alg:
-        print(f"\n{a.name}:")
-        print(f"Relations: {a.elements}")
-        if a.is_associative():
-            print(f"{a.name} is associative.")
-        else:
-            print(f"{a.name} is NOT associative.")
-
-    print("\n-----------------------------------------------")
-    print("Check network propagation for interval algebras")
-    print("-----------------------------------------------")
-
-    # Interval Algebras
-
-    entity_x = TemporalEntity(["ProperInterval"], "X")
-    entity_y = TemporalEntity(["ProperInterval"], "Y")
-    entity_z = TemporalEntity(["ProperInterval"], "Z")
-
-    for a in alg[0:4]:
-        print("\n--------------------------------------------------")
-        print(f"Algebra: {a.name}")
-        net = Network(a, f"Network-{a.name}")
-        net.add_constraint(entity_x, entity_y, "B", verbosity)
-        net.add_constraint(entity_y, entity_z, "D", verbosity)
-        net.summary()
-        net.propagate(True)
-        net.summary()
-
-    # Point Algebras
-
-    entity_x = TemporalEntity(["Point"], "X")
-    entity_y = TemporalEntity(["Point"], "Y")
-    entity_z = TemporalEntity(["Point"], "Z")
-
-    for a in alg[5:]:
-        print("\n--------------------------------------------------")
-        print(f"Algebra: {a.name}")
-        net = Network(a, f"Network-{a.name}")
-        net.add_constraint(entity_x, entity_y, "<", verbosity)
-        net.add_constraint(entity_y, entity_z, "<", verbosity)
-        net.summary()
-        net.propagate()
-        net.summary()
-
-    # RCC8 Algebra
-
-    entity_x = SpatialEntity(["Region"], "X")
-    entity_y = SpatialEntity(["Region"], "Y")
-    entity_z = SpatialEntity(["Region"], "Z")
-
-    a = alg[4]
-    print("\n--------------------------------------------------")
-    print(f"Algebra: {a.name}")
-    net = Network(a, f"Network-{a.name}")
-    net.add_constraint(entity_x, entity_y, "NTPP", verbosity)
-    net.add_constraint(entity_y, entity_z, "NTPP", verbosity)
-    net.summary()
-    net.propagate()
-    net.summary()
-
-    print("\n---------------------------------------------------------------")
-    print("Example in book on constraint processing for temporal reasoning")
-    print("---------------------------------------------------------------")
-    pint_I = TemporalEntity(["ProperInterval"], "I")
-    pint_J = TemporalEntity(["ProperInterval"], "J")
-    pint_K = TemporalEntity(["ProperInterval"], "K")
-    pint_L = TemporalEntity(["ProperInterval"], "L")
-    net2 = Network(alg[0], "Book Example")
-    net2.add_constraint(pint_I, pint_J, "F|FI", verbosity)
-    net2.add_constraint(pint_I, pint_L, "S|M", verbosity)
-    net2.add_constraint(pint_L, pint_J, "S|M", verbosity)
-    net2.add_constraint(pint_K, pint_I, "D|DI", verbosity)
-    net2.add_constraint(pint_K, pint_J, "D|DI", verbosity)
-    net2.add_constraint(pint_L, pint_K, "O", verbosity)
-    net2.summary()
-    net2.propagate()
-    net2.summary()
-
-    # Example in book on constraint processing for temporal reasoning
-    # (extended to intervals & points)
-    pint_I = TemporalEntity(["Point", "ProperInterval"], "I")
-    pint_J = TemporalEntity(["Point", "ProperInterval"], "J")
-    pint_K = TemporalEntity(["Point", "ProperInterval"], "K")
-    pint_L = TemporalEntity(["Point", "ProperInterval"], "L")
-    net2x = Network(alg[1], "Book Example Extended")
-    net2x.add_constraint(pint_I, pint_J, "F|FI")
-    net2x.add_constraint(pint_I, pint_L, "S|M")
-    net2x.add_constraint(pint_L, pint_J, "S|M")
-    net2x.add_constraint(pint_K, pint_I, "D|DI")
-    net2x.add_constraint(pint_K, pint_J, "D|DI")
-    net2x.add_constraint(pint_L, pint_K, "O")
-    net2x.summary()
-    net2x.propagate(verbose=True)
-    net2x.summary()
-
-    print("\n----------------------------------------------")
-    print("Region Connection Calculus 8")
-    print("Example from http://en.wikipedia.org/wiki/RCC8")
-    print("----------------------------------------------")
-
-    # Algebra(os.path.join(path, "Algebras/Linear_Interval_Algebra.json"
-
-    # rcc8x = Network(algebra_path=path+"/Algebras/",
-    #                 json_file_name=path+"/Networks/rcc8_example.json")
-
-    # print(f"Path = {path}")
-    # alg_path = os.path.join(path, "Algebras")
-    # print(f"Alg path = {alg_path}")
-    # json_fname = os.path.join(path, "Networks/rcc8_example.json")
-    # print(f"JSON path = {json_fname}")
-    rcc8x = Network(algebra_path=ALGEBRA_DIR,
-                    json_file_name=os.path.join(NETWORK_DIR, "rcc8_example.json"))
-    rcc8x.summary()
-    rcc8x.propagate()
-    rcc8x.summary()
-
-    # # alg4 = Algebra(os.path.join(ALGEBRA_DIR, "RCC8_Algebra.json"))
-    # alg4 = alg[4]
+    # print("\n=======================================================================")
     #
-    # house1 = SpatialEntity(["Region"], "house1")
-    # house2 = SpatialEntity(["Region"], "house2")
-    # property1 = SpatialEntity(["Region"], "property1")
-    # property2 = SpatialEntity(["Region"], "property2")
-    # road = SpatialEntity(["Region"], "road")
+    # alg = [Algebra(os.path.join(ALGEBRA_DIR, "Linear_Interval_Algebra.json")),
+    #        Algebra(os.path.join(ALGEBRA_DIR, "Extended_Linear_Interval_Algebra.json")),
+    #        Algebra(os.path.join(ALGEBRA_DIR, "Left_Branching_Interval_Algebra.json")),
+    #        Algebra(os.path.join(ALGEBRA_DIR, "Right_Branching_Interval_Algebra.json")),
+    #        Algebra(os.path.join(ALGEBRA_DIR, "RCC8_Algebra.json")),
+    #        Algebra(os.path.join(ALGEBRA_DIR, "Linear_Point_Algebra.json")),
+    #        Algebra(os.path.join(ALGEBRA_DIR, "Right_Branching_Point_Algebra.json")),
+    #        Algebra(os.path.join(ALGEBRA_DIR, "Left_Branching_Point_Algebra.json"))
+    #        ]
     #
-    # net4 = Network(alg4, "Wikipedia RCC8 Example")
+    # print("\n-------------------------------------")
+    # print("Check algebra composition identity")
+    # print("-------------------------------------")
     #
-    # net4.add_constraint(house1, house2, "DC", verbosity)
-    # net4.add_constraint(house1, property1, "TPP|NTPP", verbosity)
-    # net4.add_constraint(house1, property2, "DC|EC", verbosity)
-    # net4.add_constraint(house1, road, "EC", verbosity)
-    # net4.add_constraint(house2, property1, "DC|EC", verbosity)
-    # net4.add_constraint(house2, property2, "NTPP", verbosity)
-    # net4.add_constraint(house2, road, "EC", verbosity)
-    # net4.add_constraint(property1, property2, "DC|EC", verbosity)
+    # verbosity = False
     #
-    # net4.summary()
-    # net4.propagate()
-    # net4.summary()
-
-    print("""\nNote on example above:
-    According to Wikipedia,
-    https://en.wikipedia.org/wiki/Region_connection_calculus#Examples,
-    the correct constraints
-    between 'road' and 'property1', and
-    between 'road' and 'property2' are:
-      road property1 EC|PO
-      road property2 PO|TPP""")
-
-    # net4.converse().summary()
-
-    print("""    ------------
-    END OF TESTS
-    ------------""")
+    # for a in alg:
+    #     print(f"\n{a.name}:")
+    #     print(f"Relations: {a.elements}")
+    #     if a.check_composition_identity():
+    #         print("Composition Identity OK")
+    #     else:
+    #         print("Composition Identity Failed")
+    #
+    # print("\n---------------------------")
+    # print("Check algebra associativity")
+    # print("---------------------------")
+    #
+    # for a in alg:
+    #     print(f"\n{a.name}:")
+    #     print(f"Relations: {a.elements}")
+    #     if a.is_associative():
+    #         print(f"{a.name} is associative.")
+    #     else:
+    #         print(f"{a.name} is NOT associative.")
+    #
+    # print("\n-----------------------------------------------")
+    # print("Check network propagation for interval algebras")
+    # print("-----------------------------------------------")
+    #
+    # # Interval Algebras
+    #
+    # entity_x = TemporalEntity(["ProperInterval"], "X")
+    # entity_y = TemporalEntity(["ProperInterval"], "Y")
+    # entity_z = TemporalEntity(["ProperInterval"], "Z")
+    #
+    # for a in alg[0:4]:
+    #     print("\n--------------------------------------------------")
+    #     print(f"Algebra: {a.name}")
+    #     net = Network(a, f"Network-{a.name}")
+    #     net.add_constraint(entity_x, entity_y, "B", verbosity)
+    #     net.add_constraint(entity_y, entity_z, "D", verbosity)
+    #     net.summary()
+    #     net.propagate(True)
+    #     net.summary()
+    #
+    # # Point Algebras
+    #
+    # entity_x = TemporalEntity(["Point"], "X")
+    # entity_y = TemporalEntity(["Point"], "Y")
+    # entity_z = TemporalEntity(["Point"], "Z")
+    #
+    # for a in alg[5:]:
+    #     print("\n--------------------------------------------------")
+    #     print(f"Algebra: {a.name}")
+    #     net = Network(a, f"Network-{a.name}")
+    #     net.add_constraint(entity_x, entity_y, "<", verbosity)
+    #     net.add_constraint(entity_y, entity_z, "<", verbosity)
+    #     net.summary()
+    #     net.propagate()
+    #     net.summary()
+    #
+    # # RCC8 Algebra
+    #
+    # entity_x = SpatialEntity(["Region"], "X")
+    # entity_y = SpatialEntity(["Region"], "Y")
+    # entity_z = SpatialEntity(["Region"], "Z")
+    #
+    # a = alg[4]
+    # print("\n--------------------------------------------------")
+    # print(f"Algebra: {a.name}")
+    # net = Network(a, f"Network-{a.name}")
+    # net.add_constraint(entity_x, entity_y, "NTPP", verbosity)
+    # net.add_constraint(entity_y, entity_z, "NTPP", verbosity)
+    # net.summary()
+    # net.propagate()
+    # net.summary()
+    #
+    # print("\n---------------------------------------------------------------")
+    # print("Example in book on constraint processing for temporal reasoning")
+    # print("---------------------------------------------------------------")
+    # pint_I = TemporalEntity(["ProperInterval"], "I")
+    # pint_J = TemporalEntity(["ProperInterval"], "J")
+    # pint_K = TemporalEntity(["ProperInterval"], "K")
+    # pint_L = TemporalEntity(["ProperInterval"], "L")
+    # net2 = Network(alg[0], "Book Example")
+    # net2.add_constraint(pint_I, pint_J, "F|FI", verbosity)
+    # net2.add_constraint(pint_I, pint_L, "S|M", verbosity)
+    # net2.add_constraint(pint_L, pint_J, "S|M", verbosity)
+    # net2.add_constraint(pint_K, pint_I, "D|DI", verbosity)
+    # net2.add_constraint(pint_K, pint_J, "D|DI", verbosity)
+    # net2.add_constraint(pint_L, pint_K, "O", verbosity)
+    # net2.summary()
+    # net2.propagate()
+    # net2.summary()
+    #
+    # # Example in book on constraint processing for temporal reasoning
+    # # (extended to intervals & points)
+    # pint_I = TemporalEntity(["Point", "ProperInterval"], "I")
+    # pint_J = TemporalEntity(["Point", "ProperInterval"], "J")
+    # pint_K = TemporalEntity(["Point", "ProperInterval"], "K")
+    # pint_L = TemporalEntity(["Point", "ProperInterval"], "L")
+    # net2x = Network(alg[1], "Book Example Extended")
+    # net2x.add_constraint(pint_I, pint_J, "F|FI")
+    # net2x.add_constraint(pint_I, pint_L, "S|M")
+    # net2x.add_constraint(pint_L, pint_J, "S|M")
+    # net2x.add_constraint(pint_K, pint_I, "D|DI")
+    # net2x.add_constraint(pint_K, pint_J, "D|DI")
+    # net2x.add_constraint(pint_L, pint_K, "O")
+    # net2x.summary()
+    # net2x.propagate(verbose=True)
+    # net2x.summary()
+    #
+    # print("\n----------------------------------------------")
+    # print("Region Connection Calculus 8")
+    # print("Example from http://en.wikipedia.org/wiki/RCC8")
+    # print("----------------------------------------------")
+    #
+    # # Algebra(os.path.join(path, "Algebras/Linear_Interval_Algebra.json"
+    #
+    # # rcc8x = Network(algebra_path=path+"/Algebras/",
+    # #                 json_file_name=path+"/Networks/rcc8_example.json")
+    #
+    # # print(f"Path = {path}")
+    # # alg_path = os.path.join(path, "Algebras")
+    # # print(f"Alg path = {alg_path}")
+    # # json_fname = os.path.join(path, "Networks/rcc8_example.json")
+    # # print(f"JSON path = {json_fname}")
+    # rcc8x = Network(algebra_path=ALGEBRA_DIR,
+    #                 json_file_name=os.path.join(NETWORK_DIR, "rcc8_example.json"))
+    # rcc8x.summary()
+    # rcc8x.propagate()
+    # rcc8x.summary()
+    #
+    # # # alg4 = Algebra(os.path.join(ALGEBRA_DIR, "RCC8_Algebra.json"))
+    # # alg4 = alg[4]
+    # #
+    # # house1 = SpatialEntity(["Region"], "house1")
+    # # house2 = SpatialEntity(["Region"], "house2")
+    # # property1 = SpatialEntity(["Region"], "property1")
+    # # property2 = SpatialEntity(["Region"], "property2")
+    # # road = SpatialEntity(["Region"], "road")
+    # #
+    # # net4 = Network(alg4, "Wikipedia RCC8 Example")
+    # #
+    # # net4.add_constraint(house1, house2, "DC", verbosity)
+    # # net4.add_constraint(house1, property1, "TPP|NTPP", verbosity)
+    # # net4.add_constraint(house1, property2, "DC|EC", verbosity)
+    # # net4.add_constraint(house1, road, "EC", verbosity)
+    # # net4.add_constraint(house2, property1, "DC|EC", verbosity)
+    # # net4.add_constraint(house2, property2, "NTPP", verbosity)
+    # # net4.add_constraint(house2, road, "EC", verbosity)
+    # # net4.add_constraint(property1, property2, "DC|EC", verbosity)
+    # #
+    # # net4.summary()
+    # # net4.propagate()
+    # # net4.summary()
+    #
+    # print("""\nNote on example above:
+    # According to Wikipedia,
+    # https://en.wikipedia.org/wiki/Region_connection_calculus#Examples,
+    # the correct constraints
+    # between 'road' and 'property1', and
+    # between 'road' and 'property2' are:
+    #   road property1 EC|PO
+    #   road property2 PO|TPP""")
+    #
+    # # net4.converse().summary()
+    #
+    # print("""    ------------
+    # END OF TESTS
+    # ------------""")
 
     # End of File
