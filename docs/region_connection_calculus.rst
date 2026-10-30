@@ -34,29 +34,34 @@ Constraint Network in JSON Format
 
 Here’s what a network looks like in JSON format.
 
-A node is represented as a list of two things: 1. Node ID (i.e., Node
-Name) 1. List of ontology classes the node belongs to (e.g.,
-“ProperInterval”, “Region”)
+A node is represented as a list of two things:
 
-   NOTE: Networks that are based on simple relation algebras, such as
-   Allen’s Interval Algebra and the Region Connection Calculus, only
-   involve relations among entities that are all from the same ontology
-   class, such as Proper Time Intervals or Spatial Regions. So, the
-   ontology classes of entities being related by the relations does not
-   need to be considered when, for example, composing relations.
-   However, when ontology classes are integrated, such as Proper Time
-   Intervals and Time Points, then the ontology classes of the entities
-   being related become important.
+- Node ID (i.e., Node Name)
+- List of ontology classes the node belongs to (e.g., “ProperInterval”,
+  “Region”)
+
+NOTE: Networks that are based on simple relation algebras, such as
+Allen’s Interval Algebra and the Region Connection Calculus, only
+involve relations among entities that are all from the same ontology
+class, such as Proper Time Intervals or Spatial Regions. So, the
+ontology classes of entities being related by the relations does not
+need to be considered when, for example, composing relations. However,
+when ontology classes are integrated, such as Proper Time Intervals and
+Time Points, then the ontology classes of the entities being related
+become important.
 
 An edge is represented as a list of three things, representing a
-directed edge, labeled with a constraint: 1. Tail Node ID 1. Head Node
-ID 1. Constraint
+directed edge, labeled with a constraint:
+
+- Tail Node ID
+- Head Node ID
+- Constraint
 
 See graphical depiction below:
 
 .. code:: ipython3
 
-    Image("../data/images/Edge_Notation_Meaning.png", width=300, height=100)
+    Image(filename="../data/images/Edge_Notation_Meaning.png", width=300, height=100)
 
 
 
@@ -107,25 +112,29 @@ example <#rcc8_figures>`__.
         ]
     }
 
-NOTES: 1. The Wikipedia page on RCC8 represents disjunctions of
-constraints as sets, e.g., {DC, EC}, whereas qualreas represents this
-with the string “DC|EC”. Constraint sets represent disjunctions of
-relation statements, e.g., (Tail DC|EC Head) <==> (Tail DC Head) OR
-(Tail EC Head). 1. For convenience, constraints can be abbreviated using
-a dictionary of abbreviations. For example, the constraint “DC|EC”,
-above, is abbreviated as “dec”. By the way, internally, the qualreas
-module stores and operates on constraint sets as
-`bitsets <https://bitsets.readthedocs.io/en/stable/>`__. 1. No
-constraints are given for the Road-to-Property1 or Road-to-Property2
-edges. The meaning then is that all RCC8 relations are possible for
-those two edges. This can be seen in the first summary of the network
-farther below. 1. The Network object in qualreas is a subclass of
-`networkx.digraph <https://networkx.github.io/documentation/stable/reference/classes/digraph.html>`__,
-which has functionality for loading/saving from/to JSON format. However,
-the JSON functionality in NetworkX is not easy to read, nor is it
-compact, and it is awkward to associate an Algebra with a Network using
-those formats. So, the bespoke JSON format, described in this notebook,
-was developed for qualreas.
+NOTES:
+
+- The Wikipedia page on RCC8 represents disjunctions of constraints as
+  sets, e.g., {DC, EC}, whereas qualreas represents this with the string
+  “DC|EC”. Constraint sets represent disjunctions of relation
+  statements, e.g., (Tail DC|EC Head) <==> (Tail DC Head) OR (Tail EC
+  Head).
+- For convenience, constraints can be abbreviated using a dictionary of
+  abbreviations. For example, the constraint “DC|EC”, above, is
+  abbreviated as “dec”. By the way, internally, the qualreas module
+  stores and operates on constraint sets as
+  `bitsets <https://bitsets.readthedocs.io/en/stable/>`__.
+- No constraints are given for the Road-to-Property1 or
+  Road-to-Property2 edges. The meaning then is that all RCC8 relations
+  are possible for those two edges. This can be seen in the first
+  summary of the network farther below.
+- The Network object in qualreas is a subclass of
+  `networkx.digraph <https://networkx.github.io/documentation/stable/reference/classes/digraph.html>`__,
+  which has functionality for loading/saving from/to JSON format.
+  However, the JSON functionality in NetworkX is not easy to read, nor
+  is it compact, and it is awkward to associate an Algebra with a
+  Network using those formats. So, the bespoke JSON format, described in
+  this notebook, was developed for qualreas.
 
 RCC-8’s Spatial Relations 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -134,7 +143,7 @@ For convenient reference, here are the 8 spatial relations of RCC-8:
 
 .. code:: ipython3
 
-    Image("../data/images/640px-RCC8.jpg")
+    Image(filename="../data/images/640px-RCC8.jpg")
 
 
 
@@ -611,7 +620,7 @@ from the input after propagation are shown in red.
 
 .. code:: ipython3
 
-    Image("../data/images/wikipedia_rcc8_example.png")
+    Image(filename="../data/images/wikipedia_rcc8_example.png")
 
 
 
