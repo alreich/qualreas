@@ -7,33 +7,27 @@ Region Connection Calculus (RCC)
     import os
     from IPython.display import Image
 
-To begin, we will instantiate a Constraint Network and it’s
-corresponding Algebra from two JSON files.
+To begin, a constraint ``Network`` and it’s corresponding ``Algebra``
+will be instantiated from two JSON files.
 
-Each are kept in separate directories, ‘Networks’ and ‘Algebras’, within
-a top-level ‘qualreas’ directory, with the full path defined here using
-an environment variable:
+Each are kept in separate directories, ‘data/networks’ and
+‘data/algebras’, resp., within the top-level ‘qualreas’ directory.
 
-.. code:: ipython3
+Once defined, an ``Algebra`` should remain unchanged. The name of the
+``Algebra`` used by a ``Network`` can then be stored in the ``Network``
+definition (in JSON) regardless of where the ``Network`` JSON file
+resides. So, we only need to provide the path to the directory
+containing ``Algebra`` JSON files:
 
-    qr_path = os.path.dirname(qr.DATA_DIR)
-
-Once defined, an Algebra’s JSON format should remain unchanged. The name
-of the Algebra used by a Network can then be stored in the Network’s
-definition (in JSON) regardless of where the Network’s JSON file
-resides. So, we only need provide the path to the directory containing
-Algebra files:
-
-.. code:: ipython3
-
-    alg_dir = os.path.join(qr_path, "data", "algebras")
-
-Networks, on the other hand, could be numerous and change often. So, we
-need to provide the full path to the Network’s JSON file.
+There may be numerous different ``Networks`` definitions, on the other
+hand, and they could change often. So, the full path to a Network’s JSON
+file is required.
 
 .. code:: ipython3
 
-    rcc8_file = os.path.join(qr_path, "data", "networks", "rcc8_example.json")
+    alg_dir = qr.ALGEBRA_DIR   # Directory where algebras are kept
+    
+    rcc8_file = os.path.join(qr.NETWORK_DIR, "rcc8_example.json")  # full path to a network
 
 Constraint Network in JSON Format 
 ----------------------------------
@@ -67,7 +61,7 @@ See graphical depiction below:
 
 
 
-.. image:: output_10_0.png
+.. image:: output_6_0.png
    :width: 300px
    :height: 100px
 
@@ -145,7 +139,7 @@ For convenient reference, here are the 8 spatial relations of RCC-8:
 
 
 
-.. image:: output_16_0.jpg
+.. image:: output_12_0.jpg
 
 
 
@@ -189,6 +183,8 @@ Head_ID2: Constraint2 \* … \* and so on …
 .. parsed-literal::
 
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -227,14 +223,15 @@ Notice that, in the network summary above, even edges between an entity
 and itself are included (e.g., House1 –> House1, with constraint EQ).
 The relation on such an edge will always be the equality relation(s) for
 whatever ontology class(es) the entity belongs to. These edges are
-included in constraint propagation so that ontology classes are properly
-accounted for.
+included in constraint propagation so that the ontology classes of
+relation domains and edges are properly accounted for.
 
 Also, the summary above shows all possible connections between nodes,
 including converses, which is somewhat redundant. That is, if we know
-that X r Y, then we can infer that Y converse(r) X. To see a more
-compact representation that lists just one link per node pair, leave the
-argument, show_all, at its default setting of False, as shown below.
+that :math:`X\ r\ Y`, then we can infer that :math:`Y\ r^{-1}\ X`. To
+see a more compact representation that lists just one link per node
+pair, leave the argument, show_all, at its default setting of False, as
+shown below.
 
 .. code:: ipython3
 
@@ -243,6 +240,8 @@ argument, show_all, at its default setting of False, as shown below.
 
 .. parsed-literal::
 
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -556,6 +555,8 @@ and the two Properties.
 .. parsed-literal::
 
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -615,7 +616,7 @@ from the input after propagation are shown in red.
 
 
 
-.. image:: output_68_0.png
+.. image:: output_64_0.png
 
 
 
@@ -641,6 +642,8 @@ To begin, look again at the summary of that network:
 
 .. parsed-literal::
 
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -709,6 +712,8 @@ Here are summaries of all 9 singleton labelings:
      Singleton Labeling #1
     -------------------------
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -735,6 +740,8 @@ Here are summaries of all 9 singleton labelings:
     -------------------------
      Singleton Labeling #2
     -------------------------
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -763,6 +770,8 @@ Here are summaries of all 9 singleton labelings:
      Singleton Labeling #3
     -------------------------
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -789,6 +798,8 @@ Here are summaries of all 9 singleton labelings:
     -------------------------
      Singleton Labeling #4
     -------------------------
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -817,6 +828,8 @@ Here are summaries of all 9 singleton labelings:
      Singleton Labeling #5
     -------------------------
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -843,6 +856,8 @@ Here are summaries of all 9 singleton labelings:
     -------------------------
      Singleton Labeling #6
     -------------------------
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -871,6 +886,8 @@ Here are summaries of all 9 singleton labelings:
      Singleton Labeling #7
     -------------------------
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -898,6 +915,8 @@ Here are summaries of all 9 singleton labelings:
      Singleton Labeling #8
     -------------------------
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -924,6 +943,8 @@ Here are summaries of all 9 singleton labelings:
     -------------------------
      Singleton Labeling #9
     -------------------------
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -1015,6 +1036,8 @@ edge definitions to indicate that all relations are possible.
 
     <Network--Wikipedia RCC8 Example--RCC8_Algebra>
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -1057,7 +1080,7 @@ Network to JSON File
 
     import json
     
-    rcc8_json_file = os.path.join(qr_path, "data", "networks", "rcc8_test1.json")
+    rcc8_json_file = os.path.join(qr.NETWORK_DIR, "rcc8_test1.json")
     
     with open(rcc8_json_file, "w") as fout:
         json.dump(rcc8_net_dict, fout)
