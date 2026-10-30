@@ -1,6 +1,0 @@
-RELATION,ABBREVIATION,CONVERSE,DOMAIN,RANGE,REFLEXIVE,SYMMETRIC,TRANSITIVE
-Point-Finishes,PF,PFI,Point,Interval,False,False,False
-Point-Finished-By,PFI,PF,Interval,Point,False,False,False
-Point-Starts,PS,PSI,Point,Interval,False,False,False
-Point-Started-By,PSI,PS,Interval,Point,False,False,False
-Point-Equals,PE,PE,Point,Point,True,True,True
