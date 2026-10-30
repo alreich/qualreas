@@ -482,7 +482,7 @@ class Network(nx.DiGraph):
         # ...or start from scratch (assumes an Algebra was input, though).
         else:
             net_dict = {"name": make_name(name),
-                        "description": "undefined",
+                        "description": "",
                         "nodes": [],
                         "edges": []}
 
@@ -498,6 +498,8 @@ class Network(nx.DiGraph):
             name = net_dict["name"]
         if "description" in net_dict:
             self.description = net_dict["description"]
+        else:
+            self.description = "None provided"
 
         # Create 'nodes' as a dictionary where key:value = node_name:node_classes
         # TODO: Eliminate this dictionary and incorporate it in 'entities' below
@@ -706,6 +708,7 @@ class Network(nx.DiGraph):
         """Prints a summary of the network and its nodes/classes, edges, & constraints.
         By default, converse edges are not shown,  That is, if edge A-->B is shown,
         then it's converse, B-->A, is not shown. To see all edges, set 'show_all' to True."""
+        print(f"\nDescription: {self.description}")
         print(f"\n{self.name}: {len(self.nodes)} nodes, {len(self.edges)} edges")
         print(f"  Algebra: {self.algebra.name}")
         done = []
