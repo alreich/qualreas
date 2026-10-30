@@ -89,18 +89,15 @@ There is a lot here that is old and even obsolete.  The important directories fo
 * data/ontologies -- The .ttl file updates the W3C.org ontology of time to correspond to the Extended_Linear_Interval_Algebra [Reich 1994]
 * docs -- The [Read the Docs](https://qualreas.readthedocs.io) documentation, including an annotated bibliography
 * LICENSE -- same
-* misc -- Assorted junk (Don't look in here)
 * notebooks -- Jupyter Notebooks; A description of each can be found at the end of this notebook
 * pyproject.toml -- Packaging information, needed to install qualreas with pip
 * README.md -- This file
 * src -- The module, "qualreas.py"
 * tests -- Unit tests (see "Testing the installation", above)
-* trash -- Because sometimes I want to backtrack w.r.t. something I wrote
 
 ## References <a class="anchor" id="refs"></a>
 
 1. [[Allen, 1983] "Maintaining Knowledge about Temporal Intervals" by James F. Allen](https://cse.unl.edu/~choueiry/Documents/Allen-CACM1983.pdf) - Allen's original paper (PDF)
-1. [Allen's Interval Algebra](https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html) or [here](https://thomasalspaugh.org/pub/fnd/allen.html) - summarizes Allen's algebra of proper time intervals
 1. [[Reich, 1994] "Intervals, Points, and Branching Time" by A.J. Reich](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time) - basis for the point & branching time extensions to Allen's algebra
 
 ## EXAMPLES <a class="anchor" id="examples"></a>
@@ -176,7 +173,7 @@ The network, shown in JSON format below, is the example from the [Wikipedia page
 
 
 ```python
-!cat {rcc8_file}
+print(open(rcc8_file).read())
 ```
 
     {
@@ -204,6 +201,7 @@ The network, shown in JSON format below, is the example from the [Wikipedia page
             ["Road", "Property2"]
         ]
     }
+
 
 NOTES:
 1. The Wikipedia page on RCC8 represents disjunctions of constraints as sets, e.g., {DC, EC}, whereas qualreas represents this with the string "DC|EC".  Constraint sets represent disjunctions of relation statements, e.g., (Tail DC|EC Head) <==> (Tail DC Head) OR (Tail EC Head).
@@ -1161,10 +1159,12 @@ with open(rcc8_json_file, "w") as fout:
 
 
 ```python
-!cat {rcc8_json_file}
+# !cat {rcc8_json_file}
+print(open(rcc8_json_file).read())
 ```
 
     {"name": "Wikipedia RCC8 Example", "algebra": "RCC8_Algebra", "description": "See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples", "nodes": [["House1", ["Region"]], ["House2", ["Region"]], ["Property1", ["Region"]], ["Property2", ["Region"]], ["Road", ["Region"]]], "edges": [["House1", "House2", "DC"], ["House1", "Property1", "NTPP|TPP"], ["House1", "Property2", "DC|EC"], ["House1", "Road", "EC"], ["House2", "Property1", "DC"], ["House2", "Property2", "NTPP"], ["House2", "Road", "EC"], ["Property1", "Property2", "DC|EC"], ["Property1", "Road", "EC|PO"], ["Property2", "Road", "PO|TPPI"]]}
+
 
 #### Network to JSON String <a class="anchor" id="net_to_json_str"></a>
 
