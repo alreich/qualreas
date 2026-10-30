@@ -34,63 +34,67 @@ Algebras and Networks in qualreas can be read from, or written to, <b>JSON</b> o
     * [Jupyter Notebooks](#jupyter_notebooks)
         * [Introduction to Algebras](#alg_intro)
         * [Derivation of Interval Algebras](#alg_deriv)
-            * [Algebra's Derived in Reich's 1994 Paper](#reich_1994)
+            * [Algebras Derived in Reich's 1994 Paper](#reich_1994)
             * [Interval & Point BINARY Branching Time Algebras](#binary_branching)
             * [PROPER INTERVAL Branching Time Algebras](#proper_int_branching)
         * [Miscellaneous Examples](#misc_ex)
 
 ## How do I get set up? <a class="anchor" id="setup"></a>
 
-With respect the Python packages that <b>qualreas</b> depends on, here are the imports from the top of the source code file, <i>qualreas.py</i>:
+<b>qualreas</b> requires Python 3.9 or later.  It depends on three third-party packages, which are installed automatically by the steps below:
 
-* from bitsets import bitset, bases  (https://bitsets.readthedocs.io/en/stable/)
-* import os
-* import json
-* import random
-* import string
-* import networkx as nx  (https://networkx.github.io/)
-* from functools import reduce
-* from collections import abc, OrderedDict
-* import numpy as np
+* [bitsets](https://bitsets.readthedocs.io/en/stable/)
+* [networkx](https://networkx.github.io/)
+* [numpy](https://numpy.org/)
 
-All but one of the dependencies, above, will be taken care of if the [Anaconda Python distribution for individuals](https://www.anaconda.com/products/individual) is used.
+Use <b>git</b> to clone the <b>qualreas</b> repository.  Then, from the top-level directory (the one containing <i>pyproject.toml</i>), install <b>qualreas</b> in editable mode:
 
-The one additional dependency required is <b>bitsets</b>.  The [bitsets package](https://bitsets.readthedocs.io/en/stable/#) is not available in the Anaconda distribution, but it can be easily added by executing the following command:
+```
+git clone https://github.com/alreich/qualreas.git
+cd qualreas
+pip install -e .
+```
 
-> pip install bitsets
-
-Then, use <b>git</b> to clone the <b>qualreas</b> respository.
+After that, <b>import qualreas as qr</b> works from any directory, and changes to <i>src/qualreas.py</i> take effect immediately; no environment variables are needed.  (The Jupyter notebooks in this repository also require [Jupyter](https://jupyter.org/), of course.)
 
 ### Testing the installation <a class="anchor" id="test_install"></a>
 
-From the top-level <b>qualreas</b> directory (the one containing <i>pyproject.toml</i>), install <b>qualreas</b> in editable mode:
-
-> pip install -e .
-
-After that, <b>import qualreas as qr</b> works from any directory; no environment variables are needed.  Then execute the following command to run a quick test:
+Two quick checks are available.  First, from the top-level <b>qualreas</b> directory, run the smoke test, which just loads one of the algebras:
 
 > python src/qualreas.py
 
-This test will generate output that ends with the words, END OF TESTS.
+It should print something like this (the version number will match the one you installed):
+
+```
+Smoke Test:
+qualreas 0.5.0: loaded Linear_Interval_Algebra with 13 relations
+```
+
+Second, run the unit tests, which check that every algebra loads and is well formed, and that constraint propagation gives the expected results (including for the Wikipedia RCC8 example used below):
+
+> python -m unittest discover -s tests -v
+
+<i>pytest tests</i> works too, if you have pytest installed.  All of the tests should pass.  They are also run automatically by GitHub Actions, on Python 3.9 through 3.14, whenever changes are pushed to the repository.
 
 ## Repository Description <a class="anchor" id="repo_desc"></a>
 
 This is a brief description of the contents of each directory in this repository.
 
-There is a lot here that is old and even obsolete.  The important directories for now are: <b>data, notebooks, src, and docs</b>.  Because much has been in flux, testing & documentation has mostly been done using the notebooks (Jupyter notebooks), but not all of the notebooks have been kept up-to-date. This readme is one of the notebooks, exported to <i>markdown (md).</i>
+There is a lot here that is old and even obsolete.  The important directories for now are: <b>data, notebooks, src, and docs</b>.  Because much has been in flux, documentation has mostly been done using the notebooks (Jupyter notebooks), but not all of the notebooks have been kept up-to-date.  Testing is done with the unit tests in the <b>tests</b> directory.  This readme is one of the notebooks (<i>notebooks/README.ipynb</i>), exported to <i>markdown (md).</i>
 
+* .github -- GitHub Actions workflow that runs the tests
 * data/algebras -- Relation Algebras in JSON format
 * data/images -- What the title says
 * data/networks -- Constraint Networks in JSON format
 * data/ontologies -- The .ttl file updates the W3C.org ontology of time to correspond to the Extended_Linear_Interval_Algebra [Reich 1994]
-* docs -- The Read the Docs documentation, including an annotated bibliography
+* docs -- The [Read the Docs](https://qualreas.readthedocs.io) documentation, including an annotated bibliography
 * LICENSE -- same
 * misc -- Assorted junk (Don't look in here)
 * notebooks -- Jupyter Notebooks; A description of each can be found at the end of this notebook
 * pyproject.toml -- Packaging information, needed to install qualreas with pip
 * README.md -- This file
 * src -- The module, "qualreas.py"
-* tests -- INCOMPLETE (Don't look in here)
+* tests -- Unit tests (see "Testing the installation", above)
 * trash -- Because sometimes I want to backtrack w.r.t. something I wrote
 
 ## References <a class="anchor" id="refs"></a>
@@ -101,7 +105,7 @@ There is a lot here that is old and even obsolete.  The important directories fo
 
 ## EXAMPLES <a class="anchor" id="examples"></a>
 
-In the following Jupyter Notebook examples, <b>two different types</b> of contraint algebras are demonstrated:
+In the following Jupyter Notebook examples, <b>two different types</b> of constraint algebras are demonstrated:
 1. The spatial constraint algebra, [Region Connection Calculus 8 (RCC8)](https://en.wikipedia.org/wiki/Region_connection_calculus)
 1. The temporal interval & point algebra defined by Reich in ["Intervals, Points, and Branching Time", 1994](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time)
 
@@ -122,14 +126,13 @@ A brief look at Algebras and their components and methods is provided also.
 ```python
 import qualreas as qr
 import os
-from IPython.display import Image
 ```
 
 ## Paths to Network & Algebra <a class="anchor" id="paths"></a>
 
-To begin, we will instantiate a Constraint Network and it's corresponding Algebra from two JSON files.
+To begin, we will instantiate a Constraint Network and its corresponding Algebra from two JSON files.
 
-Each are kept in separate directories, 'networks' and 'algebras', within the 'data' directory of the top-level 'qualreas' directory.  The location of 'data' is available as <i>qr.DATA_DIR</i>, so the top-level path can be defined without an environment variable:
+They are kept in separate directories, 'networks' and 'algebras', within the 'data' directory of the top-level 'qualreas' directory.  The location of 'data' is available as <i>qr.DATA_DIR</i>, so the top-level path can be defined without an environment variable:
 
 
 ```python
@@ -167,19 +170,7 @@ An edge is represented as a list of three things, representing a directed edge, 
 
 See graphical depiction below:
 
-
-```python
-Image("data/images/Edge_Notation_Meaning.png", width=300, height=100)
-```
-
-
-
-
-    
-![png](output_31_0.png)
-    
-
-
+<img src="https://raw.githubusercontent.com/alreich/qualreas/master/data/images/Edge_Notation_Meaning.png" width="300" alt="Edge notation: an arrow from TailNode to HeadNode, labeled with the Constraint">
 
 The network, shown in JSON format below, is the example from the [Wikipedia page on the Region Connection Calculus (RCC8)](https://en.wikipedia.org/wiki/Region_connection_calculus). The URL is also in the "description" field of the JSON format below. The network, below, is depicted as a [labeled graph near the end of this example](#rcc8_figures).
 
@@ -224,19 +215,7 @@ NOTES:
 
 For convenient reference, here are the 8 spatial relations of RCC-8:
 
-
-```python
-Image("data/images/640px-RCC8.jpg")
-```
-
-
-
-
-    
-![jpeg](output_37_0.jpg)
-    
-
-
+![The 8 spatial relations of RCC-8](https://raw.githubusercontent.com/alreich/qualreas/master/data/images/640px-RCC8.jpg)
 
 Attribution: CC BY-SA 3.0, https://en.wikipedia.org/w/index.php?curid=8614172
 
@@ -275,6 +254,8 @@ The format is:
 rcc8_net.summary(show_all=True)
 ```
 
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -319,6 +300,8 @@ Also, the summary above shows all possible connections between nodes, including 
 rcc8_net.summary()
 ```
 
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -418,7 +401,7 @@ rcc8_net.get_constraint("Property1", "Road")
 
 
 
-By the way, the Network method, <b>set_constraint</b>, can be used to set or change the constraint on an edge.  Setting the constraint on an edge, [Tail, Head], will automatically, set the converse constraint on the edge, [Head, Tail]. Always run the <b>propogate</b> method on a Network after setting/changing constraints.
+By the way, the Network method, <b>set_constraint</b>, can be used to set or change the constraint on an edge.  Setting the constraint on an edge, [Tail, Head], will automatically, set the converse constraint on the edge, [Head, Tail]. Always run the <b>propagate</b> method on a Network after setting/changing constraints.
 
 ### The Algebra "Inside" the Network <a class="anchor" id="algebra"></a>
 
@@ -567,6 +550,8 @@ rcc8_net.summary()
 ```
 
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -611,19 +596,7 @@ print(f"{road} {rcc8_net.get_constraint(road, prop2)} {prop2}")
 
 The two figures below depict Wikipedia's RCC-8 example, where the first depicts the original input network, and the second depicts the network following constraint propagation by <i>qualreas</i>. Constraints that changed from the input after propagation are shown in red.
 
-
-```python
-Image("data/images/wikipedia_rcc8_example.png")
-```
-
-
-
-
-    
-![png](output_89_0.png)
-    
-
-
+![Wikipedia RCC8 example network: the input, and the result after propagation, with changed constraints shown in red](https://raw.githubusercontent.com/alreich/qualreas/master/data/images/wikipedia_rcc8_example.png)
 
 ## Singleton Labelings of a Network <a class="anchor" id="labelings"></a>
 
@@ -638,6 +611,8 @@ To begin, look again at the summary of that network:
 rcc8_net.summary()
 ```
 
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -696,6 +671,8 @@ for network in consistent_singleton_labelings:
      Singleton Labeling #1
     -------------------------
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -722,6 +699,8 @@ for network in consistent_singleton_labelings:
     -------------------------
      Singleton Labeling #2
     -------------------------
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -750,6 +729,8 @@ for network in consistent_singleton_labelings:
      Singleton Labeling #3
     -------------------------
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -776,6 +757,8 @@ for network in consistent_singleton_labelings:
     -------------------------
      Singleton Labeling #4
     -------------------------
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -804,6 +787,8 @@ for network in consistent_singleton_labelings:
      Singleton Labeling #5
     -------------------------
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -830,6 +815,8 @@ for network in consistent_singleton_labelings:
     -------------------------
      Singleton Labeling #6
     -------------------------
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -858,6 +845,8 @@ for network in consistent_singleton_labelings:
      Singleton Labeling #7
     -------------------------
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -885,6 +874,8 @@ for network in consistent_singleton_labelings:
      Singleton Labeling #8
     -------------------------
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -911,6 +902,8 @@ for network in consistent_singleton_labelings:
     -------------------------
      Singleton Labeling #9
     -------------------------
+    
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
     
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
@@ -994,6 +987,8 @@ time_net.summary()
 
     A simple example of a Network of Time Points integrated with Time Intervals
     
+    Description: A simple example of a Network of Time Points integrated with Time Intervals
+    
     Simple Temporal Constraint Network: 4 nodes, 10 edges
       Algebra: Extended_Linear_Interval_Algebra
       Monday:['ProperInterval']
@@ -1023,6 +1018,8 @@ else:
 ```
 
     The network is consistent.  Here's a summary:
+    
+    Description: A simple example of a Network of Time Points integrated with Time Intervals
     
     Simple Temporal Constraint Network: 4 nodes, 16 edges
       Algebra: Extended_Linear_Interval_Algebra
@@ -1118,6 +1115,8 @@ rcc8_net_from_dict.summary(show_all=False)
 
     <Network--Wikipedia RCC8 Example--RCC8_Algebra>
     
+    Description: See https://en.wikipedia.org/wiki/Region_connection_calculus#Examples
+    
     Wikipedia RCC8 Example: 5 nodes, 25 edges
       Algebra: RCC8_Algebra
       House1:['Region']
@@ -1185,7 +1184,7 @@ json.dumps(rcc8_net_dict)
 
 The following tables describe Jupyter Notebooks that provide examples that use <i>qualreas</i>.
 
-<b>The notebooks are contained in the Notebook directory.</b>
+<b>The notebooks are contained in the notebooks directory.</b>
 
 ### Introduction to Algebras <a class="anchor" id="alg_intro"></a>
 
@@ -1197,17 +1196,17 @@ Also described in the second notebook are two additional extensions that allow f
 
 The third notebook is a fundamental one, and perhaps the most important one, because it describes the time point algebras from which all of the interval algebras in qualreas are derived.  It also provides the axioms upon which linear and branching time are based.
 
-| Juypter Notebook | Description |
+| Jupyter Notebook | Description |
 |:-------|:-------|
-| intro1_Allens_Interval_Algebra | Intro to qualreas Algebras using Allen's algebra |
-| intro2_extended_interval_algebras | Intro to 3 extensions to Allen's algebra |
+| Allens_Interval_Algebra | Intro to qualreas Algebras using Allen's algebra |
+| extended_interval_algebras | Intro to 3 extensions to Allen's algebra |
 | time_point_algebras | Describes linear and branching time point structures and algebras |
 
 ### Derivation of Interval Algebras <a class="anchor" id="alg_deriv"></a>
 
-Interval Algebras can be obtained using Point Algebras.  For example, Allen's algebra of proper intervals can be obtain from a linear-time point algebra that uses the following three relations: <, =, >.  Time points can be integrated with proper intervals by using a point algebra based on the relations: $\le$, =, $\ge$.  Branching time can be included by adding the relation, <i>incomparable</i>, denoted by "~", where the composition of point relations are defined in either left or right-branching time as described in [Reich, 1994]
+Interval Algebras can be obtained using Point Algebras.  For example, Allen's algebra of proper intervals can be obtained from a linear-time point algebra that uses the following three relations: <, =, >.  Time points can be integrated with proper intervals by using a point algebra based on the relations: $\le$, =, $\ge$.  Branching time can be included by adding the relation, <i>incomparable</i>, denoted by "~", where the composition of point relations are defined in either left or right-branching time as described in [Reich, 1994]
 
-The point algebras used in the derivations can be found in the Algebras directory:
+The point algebras used in the derivations can be found in the data/algebras directory:
 * Linear_Point_Algebra
 * Left_Branching_Point_Algebra
 * Right_Branching_Point_Algebra
@@ -1216,11 +1215,11 @@ The point algebras used in the derivations can be found in the Algebras director
 
 See the Jupyter Notebook, "time_point_algebras.ipynb" in the notebooks folder for details about the point algebras listed above.
 
-#### Algebra's Derived in Reich's 1994 Paper <a class="anchor" id="reich_1994"></a>
+#### Algebras Derived in Reich's 1994 Paper <a class="anchor" id="reich_1994"></a>
 
-The 4 notebooks in the table, below, contain derivations of the elements and composition tables for the 4 algebras descibed in the 2 introductory notebooks listed in the first table, above.
+The 4 notebooks in the table, below, contain derivations of the elements and composition tables for the 4 algebras described in the 2 introductory notebooks listed in the first table, above.
 
-| Juypter Notebook | Description |
+| Jupyter Notebook | Description |
 |:-------|:-------|
 | derive_allens_algebra | Derivation of Allen's proper interval algebra |
 | derive_extended_interval_algebra | Integrates points with proper intervals |
@@ -1232,7 +1231,7 @@ The 4 notebooks in the table, below, contain derivations of the elements and com
 
 The 2 algebras described in the notebooks listed in the table, below, are basically the same as the 2 branching algebras, described above, except that branching is assumed to be binary (i.e., only 2 branches are possible at any branch point).
 
-| Juypter Notebook | Description |
+| Jupyter Notebook | Description |
 |:-------|:-------|
 | derive_left_binary_branching_interval_algebra | Only binary left-branching allowed |
 | derive_right_binary_branching_interval_algebra | Only binary right-branching allowed |
@@ -1241,7 +1240,7 @@ The 2 algebras described in the notebooks listed in the table, below, are basica
 
 The algebras derived here are, essentially, the same as Allen's original algebra of proper time intervals, except that they are situated in branching time.
 
-| Juypter Notebook | Description |
+| Jupyter Notebook | Description |
 |:-------|:-------|
 | derive_left_branching_proper_interval_algebra | Proper intervals only in left-branching time |
 | derive_right_branching_proper_interval_algebra | Proper intervals only in right-branching time |
@@ -1250,7 +1249,7 @@ The algebras derived here are, essentially, the same as Allen's original algebra
 
 These notebooks describe various examples, from other papers and books, in terms of the <i>qualreas</i> API.
 
-| Juypter Notebook | Description |
+| Jupyter Notebook | Description |
 |:-------|:-------|
 | Figure_5_Allen_1983 | Example in Fig 5 of Allen's 1983 paper |
 | Golumbic_and_Shamir_1993_Examples | Examples from Golumbic & Shamir's 1993 paper |
