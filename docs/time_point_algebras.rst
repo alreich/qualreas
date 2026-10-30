@@ -8,7 +8,7 @@ Time Point Algebras
 
 .. code:: ipython3
 
-    >>> path = os.path.dirname(qr.DATA_DIR)
+    # >>> path = os.path.dirname(qr.DATA_DIR)
 
 References
 ----------
@@ -32,7 +32,7 @@ in the figures below.
 .. code:: ipython3
 
     from IPython.display import Image  # Only needed to display figures here
-    Image(filename='../data/images/global_structures_of_time.png', width="400")
+    Image(filename='../data/images/global_structures_of_time.png', width=400)
 
 
 
@@ -126,7 +126,7 @@ has the property of Left Linearity:
 
 .. code:: ipython3
 
-    Image(filename='../data/images/left_linearity_in_right_branching_time.png', width="300")
+    Image(filename='../data/images/left_linearity_in_right_branching_time.png', width=300)
 
 
 
@@ -179,7 +179,7 @@ Jupyter Notebook, “notebooks/derive_extended_interval_algebra.ipynb”)
 
 .. code:: ipython3
 
-    >>> pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Linear_Point_Algebra.json"))
+    >>> pt_alg = qr.Algebra(os.path.join(qr.DATA_DIR, "algebras/Linear_Point_Algebra.json"))
     
     >>> pt_alg.summary()
 
@@ -238,7 +238,7 @@ Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
 
 .. code:: ipython3
 
-    >>> rb_pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Right_Branching_Point_Algebra.json"))
+    >>> rb_pt_alg = qr.Algebra(os.path.join(qr.DATA_DIR, "algebras/Right_Branching_Point_Algebra.json"))
     
     >>> rb_pt_alg.summary()
 
@@ -306,7 +306,7 @@ Notebook, “notebooks/derive_right_branching_interval_algebra.ipynb”)
 
 .. code:: ipython3
 
-    >>> lb_pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Left_Branching_Point_Algebra.json"))
+    >>> lb_pt_alg = qr.Algebra(os.path.join(qr.DATA_DIR, "algebras/Left_Branching_Point_Algebra.json"))
     
     >>> lb_pt_alg.summary()
 
@@ -374,7 +374,7 @@ Jupyter Notebook,
 
 .. code:: ipython3
 
-    >>> rbb_pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Right_Binary_Branching_Point_Algebra.json"))
+    >>> rbb_pt_alg = qr.Algebra(os.path.join(qr.DATA_DIR, "algebras/Right_Binary_Branching_Point_Algebra.json"))
     
     >>> rbb_pt_alg.summary()
 
@@ -442,7 +442,7 @@ Jupyter Notebook,
 
 .. code:: ipython3
 
-    >>> lbb_pt_alg = qr.Algebra(os.path.join(path, "data/algebras/Left_Binary_Branching_Point_Algebra.json"))
+    >>> lbb_pt_alg = qr.Algebra(os.path.join(qr.DATA_DIR, "algebras/Left_Binary_Branching_Point_Algebra.json"))
     
     >>> lbb_pt_alg.summary()
 

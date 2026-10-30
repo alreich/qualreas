@@ -34,31 +34,29 @@ Dependencies
     >>> import qualreas as qr
     >>> import os
 
-.. code:: ipython3
-
-    >>> path = os.path.dirname(qr.DATA_DIR)
-
 1. Linear Interval and Point Algebra
 ------------------------------------
 
 In Allen’s original algebra, time is linear and only applies to proper
-time intervals, not time points. So, effectively, it is a Linear
-Interval Algebra, which is the name used for its JSON definition file.
+time intervals, not time points. So, effectively, it is a *Linear
+Interval Algebra*, which is the name used for its JSON definition file.
 
 In [`Reich,
 1994 <https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time>`__],
 Allen’s algebra was extended to include time points, as well as proper
-intervals, to obtain a Linear Interval & Point Algebra. We’ll describe
-it in this section.
+intervals, to obtain a *Linear Interval & Point Algebra*. It will be
+described in this section.
 
-The Linear Interval & Point algebra extends Allen’s algebra by adding 5
-new relations, involving time points, and modifies the domains and
+The *Linear Interval & Point Algebra* extends Allen’s algebra by adding
+5 new relations, involving time points, and modifies the domains and
 ranges of 4 of the original 13 relations.
+
+Introduction
+~~~~~~~~~~~~
 
 .. code:: ipython3
 
-    # Instantiate algebra and print some basic info about it
-    >>> algX = qr.Algebra(os.path.join(path, "data/algebras/Extended_Linear_Interval_Algebra.json"))
+    >>> algX = qr.Algebra(os.path.join(qr.DATA_DIR, "algebras/Extended_Linear_Interval_Algebra.json"))
     >>> print(algX.name)
     >>> print(algX.description)
     >>> algX_num_elements = len(algX.elements)
@@ -84,8 +82,8 @@ relations are unchanged.
 
 .. code:: ipython3
 
-    from IPython.display import Image  # Only needed to display figures here
-    Image(filename='../data/images/Extension_of_Allens_Interval_Relations.png', width="400")
+    from IPython.display import Image
+    Image(filename='../data/images/Extension_of_Allens_Interval_Relations.png', width=400)
 
 
 
@@ -101,7 +99,7 @@ as above.
 
 .. code:: ipython3
 
-    Image(filename='../data/images/Point_Interval_Relations.png', width="400") 
+    Image(filename='../data/images/Point_Interval_Relations.png', width=400) 
 
 
 
@@ -199,7 +197,7 @@ Check Composition Identity
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If :math:`r` and :math:`s` are two relations, then
-:math:`!(r;s) = (!s);(!r)`
+:math:`(r;s)^{-1} = (s^{-1});(r^{-1})`
 
 .. raw:: html
 
@@ -224,7 +222,7 @@ and returns True if all pairs check out.
     There are 324 (18x18) possible compositions.
     
     Extended_Linear_Interval_Algebra -- Composition Identity Check:
-    PASSED . 324 products tested.
+    PASSED . 324 compositions tested.
 
 
 
@@ -286,7 +284,7 @@ addition to the 18 described above.
 .. code:: ipython3
 
     # Instantiate algebra and print some basic info about it
-    >>> algR = qr.Algebra(os.path.join(path, "data/algebras/Right_Branching_Interval_Algebra.json"))
+    >>> algR = qr.Algebra(os.path.join(qr.DATA_DIR, "algebras/Right_Branching_Interval_Algebra.json"))
     >>> print(algR.name)
     >>> print(algR.description)
     >>> algR_num_elements = len(algR.elements)
@@ -304,7 +302,7 @@ addition to the 18 described above.
 
 .. code:: ipython3
 
-    Image(filename='../data/images/Right_Branching_Time_Relations.png', width="400")
+    Image(filename='../data/images/Right_Branching_Time_Relations.png', width=400)
 
 
 
@@ -368,7 +366,7 @@ Algebra.
 .. code:: ipython3
 
     # Instantiate algebra and print some basic info about it
-    >>> algL = qr.Algebra(os.path.join(path, "data/algebras/Left_Branching_Interval_Algebra.json"))
+    >>> algL = qr.Algebra(os.path.join(qr.DATA_DIR, "algebras/Left_Branching_Interval_Algebra.json"))
     >>> print(algL.name)
     >>> print(algL.description)
     >>> algL_num_elements = len(algL.elements)
@@ -386,7 +384,7 @@ Algebra.
 
 .. code:: ipython3
 
-    Image(filename='../data/images/Left_Branching_Time_Relations.png', width="400")
+    Image(filename='../data/images/Left_Branching_Time_Relations.png', width=400)
 
 
 
@@ -467,14 +465,14 @@ Here are a few element summaries:
 
 .. parsed-literal::
 
-                      Symbol: PF
-                        Name: Point-Finishes
-                      Domain: ['Point']
+                      Symbol: S
+                        Name: Starts
+                      Domain: ['ProperInterval']
                        Range: ['ProperInterval']
-                    Converse: Point-Finished-By
+                    Converse: Started-By
                Is Reflexive?: False
                Is Symmetric?: False
-              Is Transitive?: False
+              Is Transitive?: True
     Is an Equality Relation?: False
     
     
@@ -489,14 +487,14 @@ Here are a few element summaries:
     Is an Equality Relation?: False
     
     
-                      Symbol: PS
-                        Name: Point-Starts
-                      Domain: ['Point']
-                       Range: ['ProperInterval']
-                    Converse: Point-Started-By
+                      Symbol: DI
+                        Name: Contains
+                      Domain: ['ProperInterval']
+                       Range: ['Point', 'ProperInterval']
+                    Converse: During
                Is Reflexive?: False
                Is Symmetric?: False
-              Is Transitive?: False
+              Is Transitive?: True
     Is an Equality Relation?: False
     
     
@@ -778,11 +776,12 @@ F;PF, results in the empty set, as shown below:
 Converses
 ~~~~~~~~~
 
-NOTATION: Here, we’ll denote the converse operation with “!”. So, if
-:math:`A` and :math:`B` are Temporal Entities, and :math:`r` is a
-relation between them, then :math:`!r` is its converse relation, so,
-:math:`A r B` if and only if :math:`B !r A`. For example, “A before B”
-if and only if “B after A”.
+If :math:`A` and :math:`B` are Temporal Entities, and :math:`r` is a
+relation between them, then :math:`r^{-1}` is its converse relation.
+
+That is, :math:`A r B \Leftrightarrow B r^{-1} A`.
+
+For example, “A before B” if and only if “B after A”.
 
 Individual relations have converses:
 
@@ -801,14 +800,14 @@ And relation sets also have converses:
 
 .. code:: ipython3
 
-    >>> print(f"!{alg.relset(rel_symbol)} = {alg.converse(alg.relset(rel_symbol))}")
-    >>> print(f"!({alg.converse(relset_version1)}) = {relset_version1}")
+    >>> print(f"converse({alg.relset(rel_symbol)}) = {alg.converse(alg.relset(rel_symbol))}")
+    >>> print(f"converse({alg.converse(relset_version1)}) = {relset_version1}")
 
 
 .. parsed-literal::
 
-    !B = BI
-    !(BI|F|MI) = B|FI|M
+    converse(B) = BI
+    converse(BI|F|MI) = B|FI|M
 
 
 Complement of a Relation Set
@@ -817,26 +816,26 @@ Complement of a Relation Set
 The complement of a relation set, R, is the set of all relation elements
 that are not in R.
 
-We’ll use ~R to denote the complement of R.
+The complement of :math:`R` is denoted by :math:`R^{c}`.
 
 .. code:: ipython3
 
     >>> R = alg.relset('B|BI|D|DI|E|F|FI|M|MI|O|OI')
     >>> compR = R.complement()
     
-    >>> print(f"\nAll Elements = {alg.elements}")
-    >>> print(f"          R  = {R}")
-    >>> print(f"         ~R  =                            {compR}")
-    >>> print(f"       ~(~R) = {compR.complement()}")
+    >>> print(f"\n All Elements = {alg.elements}")
+    >>> print(f"            R = {R}")
+    >>> print(f"           R\u1d9c = {compR}")  # '\u1d9c' is Unicode for superscript 'c'
+    >>> print(f"        (R\u1d9c)\u1d9c = {compR.complement()}")
 
 
 .. parsed-literal::
 
     
-    All Elements = B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|RB|RBI|RO|ROI|RS|R~|S|SI
-              R  = B|BI|D|DI|E|F|FI|M|MI|O|OI
-             ~R  =                            PE|PF|PFI|PS|PSI|RB|RBI|RO|ROI|RS|R~|S|SI
-           ~(~R) = B|BI|D|DI|E|F|FI|M|MI|O|OI
+     All Elements = B|BI|D|DI|E|F|FI|M|MI|O|OI|PE|PF|PFI|PS|PSI|RB|RBI|RO|ROI|RS|R~|S|SI
+                R = B|BI|D|DI|E|F|FI|M|MI|O|OI
+               Rᶜ = PE|PF|PFI|PS|PSI|RB|RBI|RO|ROI|RS|R~|S|SI
+            (Rᶜ)ᶜ = B|BI|D|DI|E|F|FI|M|MI|O|OI
 
 
 Global Properties of an Algebra of Relations
@@ -853,28 +852,28 @@ Composition Identity
 ~~~~~~~~~~~~~~~~~~~~
 
 If :math:`r` and :math:`s` are two relations, then
-:math:`!(r;s) = (!s);(!r)`
+:math:`(r;s)^{-1} = (s^{-1});(r^{-1})`
 
 Here’s an example:
 
 .. code:: ipython3
 
+    >>> inv = lambda x: alg.converse(x)
+    >>> mul = lambda x,y: alg.compose(x, y)
+    
     >>> r = alg.relset("O")
     >>> s = alg.relset("F")
     
-    >>> conv_comp_r_s = alg.converse(alg.compose(r, s))
-    >>> print(f"!({r};{s}) = {conv_comp_r_s}")
+    >>> print(f"({r};{s})\u207b\u00b9 = {inv(mul(r, s))}")                 #  r ; s
+    >>> print(f"{s}\u207b\u00b9;{r}\u207b\u00b9 = {mul(inv(s), inv(r))}")  # si ; ri
     
-    >>> comp_conv_s_conv_r = alg.compose(alg.converse(s), alg.converse(r))
-    >>> print(f"!{s};!{r} = {comp_conv_s_conv_r}")
-    
-    >>> print(f"Same? {conv_comp_r_s == comp_conv_s_conv_r}")
+    >>> print(f"Same? {inv(mul(r, s)) == mul(inv(s), inv(r))}")
 
 
 .. parsed-literal::
 
-    !(O;F) = DI|OI|SI
-    !F;!O = DI|OI|SI
+    (O;F)⁻¹ = DI|OI|SI
+    F⁻¹;O⁻¹ = DI|OI|SI
     Same? True
 
 
@@ -891,7 +890,7 @@ and returns True if all pairs check out.
 
     
     Right_Branching_Interval_Algebra -- Composition Identity Check:
-    PASSED . 576 products tested.
+    PASSED . 576 compositions tested.
 
 
 

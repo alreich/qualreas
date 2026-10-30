@@ -19,8 +19,8 @@ instead of =
 
 .. code:: ipython3
 
-    from IPython.display import Image  # Only needed to display figures here
-    Image(filename='../data/images/Allens_Interval_Relations.png', width="400") 
+    from IPython.display import Image
+    Image(filename='../data/images/Allens_Interval_Relations.png', width=400)
 
 
 
@@ -52,10 +52,6 @@ Dependencies
     >>> import qualreas as qr
     >>> import os
 
-.. code:: ipython3
-
-    >>> path = os.path.dirname(qr.DATA_DIR)
-
 Instantiate an Algebra
 ----------------------
 
@@ -65,7 +61,7 @@ Algebra” and is instantiated as follows:
 
 .. code:: ipython3
 
-    >>> alg = qr.Algebra(os.path.join(path, "data/algebras/Linear_Interval_Algebra.json"))
+    >>> alg = qr.Algebra(os.path.join(qr.DATA_DIR, "algebras/Linear_Interval_Algebra.json"))
 
 Algebra Summary
 ---------------
@@ -136,31 +132,31 @@ Here are a few random individual element summaries:
 .. parsed-literal::
 
     --------------------------------------------------
+                      Symbol: S
+                        Name: Starts
+                      Domain: ['ProperInterval']
+                       Range: ['ProperInterval']
+                    Converse: Started-By
+               Is Reflexive?: False
+               Is Symmetric?: False
+              Is Transitive?: True
+    Is an Equality Relation?: False
+    --------------------------------------------------
+                      Symbol: O
+                        Name: Overlaps
+                      Domain: ['ProperInterval']
+                       Range: ['ProperInterval']
+                    Converse: Overlapped-By
+               Is Reflexive?: False
+               Is Symmetric?: False
+              Is Transitive?: False
+    Is an Equality Relation?: False
+    --------------------------------------------------
                       Symbol: DI
                         Name: Contains
                       Domain: ['ProperInterval']
                        Range: ['ProperInterval']
                     Converse: During
-               Is Reflexive?: False
-               Is Symmetric?: False
-              Is Transitive?: True
-    Is an Equality Relation?: False
-    --------------------------------------------------
-                      Symbol: B
-                        Name: Before
-                      Domain: ['ProperInterval']
-                       Range: ['ProperInterval']
-                    Converse: After
-               Is Reflexive?: False
-               Is Symmetric?: False
-              Is Transitive?: True
-    Is an Equality Relation?: False
-    --------------------------------------------------
-                      Symbol: FI
-                        Name: Finished-by
-                      Domain: ['ProperInterval']
-                       Range: ['ProperInterval']
-                    Converse: Finishes
                Is Reflexive?: False
                Is Symmetric?: False
               Is Transitive?: True
@@ -381,13 +377,12 @@ the pairwise compositions of F|MI and O|D:
 Converses
 ~~~~~~~~~
 
-NOTATION: Here, we’ll denote the converse operation with “!”.
+If :math:`A` and :math:`B` are Temporal Entities, and :math:`r` is a
+relation between them, then :math:`r^{-1}` is its converse relation.
 
-So, if :math:`A` and :math:`B` are Temporal Entities, and :math:`r` is a
-relation between them, then :math:`!r` is its converse relation.
+That is, :math:`A r B \Leftrightarrow B r^{-1} A`.
 
-Thus, :math:`A r B \Leftrightarrow B !r A`. For example, “A before B” if
-and only if “B after A”.
+For example, “A before B” if and only if “B after A”.
 
 Individual relations have converses:
 
@@ -406,42 +401,42 @@ And relation sets also have converses:
 
 .. code:: ipython3
 
-    >>> print(f"!{alg.relset(rel_symbol)} = {alg.converse(alg.relset(rel_symbol))}")
-    >>> print(f"!({alg.converse(relset_version1)}) = {relset_version1}")
+    >>> print(f"converse({alg.relset(rel_symbol)}) = {alg.converse(alg.relset(rel_symbol))}")
+    >>> print(f"converse({alg.converse(relset_version1)}) = {relset_version1}")
 
 
 .. parsed-literal::
 
-    !B = BI
-    !(BI|F|MI) = B|FI|M
+    converse(B) = BI
+    converse(BI|F|MI) = B|FI|M
 
 
 Complement of a Relation Set
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The complement of a relation set, R, is the set of all relation elements
-that are not in R.
+The complement of a relation set, :math:`R`, is the set of all relation
+elements that are not in :math:`R`.
 
-We’ll use ~R to denote the complement of R.
+The complement of :math:`R` is denoted by :math:`R^{c}`.
 
 .. code:: ipython3
 
     >>> R = alg.relset('B|BI|D|DI|E|F|FI')
     >>> compR = R.complement()
     
-    >>> print(f"\nAll Elements = {alg.elements}")
-    >>> print(f"          R  = {R}")
-    >>> print(f"         ~R  =                  {compR}")
-    >>> print(f"       ~(~R) = {compR.complement()}")
+    >>> print(f"\n All Elements = {alg.elements}")
+    >>> print(f"            R = {R}")
+    >>> print(f"           R\u1d9c = {compR}")  # '\u1d9c' is Unicode for superscript 'c'
+    >>> print(f"        (R\u1d9c)\u1d9c = {compR.complement()}")
 
 
 .. parsed-literal::
 
     
-    All Elements = B|BI|D|DI|E|F|FI|M|MI|O|OI|S|SI
-              R  = B|BI|D|DI|E|F|FI
-             ~R  =                  M|MI|O|OI|S|SI
-           ~(~R) = B|BI|D|DI|E|F|FI
+     All Elements = B|BI|D|DI|E|F|FI|M|MI|O|OI|S|SI
+                R = B|BI|D|DI|E|F|FI
+               Rᶜ = M|MI|O|OI|S|SI
+            (Rᶜ)ᶜ = B|BI|D|DI|E|F|FI
 
 
 Global Properties of an Algebra of Relations
@@ -463,28 +458,28 @@ Composition Identity
 ~~~~~~~~~~~~~~~~~~~~
 
 If :math:`r` and :math:`s` are two relations, then
-:math:`!(r;s) = (!s);(!r)`
+:math:`(r;s)^{-1} = (s^{-1});(r^{-1})`
 
 Here’s an example:
 
 .. code:: ipython3
 
+    >>> inv = lambda x: alg.converse(x)
+    >>> mul = lambda x,y: alg.compose(x, y)
+    
     >>> r = alg.relset("O")
     >>> s = alg.relset("F")
     
-    >>> conv_comp_r_s = alg.converse(alg.compose(r, s))
-    >>> print(f"!({r};{s}) = {conv_comp_r_s}")
+    >>> print(f"({r};{s})\u207b\u00b9 = {inv(mul(r, s))}")                 #  r ; s
+    >>> print(f"{s}\u207b\u00b9;{r}\u207b\u00b9 = {mul(inv(s), inv(r))}")  # si ; ri
     
-    >>> comp_conv_s_conv_r = alg.compose(alg.converse(s), alg.converse(r))
-    >>> print(f"!{s};!{r} = {comp_conv_s_conv_r}")
-    
-    >>> print(f"Same? {conv_comp_r_s == comp_conv_s_conv_r}")
+    >>> print(f"Same? {inv(mul(r, s)) == mul(inv(s), inv(r))}")
 
 
 .. parsed-literal::
 
-    !(O;F) = DI|OI|SI
-    !F;!O = DI|OI|SI
+    (O;F)⁻¹ = DI|OI|SI
+    F⁻¹;O⁻¹ = DI|OI|SI
     Same? True
 
 
@@ -501,7 +496,7 @@ and returns True if all pairs check out.
 
     
     Linear_Interval_Algebra -- Composition Identity Check:
-    PASSED . 169 products tested.
+    PASSED . 169 compositions tested.
 
 
 
@@ -515,13 +510,13 @@ and returns True if all pairs check out.
 Associativity
 ~~~~~~~~~~~~~
 
-The is_associative Algebra method checks all possible triples of
+The ``Algebra`` method *is_associative* checks all possible triples of
 individual algebra relations and, if the domains and ranges are
 “compatible”, checks to see if the triple is associative. Incompatible
-triples are skipped. It returns True if all compatible triples are
+triples are skipped. It returns ``True`` if all compatible triples are
 associative. Since the relations in Allen’s algebra only relate one type
-of entity, “ProperInterval”, there are no relation pairings that are
-incompatible with respect to composition.
+of entity, ``ProperInterval``, there are no relation pairings that are
+incompatible with respect to composition, so all triples are checked.
 
 .. code:: ipython3
 
@@ -533,9 +528,6 @@ incompatible with respect to composition.
 
     There are 13^3 = 2197 ways we can combine the algebra's elements to test associativity.
 
-
-The following method tests all of those ways, skipping the ones that
-don’t make sense due to range-domain mismatches.
 
 .. code:: ipython3
 
