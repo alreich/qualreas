@@ -1,6 +1,6 @@
 # Qualitative Reasoning ("qualreas")
 
-The Python module, <b>qualreas</b>, provides a framework for working with the class of <b>Relation Algebras</b> like [Allen's Algebra of Time Intervals](https://en.wikipedia.org/wiki/Allen%27s_interval_algebra) and the [Region Connection Calculus (RCC)](https://en.wikipedia.org/wiki/Region_connection_calculus).  Specifically, <i>qualreas</i> provides a representation of <b>Constraint Networks</b> where the nodes represent <b>Entities</b> (Spatial, Temporal, or whatever) and the edges are labelled with <b>Relation Sets</b> (<i>relsets</i>) that represent spatio-temporal constraints between the entities.
+The Python module, <b>qualreas</b>, provides a framework for working with the class of <b>Relation Algebras</b> like [Allen's Algebra of Time Intervals](https://en.wikipedia.org/wiki/Allen%27s_interval_algebra) and the [Region Connection Calculus (RCC)](https://en.wikipedia.org/wiki/Region_connection_calculus).  Specifically, <i>qualreas</i> provides a representation of <b>Constraint Networks</b> where the nodes represent <b>Entities</b> (Spatial, Temporal, or whatever) and the edges are labelled with <b>Relation Sets</b> (<i>relsets</i>) that represent constraints between the entities.
 
 The constraint networks in qualreas can be <b>propagated</b> to achieve <b>path consistency</b> and they can be "factored" into <b>consistent singleton networks</b>.
 
@@ -61,7 +61,9 @@ After that, <b>import qualreas as qr</b> works from any directory, and changes t
 
 Two quick checks are available.  First, from the top-level <b>qualreas</b> directory, run the smoke test, which just loads one of the algebras:
 
-> python src/qualreas.py
+```
+python src/qualreas.py
+```
 
 It should print something like this (the version number will match the one you installed):
 
@@ -72,21 +74,23 @@ qualreas 0.5.0: loaded Linear_Interval_Algebra with 13 relations
 
 Second, run the unit tests, which check that every algebra loads and is well formed, and that constraint propagation gives the expected results (including for the Wikipedia RCC8 example used below):
 
-> python -m unittest discover -s tests -v
+```
+python -m unittest discover -s tests -v
+```
 
-<i>pytest tests</i> works too, if you have pytest installed.  All of the tests should pass.  They are also run automatically by GitHub Actions, on Python 3.9 through 3.14, whenever changes are pushed to the repository.
+*pytest tests* works too, if you have pytest installed.  All of the tests should pass.  They are also run automatically by GitHub Actions, on Python 3.9 through 3.14, whenever changes are pushed to the repository.
 
 ## Repository Description <a class="anchor" id="repo_desc"></a>
 
 This is a brief description of the contents of each directory in this repository.
 
-There is a lot here that is old and even obsolete.  The important directories for now are: <b>data, notebooks, src, and docs</b>.  Because much has been in flux, documentation has mostly been done using the notebooks (Jupyter notebooks), but not all of the notebooks have been kept up-to-date.  Testing is done with the unit tests in the <b>tests</b> directory.  This readme is one of the notebooks (<i>notebooks/README.ipynb</i>), exported to <i>markdown (md).</i>
+The important directories for now are: **data, notebooks, src, tests** and **docs**.  Documentation has mostly been done using Jupyter notebooks in the *notebooks* directory, and then saving those in *rst* format. That includes this readme.
 
 * .github -- GitHub Actions workflow that runs the tests
 * data/algebras -- Relation Algebras in JSON format
 * data/images -- What the title says
-* data/networks -- Constraint Networks in JSON format
-* data/ontologies -- The .ttl file updates the W3C.org ontology of time to correspond to the Extended_Linear_Interval_Algebra [Reich 1994]
+* data/networks -- Example constraint Networks in JSON format
+* data/ontologies -- The .ttl file updates the W3C.org ontology of time to correspond to the Extended_Linear_Interval_Algebra [Reich 1994] Here for informational purposes. Not really required by `qualreas`.
 * docs -- The [Read the Docs](https://qualreas.readthedocs.io) documentation, including an annotated bibliography
 * LICENSE -- same
 * notebooks -- Jupyter Notebooks; A description of each can be found at the end of this notebook
@@ -99,6 +103,7 @@ There is a lot here that is old and even obsolete.  The important directories fo
 
 1. [[Allen, 1983] "Maintaining Knowledge about Temporal Intervals" by James F. Allen](https://cse.unl.edu/~choueiry/Documents/Allen-CACM1983.pdf) - Allen's original paper (PDF)
 1. [[Reich, 1994] "Intervals, Points, and Branching Time" by A.J. Reich](https://www.researchgate.net/publication/220810644_Intervals_Points_and_Branching_Time) - basis for the point & branching time extensions to Allen's algebra
+1. [Randell 1992] "A spatial logic based on regions and connection" by Randell, D. A., Cui, Z., & Cohn, A. G. - RCC8 (Region Connection Calculus 8)
 
 ## EXAMPLES <a class="anchor" id="examples"></a>
 
@@ -127,27 +132,19 @@ import os
 
 ## Paths to Network & Algebra <a class="anchor" id="paths"></a>
 
-To begin, we will instantiate a Constraint Network and its corresponding Algebra from two JSON files.
+To begin, a constraint `Network` and it's corresponding `Algebra` will be instantiated from two JSON files.
 
-They are kept in separate directories, 'networks' and 'algebras', within the 'data' directory of the top-level 'qualreas' directory.  The location of 'data' is available as <i>qr.DATA_DIR</i>, so the top-level path can be defined without an environment variable:
+Each are kept in separate directories, 'data/networks' and 'data/algebras', resp., within the top-level 'qualreas' directory.
 
+Once defined, an `Algebra` should remain unchanged. The name of the `Algebra` used by a `Network` can then be stored in the `Network` definition (in JSON) regardless of where the `Network` JSON file resides.  So, we only need to provide the path to the directory containing `Algebra` JSON files:
 
-```python
-qr_path = os.path.dirname(qr.DATA_DIR)
-```
-
-Once defined, an Algebra's JSON format should remain unchanged. The name of the Algebra used by a Network can then be stored in the Network's definition (in JSON) regardless of where the Network's JSON file resides.  So, we only need provide the path to the directory containing Algebra files:
+There may be numerous different `Networks` definitions, on the other hand, and they could change often.  So, the full path to a Network's JSON file is required.
 
 
 ```python
-alg_dir = os.path.join(qr_path, "data", "algebras")
-```
+alg_dir = qr.ALGEBRA_DIR   # Directory where algebras are kept
 
-Networks, on the other hand, could be numerous and change often.  So, we need to provide the full path to the Network's JSON file.
-
-
-```python
-rcc8_file = os.path.join(qr_path, "data", "networks", "rcc8_example.json")
+rcc8_file = os.path.join(qr.NETWORK_DIR, "rcc8_example.json")  # full path to a network
 ```
 
 ## Constraint Network in JSON Format <a class="anchor" id="network_format"></a>
@@ -155,15 +152,17 @@ rcc8_file = os.path.join(qr_path, "data", "networks", "rcc8_example.json")
 Here's what a network looks like in JSON format.
 
 A node is represented as a list of two things:
-1. Node ID (i.e., Node Name)
-1. List of ontology classes the node belongs to (e.g., "ProperInterval", "Region")
 
-> NOTE: Networks that are based on simple relation algebras, such as Allen's Interval Algebra and the Region Connection Calculus, only involve relations among <i>entities</i> that are all from the same ontology class, such as Proper Time Intervals or Spatial Regions.  So, the <b>ontology classes of entities being related by the relations</b> does not need to be considered when, for example, composing relations.  However, when ontology classes are integrated, such as Proper Time Intervals and Time Points, then the ontology classes of the entities being related become important.
+* Node ID (i.e., Node Name)
+* List of ontology classes the node belongs to (e.g., "ProperInterval", "Region")
+
+NOTE: Networks that are based on simple relation algebras, such as Allen's Interval Algebra and the Region Connection Calculus, only involve relations among <i>entities</i> that are all from the same ontology class, such as Proper Time Intervals or Spatial Regions.  So, the <b>ontology classes of entities being related by the relations</b> does not need to be considered when, for example, composing relations.  However, when ontology classes are integrated, such as Proper Time Intervals and Time Points, then the ontology classes of the entities being related become important.
 
 An edge is represented as a list of three things, representing a directed edge, labeled with a constraint:
-1. Tail Node ID
-1. Head Node ID
-1. Constraint
+
+* Tail Node ID
+* Head Node ID
+* Constraint
 
 See graphical depiction below:
 
@@ -204,10 +203,11 @@ print(open(rcc8_file).read())
 
 
 NOTES:
-1. The Wikipedia page on RCC8 represents disjunctions of constraints as sets, e.g., {DC, EC}, whereas qualreas represents this with the string "DC|EC".  Constraint sets represent disjunctions of relation statements, e.g., (Tail DC|EC Head) <==> (Tail DC Head) OR (Tail EC Head).
-1. For convenience, constraints can be abbreviated using a dictionary of abbreviations.  For example, the constraint "DC|EC", above, is abbreviated as "dec".  By the way, internally, the qualreas module stores and operates on constraint sets as [bitsets](https://bitsets.readthedocs.io/en/stable/).
-1. No constraints are given for the Road-to-Property1 or Road-to-Property2 edges.  The meaning then is that all RCC8 relations are possible for those two edges.  This can be seen in the first summary of the network farther below.
-1. The Network object in qualreas is a subclass of [networkx.digraph](https://networkx.github.io/documentation/stable/reference/classes/digraph.html), which has functionality for loading/saving from/to JSON format. However, the JSON functionality in NetworkX is not easy to read, nor is it compact, and it is awkward to associate an Algebra with a Network using those formats.  So, the bespoke JSON format, described in this notebook, was developed for <i>qualreas</i>.
+
+* The Wikipedia page on RCC8 represents disjunctions of constraints as sets, e.g., {DC, EC}, whereas qualreas represents this with the string "DC|EC".  Constraint sets represent disjunctions of relation statements, e.g., (Tail DC|EC Head) <==> (Tail DC Head) OR (Tail EC Head).
+* For convenience, constraints can be abbreviated using a dictionary of abbreviations.  For example, the constraint "DC|EC", above, is abbreviated as "dec".  By the way, internally, the qualreas module stores and operates on constraint sets as [bitsets](https://bitsets.readthedocs.io/en/stable/).
+* No constraints are given for the Road-to-Property1 or Road-to-Property2 edges.  The meaning then is that all RCC8 relations are possible for those two edges.  This can be seen in the first summary of the network farther below.
+* The Network object in qualreas is a subclass of [networkx.digraph](https://networkx.github.io/documentation/stable/reference/classes/digraph.html), which has functionality for loading/saving from/to JSON format. However, the JSON functionality in NetworkX is not easy to read, nor is it compact, and it is awkward to associate an Algebra with a Network using those formats.  So, the bespoke JSON format, described in this notebook, was developed for <i>qualreas</i>.
 
 ### RCC-8's Spatial Relations <a class="anchor" id="rcc8_rels"></a>
 
