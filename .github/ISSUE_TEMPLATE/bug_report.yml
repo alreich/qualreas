@@ -1,0 +1,75 @@
+name: Bug report
+description: Something in qualreas doesn't work the way it should
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Before submitting, please check the
+        [documentation](https://qualreas.readthedocs.io) and the existing issues.
+        For security problems, please do **not** use this form; see the
+        [security policy](https://github.com/alreich/qualreas/security/policy).
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal example to reproduce it
+      description: >
+        A short, self-contained Python snippet, in a fenced code block. If a network or algebra
+        definition (JSON or dictionary) is involved, include it too.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output or traceback
+      description: Paste any error message or unexpected output. It will be formatted as code automatically.
+      render: shell
+  - type: dropdown
+    id: algebra
+    attributes:
+      label: Which algebra is involved, if any?
+      options:
+        - Allen's interval algebra (Linear_Interval_Algebra)
+        - Extended or branching-time interval algebras
+        - Point algebras
+        - RCC8
+        - A custom algebra
+        - Not applicable or not sure
+  - type: input
+    id: version
+    attributes:
+      label: qualreas version
+      description: >
+        The output of `python -c "import qualreas; print(qualreas.__version__)"`,
+        or the commit hash if you installed from GitHub.
+      placeholder: "0.5.0"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Python version and operating system
+      placeholder: "Python 3.12, macOS 14"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues and didn't find this one.
+          required: true
