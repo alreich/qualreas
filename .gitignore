@@ -112,3 +112,5 @@ venv.bak/
 # Random files
 QR2_Prototyping.ipynb
 rcc8.text
+*.iml
+anaconda_projects/
