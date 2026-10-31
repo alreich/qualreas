@@ -27,14 +27,12 @@ Derivation of Algebras
 .. toctree::
     :maxdepth: 2
 
-    derive_point_algebras
     derive_allens_algebra
     derive_extended_interval_algebra
     derive_left_binary_branching_interval_algebra
     derive_left_branching_proper_interval_algebra
     derive_right_binary_branching_interval_algebra
     derive_right_branching_proper_interval_algebra
-    derive_rectangle_algebra
 
 API Reference
 =============

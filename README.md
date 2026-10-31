@@ -1255,3 +1255,5 @@ These notebooks describe various examples, from other papers and books, in terms
 | Golumbic_and_Shamir_1993_Examples | Examples from Golumbic & Shamir's 1993 paper |
 | Janhunen_and_Sioutis_2019_Example | Example from Janhunen & Sioutis' 2019 paper |
 | example_from_book| I've forgotten where this example came from :-( |
+
+The Jupyter notebooks **qualreas_papers_bibliography**, **region_connection_calculus**, and **temporal_reasoning_about_intervals_and_points** are the sources of pages in the Read the Docs documentation (the .rst files in docs/ are generated from them). Notebooks whose names begin with **WIP_** are works in progress and are intentionally not described here.
