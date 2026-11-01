@@ -383,28 +383,24 @@ class Algebra:
             for _b in rels:
                 for _c in rels:
                     if verbose:
-                        print(f"{_a} x {_b} x {_c} :")
+                        print(f"{_a} ; {_b} ; {_c} :")
                     a_rs = self.relset((_a,))
                     b_rs = self.relset((_b,))
                     c_rs = self.relset((_c,))
                     if set(self.rel_range(_a)) & set(self.rel_domain(_b)):
-                        # prod_ab = a_rs * b_rs
                         prod_ab = self.compose(a_rs, b_rs)
-                        # prod_ab_c = prod_ab * c_rs
                         prod_ab_c = self.compose(prod_ab, c_rs)
                         if set(self.rel_range(_b)) & set(self.rel_domain(_c)):
-                            # prod_bc = b_rs * c_rs
                             prod_bc = self.compose(b_rs, c_rs)
-                            # prod_a_bc = a_rs * prod_bc
                             prod_a_bc = self.compose(a_rs, prod_bc)
                             if not (prod_ab_c == prod_a_bc):
                                 if verbose:
-                                    print(f"  Associativity fails for a = {a_rs}, b = {b_rs}, c = {c_rs}")
+                                    print(f"  Associativity Fails")  # for {_a} ; {_b} ; {_c}")
                                     print(
-                                        f"    associativity check: {self.rel_range(_a)}::{self.rel_domain(_b)} \
-                                        {self.rel_range(_b)}::{self.rel_domain(_c)}")
-                                    print(f"    (a * b) * c = {prod_ab_c}")
-                                    print(f"    a * (b * c) = {prod_a_bc}")
+                                        f"    {_a}.range {self.rel_range(_a)} <-> {_b}.domain {self.rel_domain(_b)}"\
+                                        f" and {_b}.range {self.rel_range(_b)} <-> {_c}.domain {self.rel_domain(_c)}")
+                                    print(f"    ({_a} ;  {_b}) ; {_c}  = {prod_ab_c}")
+                                    print(f"     {_a} ; ({_b}  ; {_c}) = {prod_a_bc}")
                                 count_failed += 1
                                 count_total += 1
                                 result = False
@@ -416,12 +412,12 @@ class Algebra:
                         else:
                             if verbose:
                                 print(
-                                    f"  Skipping check due to b x c: {self.rel_range(_b)}::{self.rel_domain(_c)}")
+                                    f"  Check Skipped: {_b}.range={self.rel_range(_b)} vs {_c}.domain={self.rel_domain(_c)}")
                             count_skipped += 1
                             count_total += 1
                     else:
                         if verbose:
-                            print(f"  Skipping check due to a x b: {self.rel_range(_a)}::{self.rel_domain(_b)}")
+                            print(f"  Check Skipped: {_a}.range={self.rel_range(_a)} vs {_b}.domain={self.rel_domain(_b)}")
                         count_skipped += 1
                         count_total += 1
         print(f"TEST SUMMARY: {count_ok} OK, {count_skipped} Skipped, {count_failed} Failed ({count_total} Total)")
