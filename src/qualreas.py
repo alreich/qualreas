@@ -388,11 +388,15 @@ class Algebra:
                     b_rs = self.relset((_b,))
                     c_rs = self.relset((_c,))
                     if set(self.rel_range(_a)) & set(self.rel_domain(_b)):
-                        prod_ab = a_rs * b_rs
-                        prod_ab_c = prod_ab * c_rs
+                        # prod_ab = a_rs * b_rs
+                        prod_ab = self.compose(a_rs, b_rs)
+                        # prod_ab_c = prod_ab * c_rs
+                        prod_ab_c = self.compose(prod_ab, c_rs)
                         if set(self.rel_range(_b)) & set(self.rel_domain(_c)):
-                            prod_bc = b_rs * c_rs
-                            prod_a_bc = a_rs * prod_bc
+                            # prod_bc = b_rs * c_rs
+                            prod_bc = self.compose(b_rs, c_rs)
+                            # prod_a_bc = a_rs * prod_bc
+                            prod_a_bc = self.compose(a_rs, prod_bc)
                             if not (prod_ab_c == prod_a_bc):
                                 if verbose:
                                     print(f"  Associativity fails for a = {a_rs}, b = {b_rs}, c = {c_rs}")
