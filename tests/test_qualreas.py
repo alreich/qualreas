@@ -12,6 +12,11 @@ end of src/qualreas.py, turned into unit tests:
     the interval algebras that ship in data/algebras
   * networks survive a round trip through to_dict / JSON, can be copied (mostly_copy) and
     combined (+), and can be expanded into singleton labelings
+  * algebras can be built from dictionaries; relation sets, converse and composition behave as
+    they should, including for bad input; add_constraint and propagate handle every kind of
+    input and report what they did when asked to
+  * the composition-identity and associativity checks notice an algebra that has been damaged
+  * the summary and table-printing methods print what they promise to
 
 Run from anywhere, once qualreas is installed (pip install -e .):
 
@@ -23,9 +28,13 @@ each, so those tests are skipped unless the environment variable QUALREAS_SLOW_T
     QUALREAS_SLOW_TESTS=1 python -m unittest discover -s tests -v
 """
 import contextlib
+import copy
 import io
+import itertools
 import json
 import os
+import re
+import runpy
 import sys
 import tempfile
 import unittest
@@ -39,6 +48,14 @@ def quietly(func, *args, **kwargs):
     """Call func, discarding anything it prints (e.g., is_associative prints a test summary)."""
     with contextlib.redirect_stdout(io.StringIO()):
         return func(*args, **kwargs)
+
+
+def capturing(func, *args, **kwargs):
+    """Call func and return (its result, everything it printed)."""
+    buffer = io.StringIO()
+    with contextlib.redirect_stdout(buffer):
+        result = func(*args, **kwargs)
+    return result, buffer.getvalue()
 
 
 def relations(relset):
@@ -73,6 +90,27 @@ def recursion_limit(limit):
         yield
     finally:
         sys.setrecursionlimit(old)
+
+
+def tampered(algebra_name, rel1, rel2, entry):
+    """A copy of a shipped algebra in which the composition rel1;rel2 has been replaced by
+    entry (a string such as 'B|M', or '' for the empty relation set)."""
+    alg_dict = copy.deepcopy(load_algebra(algebra_name).algebra_dict)
+    alg_dict["TransTable"][rel1][rel2] = entry
+    return qr.Algebra(alg_dict=alg_dict)
+
+
+def associativity_violations(algebra):
+    """Every triple of relations (a, b, c) for which (a;b);c differs from a;(b;c), found with the
+    algebra's own compose method.  Only meaningful for algebras with a single ontological class
+    (the point algebras, Allen's interval algebra, RCC8); see TestAlgebraChecks."""
+    violations = []
+    for a, b, c in itertools.product(algebra.elements, repeat=3):
+        ra, rb, rc = algebra.relset([a]), algebra.relset([b]), algebra.relset([c])
+        if (algebra.compose(algebra.compose(ra, rb), rc)
+                != algebra.compose(ra, algebra.compose(rb, rc))):
+            violations.append((a, b, c))
+    return violations
 
 
 def intervals(names):
@@ -754,6 +792,555 @@ class TestSingletonLabelings(unittest.TestCase):
         result = net.get_2x2_partition_constraints(0, 1, ["X", "Y", "Z"])
         self.assertEqual([relations(r) for r in result.split(",")],
                          [{"B"}, {"B", "D", "M", "O", "S"}, {"E"}, {"D"}])
+
+
+class TestAlgebraConstruction(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.allen = load_algebra("Linear_Interval_Algebra")
+        cls.points = load_algebra("Linear_Point_Algebra")
+
+    def test_name_and_description_come_from_the_file(self):
+        self.assertEqual(self.allen.name, "Linear_Interval_Algebra")
+        self.assertTrue(self.allen.description)
+        self.assertEqual(str(self.allen), f"<{self.allen.name}: {self.allen.description}>")
+
+    def test_from_a_dictionary_without_name_or_description(self):
+        alg_dict = {"Relations": self.allen.algebra_dict["Relations"],
+                    "TransTable": self.allen.algebra_dict["TransTable"]}
+        alg = qr.Algebra(alg_dict=alg_dict)
+        self.assertTrue(alg.name.startswith("Algebra:"))
+        self.assertEqual(alg.description, "No description provided.")
+        self.assertEqual(relations(alg.elements), relations(self.allen.elements))
+        self.assertTrue(alg.equivalent_algebra(self.allen))
+
+    def test_table_entries_can_be_lists(self):
+        """The original transitivity table format used lists; the compact one uses strings."""
+        table = {r1: {r2: str(self.points.transitivity_table[r1][r2]).split("|")
+                         if str(self.points.transitivity_table[r1][r2]) else []
+                      for r2 in self.points.elements}
+                 for r1 in self.points.elements}
+        alg = qr.Algebra(alg_dict={"Name": "ListTable",
+                                   "Relations": self.points.algebra_dict["Relations"],
+                                   "TransTable": table})
+        for r1, r2 in itertools.product(alg.elements, repeat=2):
+            self.assertEqual(alg.transitivity_table[r1][r2], self.points.transitivity_table[r1][r2])
+
+    def test_a_bad_table_entry_is_rejected(self):
+        with self.assertRaisesRegex(Exception, "Bad entry in transitivity table"):
+            qr.Algebra(alg_dict={"Relations": self.points.algebra_dict["Relations"],
+                                 "TransTable": {"<": {"<": 5}}})
+
+    def test_an_empty_string_in_the_table_is_the_empty_relation_set(self):
+        alg = tampered("Linear_Point_Algebra", "<", "<", "")
+        self.assertEqual(str(alg.transitivity_table["<"]["<"]), "")
+        self.assertEqual(str(alg.compose(alg.relset("<"), alg.relset("<"))), "")
+
+    def test_equivalent_algebra(self):
+        self.assertTrue(self.allen.equivalent_algebra(load_algebra("Linear_Interval_Algebra")))
+        self.assertFalse(self.allen.equivalent_algebra(load_algebra("Extended_Linear_Interval_Algebra")))
+        # A change to one composition, or to one relation, makes algebras differ
+        self.assertFalse(self.allen.equivalent_algebra(
+            tampered("Linear_Interval_Algebra", "B", "B", "M")))
+        alg_dict = copy.deepcopy(self.allen.algebra_dict)
+        alg_dict["Relations"]["B"]["Name"] = "Earlier"
+        self.assertFalse(self.allen.equivalent_algebra(qr.Algebra(alg_dict=alg_dict)))
+
+
+class TestAlgebraAccessors(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.allen = load_algebra("Linear_Interval_Algebra")
+        cls.extended = load_algebra("Extended_Linear_Interval_Algebra")
+
+    def test_relation_information(self):
+        self.assertEqual(self.allen.rel_name("B"), "Before")
+        self.assertEqual(self.allen.rel_converse_name("B"), "After")
+        self.assertEqual(self.allen.rel_domain("B"), ["ProperInterval"])
+        self.assertEqual(self.allen.rel_range("B"), ["ProperInterval"])
+        self.assertEqual(self.extended.rel_domain("PS"), ["Point"])
+        self.assertEqual(self.extended.rel_range("PS"), ["ProperInterval"])
+
+    def test_equality_is_reflexive_symmetric_and_transitive(self):
+        self.assertTrue(self.allen.rel_reflexive("E"))
+        self.assertTrue(self.allen.rel_symmetric("E"))
+        self.assertTrue(self.allen.rel_transitive("E"))
+        self.assertTrue(self.allen.rel_equality("E"))
+        self.assertFalse(self.allen.rel_equality("B"))      # transitive only
+        self.assertTrue(self.allen.rel_transitive("B"))
+
+    def test_equality_relations_of_each_algebra(self):
+        expected = {"Linear_Interval_Algebra": {"E"},
+                    "Extended_Linear_Interval_Algebra": {"E", "PE"},
+                    "RCC8_Algebra": {"EQ"},
+                    "Linear_Point_Algebra": {"="}}
+        for name, equalities in expected.items():
+            with self.subTest(algebra=name):
+                self.assertEqual(relations(load_algebra(name).all_equality_relations), equalities)
+
+    def test_equality_relation_of_each_class(self):
+        self.assertEqual(relations(self.allen.get_domain_or_range_equality_rel("ProperInterval")),
+                         {"E"})
+        self.assertEqual(relations(self.extended.get_domain_or_range_equality_rel("Point")),
+                         {"PE"})
+        self.assertEqual(relations(self.extended.get_domain_or_range_equality_rel("ProperInterval")),
+                         {"E"})
+        with self.assertRaises(KeyError):
+            self.allen.get_domain_or_range_equality_rel("Point")
+
+    def test_domain_and_range_classes_of_a_relation_set(self):
+        # (relation set, domain classes, range classes)
+        for relset, domain, range_ in [("PE", {"Point"}, {"Point"}),
+                                       ("E", {"ProperInterval"}, {"ProperInterval"}),
+                                       ("PE|E", {"Point", "ProperInterval"},
+                                        {"Point", "ProperInterval"}),
+                                       ("PS", {"Point"}, {"ProperInterval"}),
+                                       ("PFI", {"ProperInterval"}, {"Point"})]:
+            with self.subTest(relset=relset):
+                self.assertEqual(self.extended.get_domain_classes(relset), domain)
+                self.assertEqual(self.extended.get_range_classes(relset), range_)
+
+
+class TestRelSetOperations(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.allen = load_algebra("Linear_Interval_Algebra")
+        cls.algebras = {name: load_algebra(name) for name, _ in ALL_ALGEBRAS}
+
+    def test_relset_from_every_kind_of_input(self):
+        for given, expected in [("B|M", {"B", "M"}), (["B", "M"], {"B", "M"}), (("B",), {"B"}),
+                                ({"B", "M"}, {"B", "M"}), ("", set()), ([], set())]:
+            with self.subTest(given=given):
+                self.assertEqual(relations(self.allen.relset(given)), expected)
+
+    def test_relset_rejects_bad_input(self):
+        for bad in (5, 3.5, None):
+            with self.subTest(given=bad):
+                with self.assertRaises(TypeError):
+                    self.allen.relset(bad)
+        with self.assertRaises(KeyError):
+            self.allen.relset("ZZ")
+
+    def test_string_to_relset_with_another_delimiter(self):
+        self.assertEqual(relations(self.allen.string_to_relset("B,M", delimiter=",")), {"B", "M"})
+
+    def test_relset_text_and_intersection(self):
+        self.assertEqual(str(self.allen.relset("B|M")), "B|M")
+        self.assertEqual(str(self.allen.relset([])), "")
+        # + is intersection
+        self.assertEqual(relations(self.allen.relset("B|M") + self.allen.relset("M|O")), {"M"})
+        self.assertEqual(str(self.allen.relset("B") + self.allen.relset("M")), "")
+
+    def test_converse_of_a_relation_and_of_a_relation_set(self):
+        self.assertEqual(self.allen.converse("B"), "BI")
+        self.assertEqual(self.allen.converse("E"), "E")
+        converse = self.allen.converse(self.allen.relset("B|M"))
+        self.assertIsInstance(converse, qr.RelSet)
+        self.assertEqual(relations(converse), {"BI", "MI"})
+        self.assertEqual(str(self.allen.converse(self.allen.relset([]))), "")
+
+    def test_converse_of_converse_is_the_relation_itself(self):
+        for name, alg in self.algebras.items():
+            with self.subTest(algebra=name):
+                for rel in alg.elements:
+                    self.assertEqual(alg.converse(alg.converse(rel)), rel)
+
+    def test_compose(self):
+        self.assertEqual(relations(self.allen.compose(self.allen.relset("B"),
+                                                      self.allen.relset("D"))),
+                         {"B", "D", "M", "O", "S"})
+        # Composing with the empty relation set gives the empty relation set
+        self.assertEqual(str(self.allen.compose(self.allen.relset([]), self.allen.relset("B"))), "")
+        self.assertEqual(str(self.allen.compose(self.allen.relset("B"), self.allen.relset([]))), "")
+
+    def test_compose_distributes_over_union(self):
+        both = self.allen.compose(self.allen.relset("B|M"), self.allen.relset("D"))
+        separately = (self.allen.compose(self.allen.relset("B"), self.allen.relset("D"))
+                      .union(self.allen.compose(self.allen.relset("M"), self.allen.relset("D"))))
+        self.assertEqual(both, separately)
+
+    def test_equality_is_the_identity_for_composition(self):
+        for rel in self.allen.elements:
+            with self.subTest(relation=rel):
+                relset = self.allen.relset([rel])
+                self.assertEqual(self.allen.compose(self.allen.relset("E"), relset), relset)
+                self.assertEqual(self.allen.compose(relset, self.allen.relset("E")), relset)
+
+
+class TestAddConstraint(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.alg = load_algebra("Linear_Interval_Algebra")
+
+    def setUp(self):
+        self.net = qr.Network(self.alg, "Net")
+        self.x, self.y = intervals("xy")
+
+    def test_constraint_as_a_string(self):
+        self.net.add_constraint(self.x, self.y, "B|M")
+        self.assertEqual(relations(self.net.get_constraint("x", "y")), {"B", "M"})
+        self.assertEqual(relations(self.net.get_constraint("y", "x")), {"BI", "MI"})
+
+    def test_constraint_as_a_relset(self):
+        self.net.add_constraint(self.x, self.y, self.alg.relset("B|M"))
+        self.assertEqual(relations(self.net.get_constraint("x", "y")), {"B", "M"})
+        self.assertEqual(relations(self.net.get_constraint("y", "x")), {"BI", "MI"})
+
+    def test_no_constraint_allows_every_relation(self):
+        self.net.add_constraint(self.x, self.y)
+        self.assertEqual(relations(self.net.get_constraint("x", "y")), relations(self.alg.elements))
+        self.assertEqual(relations(self.net.get_constraint("y", "x")), relations(self.alg.elements))
+
+    def test_constraint_of_the_wrong_type(self):
+        for bad in (42, ["B", "M"], 3.5):
+            with self.subTest(given=bad):
+                with self.assertRaisesRegex(TypeError, "relation_set must be"):
+                    self.net.add_constraint(self.x, self.y, bad)
+
+    def test_a_new_constraint_replaces_the_old_one(self):
+        self.net.add_constraint(self.x, self.y, "B")
+        self.net.add_constraint(self.x, self.y, "D")
+        self.assertEqual(self.net.get_constraint("x", "y"), "D")
+        self.assertEqual(self.net.get_constraint("y", "x"), "DI")
+        self.assertEqual(len(self.net.edges), 4)       # two self edges and one edge each way
+
+    def test_every_entity_is_equal_to_itself(self):
+        self.net.add_constraint(self.x, self.y, "B")
+        self.assertEqual(self.net.get_constraint("x", "x"), "E")
+        self.assertEqual(self.net.get_constraint("y", "y"), "E")
+
+    def test_equality_of_an_entity_depends_on_its_classes(self):
+        extended = load_algebra("Extended_Linear_Interval_Algebra")
+        net = qr.Network(extended, "Classes")
+        either = qr.TemporalEntity(["Point", "ProperInterval"], "either")
+        point = qr.TemporalEntity(["Point"], "point")
+        interval = qr.TemporalEntity(["ProperInterval"], "interval")
+        net.add_constraint(either, point, "PE|PS")
+        net.add_constraint(point, interval, "PS")
+        self.assertEqual(relations(net.get_constraint("either", "either")), {"E", "PE"})
+        self.assertEqual(relations(net.get_constraint("point", "point")), {"PE"})
+        self.assertEqual(relations(net.get_constraint("interval", "interval")), {"E"})
+
+    def test_entity_with_an_unknown_class(self):
+        with self.assertRaises(KeyError):
+            self.net.add_constraint(qr.TemporalEntity(["Region"], "r"), self.y, "B")
+
+    def test_verbose_output(self):
+        _, text = capturing(self.net.add_constraint, self.x, self.y, "B|M", True)
+        self.assertEqual(text.splitlines(),
+                         ["Equality Constraint Added: x ['E']",
+                          "Equality Constraint Added: y ['E']",
+                          "Constraint Added: x y ['B', 'M']",
+                          "Constraint Added: y x ['BI', 'MI']"])
+        # The equality constraints exist now, so they are not announced a second time
+        _, text = capturing(self.net.add_constraint, self.x, self.y, "B", True)
+        self.assertEqual(text.splitlines(), ["Constraint Added: x y ['B']",
+                                             "Constraint Added: y x ['BI']"])
+
+    def test_quiet_by_default(self):
+        _, text = capturing(self.net.add_constraint, self.x, self.y, "B")
+        self.assertEqual(text, "")
+
+
+class TestNetworkConstruction(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.alg = load_algebra("Linear_Interval_Algebra")
+
+    def test_empty_network(self):
+        net = qr.Network(self.alg)
+        self.assertEqual(len(net.nodes), 0)
+        self.assertTrue(net.name.startswith("Network:"))
+        self.assertIs(net.algebra, self.alg)
+        self.assertEqual(str(net), f"<Network--{net.name}--Linear_Interval_Algebra>")
+        self.assertTrue(quietly(net.propagate))         # nothing to be inconsistent about
+
+    def test_name_given_to_the_constructor(self):
+        self.assertEqual(qr.Network(self.alg, "Mine").name, "Mine")
+
+    def test_dictionary_without_name_or_description(self):
+        net_dict = {"nodes": [["A", ["ProperInterval"]]], "edges": []}
+        net = qr.Network(algebra=self.alg, network_dict=net_dict, name="Given")
+        self.assertEqual(net.name, "Given")
+        self.assertEqual(net.description, "None provided")
+        unnamed = qr.Network(algebra=self.alg, network_dict=net_dict)
+        self.assertTrue(unnamed.name.startswith("Network:"))
+
+    def test_the_dictionary_names_the_network(self):
+        net_dict = {"name": "FromDict", "nodes": [], "edges": []}
+        net = qr.Network(algebra=self.alg, network_dict=net_dict, name="Ignored")
+        self.assertEqual(net.name, "FromDict")
+
+
+class TestPropagate(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.alg = load_algebra("Linear_Interval_Algebra")
+        cls.extended = load_algebra("Extended_Linear_Interval_Algebra")
+
+    def chain(self):
+        x, y, z = intervals("XYZ")
+        net = qr.Network(self.alg, "Chain")
+        net.add_constraint(x, y, "B")
+        net.add_constraint(y, z, "D")
+        return net
+
+    def test_quiet_unless_verbose(self):
+        result, text = capturing(self.chain().propagate)
+        self.assertTrue(result)
+        self.assertEqual(text, "")
+
+    def test_verbose_reports_the_number_of_iterations(self):
+        result, text = capturing(self.chain().propagate, True)
+        self.assertTrue(result)
+        self.assertRegex(text, r"Number of iterations: \d+")
+        # X and Z were not constrained, so propagate announces that it relates them
+        self.assertIn("Constraint Added: X Z", text)
+
+    def test_verbose_reports_an_inconsistency(self):
+        net = qr.Network(self.alg, "Inconsistent")
+        i, j, k = intervals("ijk")
+        net.add_constraint(i, j, "B")
+        net.add_constraint(j, k, "B")
+        net.add_constraint(i, k, "BI")                  # i before j before k, yet i after k
+        result, text = capturing(net.propagate, True)
+        self.assertFalse(result)
+        self.assertIn("the network is inconsistent", text)
+        self.assertNotIn("Number of iterations", text)
+
+    def test_propagating_again_changes_nothing(self):
+        net = self.chain()
+        self.assertTrue(quietly(net.propagate))
+        before = constraints_by_name(net)
+        self.assertTrue(quietly(net.propagate))
+        self.assertEqual(constraints_by_name(net), before)
+
+    def test_unconstrained_pairs_are_filled_in(self):
+        net = self.chain()
+        self.assertFalse(net.has_edge(net.get_entity("X"), net.get_entity("Z")))
+        self.assertTrue(quietly(net.propagate))
+        self.assertEqual(relations(net.get_constraint("X", "Z")), {"B", "D", "M", "O", "S"})
+        self.assertEqual(relations(net.get_constraint("Z", "X")), {"BI", "DI", "MI", "OI", "SI"})
+
+    def test_entity_classes_are_narrowed(self):
+        """Entities that start out as either a point or a proper interval become whatever the
+        constraints they are in allow."""
+        both = ["Point", "ProperInterval"]
+        # (constraint, classes of the first entity, classes of the second)
+        for constraint, first, second in [("E", ["ProperInterval"], ["ProperInterval"]),
+                                          ("PE", ["Point"], ["Point"]),
+                                          ("PS", ["Point"], ["ProperInterval"])]:
+            with self.subTest(constraint=constraint):
+                a = qr.TemporalEntity(list(both), "a")
+                b = qr.TemporalEntity(list(both), "b")
+                net = qr.Network(self.extended, "Narrowing")
+                net.add_constraint(a, b, constraint)
+                self.assertTrue(quietly(net.propagate))
+                self.assertEqual(sorted(a.classes), first)
+                self.assertEqual(sorted(b.classes), second)
+
+
+class TestAlgebraChecks(unittest.TestCase):
+    """check_composition_identity and is_associative, on sound and on damaged algebras."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.allen = load_algebra("Linear_Interval_Algebra")
+        cls.extended = load_algebra("Extended_Linear_Interval_Algebra")
+
+    def test_composition_identity_is_quiet_unless_verbose(self):
+        result, text = capturing(self.allen.check_composition_identity)
+        self.assertTrue(result)
+        self.assertEqual(text, "")
+
+    def test_composition_identity_verbose_report(self):
+        result, text = capturing(self.allen.check_composition_identity, True)
+        self.assertTrue(result)
+        self.assertIn("Linear_Interval_Algebra -- Composition Identity Check:", text)
+        self.assertIn("PASSED . 169 compositions tested.", text)    # 13 x 13
+        self.assertNotIn("FAIL", text)
+
+    def test_composition_identity_notices_a_damaged_table(self):
+        damaged = tampered("Linear_Interval_Algebra", "B", "B", "M")    # B;B should be B
+        self.assertFalse(quietly(damaged.check_composition_identity))
+        result, text = capturing(damaged.check_composition_identity, True)
+        self.assertFalse(result)
+        self.assertIn("FAIL:", text)
+        self.assertIn("( r ;  s)  = M", text)
+        self.assertIn("FAILED. See FAILURE output above.", text)
+        self.assertNotIn("PASSED", text)
+
+    def test_composition_identity_notices_an_emptied_entry(self):
+        damaged = tampered("Linear_Point_Algebra", "<", "<", "")
+        self.assertFalse(quietly(damaged.check_composition_identity))
+
+    def test_is_associative_prints_a_summary(self):
+        result, text = capturing(self.allen.is_associative)
+        self.assertTrue(result)
+        self.assertEqual(text.strip(), "TEST SUMMARY: 2197 OK, 0 Skipped, 0 Failed (2197 Total)")
+
+    def test_is_associative_skips_relations_whose_classes_do_not_meet(self):
+        """In the extended algebra a relation between points cannot be composed with one between
+        proper intervals, so many of the 18 x 18 x 18 triples are skipped."""
+        _, text = capturing(self.extended.is_associative)
+        match = re.search(r"TEST SUMMARY: (\d+) OK, (\d+) Skipped, (\d+) Failed \((\d+) Total\)", text)
+        self.assertIsNotNone(match, text)
+        ok, skipped, failed, total = (int(n) for n in match.groups())
+        self.assertEqual(total, 18 ** 3)
+        self.assertEqual(ok + skipped + failed, total)
+        self.assertGreater(skipped, 0)
+        self.assertGreater(ok, 0)
+        self.assertNotIn("do not add up", text)
+
+    def test_is_associative_verbose_output(self):
+        _, text = capturing(self.extended.is_associative, True)
+        self.assertIn("B x B x B :", text)
+        self.assertIn("Associativity OK", text)
+        self.assertIn("Skipping check due to a x b", text)
+        self.assertIn("Skipping check due to b x c", text)
+
+    def test_composition_is_associative_in_the_untyped_algebras(self):
+        """Allen's algebra, RCC8 and the point algebras have a single ontological class, so
+        every triple of relations can be composed.  This checks that with compose itself."""
+        for name in ("Linear_Interval_Algebra", "RCC8_Algebra", "Linear_Point_Algebra",
+                     "Right_Branching_Point_Algebra", "Left_Branching_Point_Algebra"):
+            with self.subTest(algebra=name):
+                self.assertEqual(associativity_violations(load_algebra(name)), [])
+
+    def test_associativity_violations_finds_a_damaged_algebra(self):
+        """Makes sure that the helper above can fail.  Damaging the entry for =;= in the linear
+        point algebra leaves the composition identity intact but breaks associativity:
+        (=;=);< is everything, but =;(=;<) is just <."""
+        damaged = tampered("Linear_Point_Algebra", "=", "=", "<|>")
+        self.assertTrue(quietly(damaged.check_composition_identity))
+        self.assertTrue(associativity_violations(damaged))
+
+    # KNOWN PROBLEM, in src/qualreas.py: is_associative multiplies the two relation sets with
+    # '*' (prod_ab = a_rs * b_rs).  A RelSet is an int, so that is integer multiplication of the
+    # bit masks, and not composition, and integer multiplication is always associative.  The
+    # check can therefore never fail, which also means that TestAlgebras.test_associativity,
+    # above, cannot fail.  The fix is to use self.compose(a_rs, b_rs) and so on.  Done with the
+    # same skipping logic, that gives no failures for Allen's algebra, RCC8 and the point
+    # algebras, but 924 for the extended algebra and 1798 for each branching algebra, so
+    # test_associativity needs to be reconsidered at the same time.  When it is fixed, this test
+    # will start to "pass unexpectedly": delete the decorator.
+    @unittest.expectedFailure
+    def test_is_associative_notices_a_damaged_algebra(self):
+        damaged = tampered("Linear_Point_Algebra", "=", "=", "<|>")
+        self.assertFalse(quietly(damaged.is_associative))
+
+
+class TestPrintedReports(unittest.TestCase):
+    """The methods and functions that print an algebra, a network, or a table."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.algebras = {name: load_algebra(name) for name, _ in ALL_ALGEBRAS}
+        cls.allen = cls.algebras["Linear_Interval_Algebra"]
+
+    def test_entity_text(self):
+        self.assertEqual(repr(qr.TemporalEntity(["Point"], "p")), "TemporalEntity(['Point'] 'p')")
+        self.assertEqual(repr(qr.SpatialEntity(["Region"], "r")), "SpatialEntity(['Region'] 'r')")
+        self.assertTrue(qr.TemporalEntity(["Point"]).name.startswith("TE:"))
+        self.assertTrue(qr.SpatialEntity(["Region"]).name.startswith("SE:"))
+        self.assertEqual(qr.make_name("given"), "given")
+
+    def test_abbrev(self):
+        self.assertEqual(qr.abbrev(["Point", "ProperInterval"]), "Pt|PInt")
+        self.assertEqual(qr.abbrev(["Region"]), "Reg")
+        self.assertEqual(qr.abbrev(["2DPoint"]), "2DPt")
+        self.assertEqual(qr.abbrev([]), "")
+        with self.assertRaises(KeyError):
+            qr.abbrev(["Duration"])
+
+    def test_algebra_summary(self):
+        for name, alg in self.algebras.items():
+            with self.subTest(algebra=name):
+                _, text = capturing(alg.summary)
+                self.assertIn(f"Algebra Name: {name}", text)
+                self.assertIn(f"Description: {alg.description}", text)
+                self.assertIn("Equality Rels:", text)
+                self.assertIn("Domain & Range Abbreviations:", text)
+                for rel in alg.elements:                 # a row for each relation
+                    self.assertIn(alg.rel_name(rel), text)
+
+    def test_element_summary(self):
+        _, text = capturing(self.allen.element_summary, "B")
+        shown = dict(line.split(":", 1) for line in text.splitlines())
+        shown = {key.strip(): value.strip() for key, value in shown.items()}
+        self.assertEqual(shown, {"Symbol": "B", "Name": "Before",
+                                 "Domain": "['ProperInterval']", "Range": "['ProperInterval']",
+                                 "Converse": "After", "Is Reflexive?": "False",
+                                 "Is Symmetric?": "False", "Is Transitive?": "True",
+                                 "Is an Equality Relation?": "False"})
+
+    def test_compact_transitivity_table_is_valid_json_for_the_same_table(self):
+        for name, alg in self.algebras.items():
+            with self.subTest(algebra=name):
+                _, text = capturing(alg.print_compact_transitivity_table)
+                table = json.loads("{" + text + "}")["TransTable"]
+                again = qr.Algebra(alg_dict={"Relations": alg.algebra_dict["Relations"],
+                                             "TransTable": table})
+                for r1, r2 in itertools.product(alg.elements, repeat=2):
+                    self.assertEqual(again.transitivity_table[r1][r2], alg.transitivity_table[r1][r2])
+
+    def test_network_summary(self):
+        net = make_chain(self.allen, "Chain")
+        _, text = capturing(net.summary)
+        self.assertIn("Chain: 3 nodes, 9 edges", text)
+        self.assertIn("Algebra: Linear_Interval_Algebra", text)
+        for node in ("X", "Y", "Z"):
+            self.assertIn(f"  {node}:['ProperInterval']", text)
+        # A constraint is shown once, not once in each direction ...
+        self.assertEqual([line.strip() for line in text.splitlines() if "=>" in line],
+                         ["=> X: E", "=> Y: B", "=> Z: B|D|M|O|S", "=> Y: E", "=> Z: D", "=> Z: E"])
+        # ... unless every edge is asked for
+        _, text = capturing(net.summary, True)
+        self.assertEqual(text.count("=>"), 9)
+        self.assertIn("=> X: BI", text)
+
+    def test_point_algebra_composition_table(self):
+        for name, _ in POINT_ALGEBRAS:
+            with self.subTest(algebra=name):
+                alg = self.algebras[name]
+                _, text = capturing(qr.print_point_algebra_composition_table, alg)
+                lines = text.splitlines()
+                self.assertEqual(lines[0], name)
+                self.assertEqual(lines[1], "Elements: " + ", ".join(alg.elements))
+                # The rows of the table are the lines with three words: rel1, rel2, composition
+                printed = {}
+                for line in lines:
+                    words = line.split()
+                    if len(words) == 3:
+                        printed[(words[0], words[1])] = words[2]
+                self.assertEqual(len(printed), len(alg.elements) ** 2)
+                for (rel1, rel2), composition in printed.items():
+                    self.assertEqual(composition, str(alg.transitivity_table[rel1][rel2]))
+
+    def test_generate_consistent_networks_reports_how_many(self):
+        pt = load_algebra("Linear_Point_Algebra")
+        _, text = capturing(qr.generate_consistent_networks, pt)
+        self.assertEqual(text.strip(), "13 consistent networks")
+
+    def test_generate_consistent_networks_verbose(self):
+        pt = load_algebra("Linear_Point_Algebra")
+        _, text = capturing(qr.generate_consistent_networks, pt, verbose=True)
+        self.assertEqual(text.count("=" * 26), 13)       # one block for each network
+        self.assertNotIn("UNKNOWN", text)
+        self.assertIn("<,<,<,<", text)                    # the signature of B
+        self.assertIn("13 consistent networks", text)
+
+    def test_running_the_module_as_a_script_runs_the_smoke_test(self):
+        _, text = capturing(runpy.run_path, qr.__file__, run_name="__main__")
+        self.assertEqual(text.splitlines(),
+                         ["Smoke Test:",
+                          f"qualreas {qr.__version__}: loaded Linear_Interval_Algebra with 13 relations"])
 
 
 if __name__ == '__main__':
