@@ -4,7 +4,7 @@ These are the checks that used to follow the ``if __name__ == '__main__'`` state
 end of src/qualreas.py, turned into unit tests:
 
   * every algebra loads, has the expected relations, and passes the composition-identity
-    and associativity checks
+    check; all but three of them are also associative (see below)
   * constraint propagation gives the expected results in the interval, point and RCC8 algebras
   * the book example (interval algebra, and its extension to points) is detected as inconsistent
   * the Wikipedia RCC8 example is read from its JSON file and propagated
@@ -17,6 +17,14 @@ end of src/qualreas.py, turned into unit tests:
     input and report what they did when asked to
   * the composition-identity and associativity checks notice an algebra that has been damaged
   * the summary and table-printing methods print what they promise to
+
+Not every algebra is associative.  Allen's interval algebra, RCC8 and the three point algebras
+are, and the tests check that.  The extended interval algebra and the left- and right-branching
+interval algebras are not: they are the three that mix points and proper intervals, and
+Algebra.is_associative reports failures for them.  That is a property of those algebras, not a
+problem with the check, so the tests do not expect them to pass it.  Instead, they check that
+the failures are reported.  The two lists, ASSOC_ALGEBRAS and NONASSOC_ALGEBRAS, say which is
+which.
 
 Run from anywhere, once qualreas is installed (pip install -e .):
 
@@ -75,8 +83,22 @@ POINT_ALGEBRAS = [("Linear_Point_Algebra", 3),
 RCC8_ALGEBRA = [("RCC8_Algebra", 8)]
 ALL_ALGEBRAS = INTERVAL_ALGEBRAS + RCC8_ALGEBRA + POINT_ALGEBRAS
 
-ASSOC_ALGEBRAS =  [("Linear_Interval_Algebra", 13)] + RCC8_ALGEBRA + POINT_ALGEBRAS
-NONASSOC_ALGEBRAS = INTERVAL_ALGEBRAS[1:]
+# Not every algebra is associative, so not every algebra is tested for associativity.  The
+# algebras that mix points and proper intervals (the extended algebra, and the left- and right-
+# branching algebras) are not associative: Algebra.is_associative reports failures for them (924
+# of 5832 triples of relations for the extended algebra, and 1798 of 13824 for each branching
+# algebra).  Allen's interval algebra, RCC8 and the point algebras, each of which has a single
+# ontological class, are associative.
+NONASSOC_ALGEBRAS = [("Extended_Linear_Interval_Algebra", 18),
+                     ("Left_Branching_Interval_Algebra", 24),
+                     ("Right_Branching_Interval_Algebra", 24)]
+ASSOC_ALGEBRAS = [alg for alg in ALL_ALGEBRAS if alg not in NONASSOC_ALGEBRAS]
+
+# What Algebra.is_associative reports for each of the non-associative algebras:
+# (triples that passed, triples that were skipped, triples that failed)
+NONASSOC_SUMMARIES = {"Extended_Linear_Interval_Algebra": (2685, 2223, 924),
+                      "Left_Branching_Interval_Algebra": (7974, 4052, 1798),
+                      "Right_Branching_Interval_Algebra": (7974, 4052, 1798)}
 
 
 def load_algebra(name):
@@ -183,10 +205,23 @@ class TestAlgebras(unittest.TestCase):
                 self.assertTrue(quietly(self.algebras[name].check_composition_identity))
 
     def test_associativity(self):
-        # for name, _ in ALL_ALGEBRAS:
+        """Allen's interval algebra, RCC8 and the point algebras are associative."""
         for name, _ in ASSOC_ALGEBRAS:
             with self.subTest(algebra=name):
                 self.assertTrue(quietly(self.algebras[name].is_associative))
+
+    def test_non_associativity(self):
+        """The extended and the branching interval algebras are not associative, and
+        is_associative says so.  See the note at the top of this file."""
+        for name, _ in NONASSOC_ALGEBRAS:
+            with self.subTest(algebra=name):
+                self.assertFalse(quietly(self.algebras[name].is_associative))
+
+    def test_every_algebra_is_in_one_of_the_associativity_lists(self):
+        self.assertEqual(len(ASSOC_ALGEBRAS), 5)
+        self.assertEqual(len(NONASSOC_ALGEBRAS), 3)
+        self.assertTrue(all(alg in ALL_ALGEBRAS for alg in NONASSOC_ALGEBRAS))
+        self.assertEqual(sorted(ASSOC_ALGEBRAS + NONASSOC_ALGEBRAS), sorted(ALL_ALGEBRAS))
 
 
 class TestIntervalNetworks(unittest.TestCase):
@@ -1185,37 +1220,87 @@ class TestAlgebraChecks(unittest.TestCase):
         self.assertFalse(quietly(damaged.check_composition_identity))
 
     def test_is_associative_prints_a_summary(self):
-        result, text = capturing(self.allen.is_associative)
-        self.assertTrue(result)
-        self.assertEqual(text.strip(), "TEST SUMMARY: 2197 OK, 0 Skipped, 0 Failed (2197 Total)")
+        """Every triple of relations in an associative algebra is checked, and all pass."""
+        for name, size in ASSOC_ALGEBRAS:
+            with self.subTest(algebra=name):
+                result, text = capturing(load_algebra(name).is_associative)
+                self.assertTrue(result)
+                total = size ** 3
+                self.assertEqual(text.strip(),
+                                 f"TEST SUMMARY: {total} OK, 0 Skipped, 0 Failed ({total} Total)")
 
-    # def test_is_associative_skips_relations_whose_classes_do_not_meet(self):
-    #     """In the extended algebra a relation between points cannot be composed with one between
-    #     proper intervals, so many of the 18 x 18 x 18 triples are skipped."""
-    #     _, text = capturing(self.extended.is_associative)
-    #     match = re.search(r"TEST SUMMARY: (\d+) OK, (\d+) Skipped, (\d+) Failed \((\d+) Total\)", text)
-    #     self.assertIsNotNone(match, text)
-    #     ok, skipped, failed, total = (int(n) for n in match.groups())
-    #     self.assertEqual(total, 18 ** 3)
-    #     self.assertEqual(ok + skipped + failed, total)
-    #     self.assertGreater(skipped, 0)
-    #     self.assertGreater(ok, 0)
-    #     self.assertNotIn("do not add up", text)
+    def test_is_associative_reports_failures_for_the_non_associative_algebras(self):
+        """The extended and the branching interval algebras are not associative (see the note at
+        the top of this file).  A relation between points cannot be composed with one between
+        proper intervals, so many of the triples are skipped; of the others, some fail.  If the
+        data files for these algebras are ever corrected, the counts in NONASSOC_SUMMARIES will
+        change, and so will this test."""
+        summary = r"TEST SUMMARY: (\d+) OK, (\d+) Skipped, (\d+) Failed \((\d+) Total\)"
+        for name, size in NONASSOC_ALGEBRAS:
+            with self.subTest(algebra=name):
+                result, text = capturing(load_algebra(name).is_associative)
+                self.assertFalse(result)
+                match = re.search(summary, text)
+                self.assertIsNotNone(match, text)
+                ok, skipped, failed, total = (int(n) for n in match.groups())
+                self.assertEqual(total, size ** 3)
+                self.assertEqual(ok + skipped + failed, total)
+                self.assertEqual((ok, skipped, failed), NONASSOC_SUMMARIES[name])
+                self.assertNotIn("do not add up", text)
 
-    # def test_is_associative_verbose_output(self):
-    #     _, text = capturing(self.extended.is_associative, True)
-    #     self.assertIn("B ; B ; B :", text)
-    #     self.assertIn("Associativity OK", text)
-    #     self.assertIn("Skipping check due to a x b", text)
-    #     self.assertIn("Skipping check due to b x c", text)
+    def test_is_associative_verbose_output(self):
+        """The extended algebra has triples that pass, triples that are skipped, and triples
+        that fail."""
+        _, text = capturing(self.extended.is_associative, True)
+        self.assertIn("B ; B ; B :\n  Associativity OK", text)
+        # The range of PE is Point, but the domain of E is ProperInterval, so PE;E can't be
+        # composed and the triple is skipped ...
+        self.assertIn("PE ; E ; B :\n"
+                      "  Check Skipped: PE.range=['Point'] vs E.domain=['ProperInterval']", text)
+        # ... and so is B;D;PE, because D;PE can't be composed
+        self.assertIn("B ; D ; PE :\n"
+                      "  Check Skipped: D.range=['ProperInterval'] vs PE.domain=['Point']", text)
+        self.assertIn("B ; BI ; D :\n  Associativity Fails", text)
 
-    def test_composition_is_associative_in_the_untyped_algebras(self):
+    def test_is_associative_verbose_output_for_a_failure(self):
+        damaged = tampered("Linear_Point_Algebra", "=", "=", "<|>")
+        result, text = capturing(damaged.is_associative, True)
+        self.assertFalse(result)
+        lines = text.splitlines()
+        start = lines.index("< ; = ; = :")
+        self.assertEqual(lines[start:start + 5],
+                         ["< ; = ; = :",
+                          "  Associativity Fails",
+                          "    <.range ['Point'] <-> =.domain ['Point']"
+                          " and =.range ['Point'] <-> =.domain ['Point']",
+                          "    (< ;  =) ; =  = <",
+                          "     < ; (=  ; =) = <|=|>"])
+        self.assertEqual(lines[-1], "TEST SUMMARY: 19 OK, 0 Skipped, 8 Failed (27 Total)")
+
+    def test_composition_is_associative_in_the_associative_algebras(self):
         """Allen's algebra, RCC8 and the point algebras have a single ontological class, so
-        every triple of relations can be composed.  This checks that with compose itself."""
-        for name in ("Linear_Interval_Algebra", "RCC8_Algebra", "Linear_Point_Algebra",
-                     "Right_Branching_Point_Algebra", "Left_Branching_Point_Algebra"):
+        every triple of relations can be composed.  This checks that with compose itself,
+        which makes it independent of how is_associative decides what to check."""
+        for name, _ in ASSOC_ALGEBRAS:
             with self.subTest(algebra=name):
                 self.assertEqual(associativity_violations(load_algebra(name)), [])
+
+    def test_composition_is_not_associative_in_the_other_algebras(self):
+        for name, _ in NONASSOC_ALGEBRAS:
+            with self.subTest(algebra=name):
+                self.assertTrue(associativity_violations(load_algebra(name)))
+
+    def test_an_example_of_non_associativity(self):
+        """In all three of the algebras that are not associative, (B;BI);D and B;(BI;D) differ:
+        the second contains PE, PFI and PSI, and the first does not."""
+        for name, _ in NONASSOC_ALGEBRAS:
+            with self.subTest(algebra=name):
+                alg = load_algebra(name)
+                b, bi, d = (alg.relset([rel]) for rel in ("B", "BI", "D"))
+                left = relations(alg.compose(alg.compose(b, bi), d))
+                right = relations(alg.compose(b, alg.compose(bi, d)))
+                self.assertEqual(right - left, {"PE", "PFI", "PSI"})
+                self.assertEqual(left - right, set())
 
     def test_associativity_violations_finds_a_damaged_algebra(self):
         """Makes sure that the helper above can fail.  Damaging the entry for =;= in the linear
@@ -1225,18 +1310,11 @@ class TestAlgebraChecks(unittest.TestCase):
         self.assertTrue(quietly(damaged.check_composition_identity))
         self.assertTrue(associativity_violations(damaged))
 
-    # KNOWN PROBLEM, in src/qualreas.py: is_associative multiplies the two relation sets with
-    # '*' (prod_ab = a_rs * b_rs).  A RelSet is an int, so that is integer multiplication of the
-    # bit masks, and not composition, and integer multiplication is always associative.  The
-    # check can therefore never fail, which also means that TestAlgebras.test_associativity,
-    # above, cannot fail.  The fix is to use self.compose(a_rs, b_rs) and so on.  Done with the
-    # same skipping logic, that gives no failures for Allen's algebra, RCC8 and the point
-    # algebras, but 924 for the extended algebra and 1798 for each branching algebra, so
-    # test_associativity needs to be reconsidered at the same time.  When it is fixed, this test
-    # will start to "pass unexpectedly": delete the decorator.
-    # @unittest.expectedFailure
     def test_is_associative_notices_a_damaged_algebra(self):
+        """The damage described above is invisible to the composition identity check, so only
+        is_associative can find it."""
         damaged = tampered("Linear_Point_Algebra", "=", "=", "<|>")
+        self.assertTrue(quietly(damaged.check_composition_identity))
         self.assertFalse(quietly(damaged.is_associative))
 
 

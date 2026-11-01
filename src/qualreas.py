@@ -974,8 +974,8 @@ def generate_consistent_networks(point_algebra, lessthan="<", startname="StartPt
                             if elem_key in signature_name_mapping:
                                 print(elem_key)
                                 print(signature_name_mapping[elem_key])
-                            else:
-                                print("UNKNOWN")
+                            # else:
+                            #     print("UNKNOWN")
                             print(ptnet.domain_and_range())
                             print(np.array(ptnet.to_list()))
     print(f"\n{len(consistent_nets)} consistent networks")
@@ -1040,17 +1040,17 @@ class SixPointNet(Network):
     def get_points(self):
         return [self.start1, self.end1, self.start2, self.end2, self.start3, self.end3]
 
-    def __ontology_classes(self, start, end):
-        """The constraints between the start and end points of a temporal entity
-        determine whether it belongs to the class of Point, ProperIntervals, or
-        both.  Return a list containing the class names for the input network, net."""
-        class_list = []
-        constr = self.edges[start, end]['constraint']
-        if '=' in constr:
-            class_list.append('Point')
-        if '<' in constr:
-            class_list.append('ProperInterval')
-        return class_list
+    # def __ontology_classes(self, start, end):
+    #     """The constraints between the start and end points of a temporal entity
+    #     determine whether it belongs to the class of Point, ProperIntervals, or
+    #     both.  Return a list containing the class names for the input network, net."""
+    #     class_list = []
+    #     constr = self.edges[start, end]['constraint']
+    #     if '=' in constr:
+    #         class_list.append('Point')
+    #     if '<' in constr:
+    #         class_list.append('ProperInterval')
+    #     return class_list
 
 
 def derive_composition(point_algebra, eq_rel, rel1, rel2):
