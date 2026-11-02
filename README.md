@@ -1252,6 +1252,7 @@ The third notebook is a fundamental one, and perhaps the most important one, bec
 | Allens_Interval_Algebra | Intro to qualreas Algebras using Allen's algebra |
 | extended_interval_algebras | Intro to 3 extensions to Allen's algebra |
 | time_point_algebras | Describes linear and branching time point structures and algebras |
+| subalgebras_of_allens_algebra | Demonstrates subalgebra generation: Convex, Pointisable, & ORD-Horn relation sets
 
 ### Derivation of Interval Algebras <a class="anchor" id="alg_deriv"></a>
 

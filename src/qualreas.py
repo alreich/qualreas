@@ -1277,6 +1277,154 @@ def print_point_algebra_composition_table(pt_alg):
         print(f"{'-'*30}")
 
 
+# Subalgebras of Allen's algebra that are defined by point relations.
+#
+# A relation of Allen's algebra is a relation between two proper intervals, X = (s1, e1) and
+# Y = (s2, e2), so it is determined by how the four end points, s1, e1, s2, e2, are ordered.
+# Each of the 13 basic relations is one of the 13 possible orderings of those points (given that
+# s1 < e1 and s2 < e2), so a relation set (RelSet), which is a set of basic relations, is also
+# a set of orderings.  Some sets of orderings can be described by simple formulas about the end
+# points, such as "e1 <= s2 or e2 <= s1", and those sets are the subject of the functions below.
+# They return the whole family of relation sets that can be described by formulas of a given
+# kind, as a frozenset of RelSets, which can be handed to Algebra.closure to check that the
+# family really is a subalgebra, or compared with what Algebra.closure generates from a few
+# relation sets.
+
+_ENDPOINT_PAIRS = ((0, 1), (2, 3), (0, 2), (0, 3), (1, 2), (1, 3))
+_POINT_CONVERSE = {'<': '>', '=': '=', '>': '<'}
+
+
+def endpoint_orderings(algebra):
+    """Return, for each relation of an algebra of proper intervals, the order of the four end
+    points of the two intervals it relates, as a dictionary of dictionaries.
+
+    The end points are numbered 0 to 3: 0 and 1 are the start and end of the first interval,
+    and 2 and 3 are the start and end of the second interval.  For each relation name, the
+    result gives the point relation ('<', '=', or '>') between each pair of end points, (i, j)
+    with i < j, in the order (0, 1), (2, 3), (0, 2), (0, 3), (1, 2), (1, 3).  For example,
+    result['M'] (Meets) has (1, 2): '=', because the first interval ends where the second
+    starts.  The results are taken from signature_name_mapping, the same table that
+    generate_consistent_networks and derive_algebra use to derive interval algebras from
+    point algebras.
+
+    A TypeError is raised if the input is not an Algebra.  A ValueError is raised if the
+    algebra is not an algebra of proper intervals in linear time (Allen's algebra), because
+    the families of relation sets below are only defined for it.
+    """
+    if not isinstance(algebra, Algebra):
+        raise TypeError("Input must be an Algebra.")
+    orderings = dict()
+    for name in algebra.elements:
+        proper = (list(algebra.rel_domain(name)) == ['ProperInterval']
+                  and list(algebra.rel_range(name)) == ['ProperInterval'])
+        signature = name_signature_mapping.get(name)
+        if not proper or signature is None or any(rel not in _POINT_CONVERSE for rel in signature):
+            raise ValueError(f"{algebra.name} is not an algebra of proper intervals in linear time,"
+                             f" like Allen's algebra, so its relations have no end point orderings.")
+        s1_s2, s1_e2, e1_s2, e1_e2 = signature  # the order used by generate_consistent_networks
+        orderings[name] = {(0, 1): '<', (2, 3): '<',
+                           (0, 2): s1_s2, (0, 3): s1_e2, (1, 2): e1_s2, (1, 3): e1_e2}
+    return orderings
+
+
+def _point_atom_masks(algebra):
+    """For each kind of point formula ('<', '<=', '=', '!='), the set of bit masks of the
+    relation sets that the formula "p op q" describes, for every ordering of two of the four
+    end points, p and q.  Bit i of a mask stands for the i-th relation of the algebra, which is
+    also the i-th bit of a RelSet."""
+    orderings = endpoint_orderings(algebra)
+    names = list(algebra.elements)
+
+    def point_relation(name, p, q):
+        return orderings[name][(p, q)] if p < q else _POINT_CONVERSE[orderings[name][(q, p)]]
+
+    allowed = {'<': {'<'}, '<=': {'<', '='}, '=': {'='}, '!=': {'<', '>'}}
+    return {op: {sum(1 << i for i, name in enumerate(names) if point_relation(name, p, q) in rels)
+                 for p in range(4) for q in range(4) if p != q}
+            for op, rels in allowed.items()}
+
+
+def _and_closure(masks, everything):
+    """All of the intersections of any number of the masks (and the empty intersection,
+    which is everything)."""
+    family = {everything}
+    for mask in masks:
+        family |= {member & mask for member in family}
+    return family
+
+
+def _or_closure(masks, nothing=0):
+    """All of the unions of any number of the masks (and the empty union, which is nothing)."""
+    family = {nothing}
+    for mask in masks:
+        family |= {member | mask for member in family}
+    return family
+
+
+def _relsets(algebra, masks):
+    return frozenset(algebra.elements_bitset.fromint(mask) for mask in masks)
+
+
+def convex_relsets(algebra):
+    """Return the convex relation sets of Allen's algebra: the ones described by a conjunction
+    of point formulas of the kinds p < q, p <= q, and p = q, where p and q are end points of
+    the two intervals (for example, 'e1 <= s2 and s1 < s2').  The result is a frozenset of
+    RelSets, and it includes the empty relation set, and the one with every relation in it.
+    For Allen's algebra it has 83 members, or 82 not counting the empty one.
+
+    The convex relation sets are closed under intersection, converse and composition, so they
+    are a subalgebra.  See endpoint_orderings for the input and the errors that can be raised.
+    """
+    atoms = _point_atom_masks(algebra)
+    full = (1 << len(list(algebra.elements))) - 1
+    return _relsets(algebra, _and_closure(atoms['<'] | atoms['<='] | atoms['='], full))
+
+
+def pointisable_relsets(algebra):
+    """Return the pointisable relation sets of Allen's algebra: the ones described by a
+    conjunction of point formulas of the kinds p < q, p <= q, p = q, and p != q, where p and q
+    are end points of the two intervals.  They are the convex relation sets (see
+    convex_relsets) together with the ones that also need a 'not equal'.  The result is a
+    frozenset of RelSets, and it includes the empty relation set, and the one with every
+    relation in it.  For Allen's algebra it has 188 members.
+
+    The pointisable relation sets are closed under intersection, converse and composition, so
+    they are a subalgebra.  See endpoint_orderings for the input and the errors that can be
+    raised.
+    """
+    atoms = _point_atom_masks(algebra)
+    full = (1 << len(list(algebra.elements))) - 1
+    return _relsets(algebra, _and_closure(atoms['<'] | atoms['<='] | atoms['='] | atoms['!='], full))
+
+
+def ord_horn_relsets(algebra):
+    """Return the ORD-Horn relation sets of Allen's algebra, H, the ones described by a
+    conjunction of ORD-Horn clauses on the end points of the two intervals.  An ORD-Horn clause
+    is a disjunction of point formulas that has any number of 'p != q' formulas in it, but at
+    most one formula of the kinds p < q, p <= q, or p = q.  For example, 'e1 < s2 or e2 < s1'
+    is a clause with no formula of those three kinds.  The result is a frozenset of RelSets,
+    and it includes the empty relation set, and the one with every relation in it.  For
+    Allen's algebra it has 868 members.
+
+    H contains every basic relation and every pointisable relation set (see pointisable_relsets).
+    It is closed under intersection, converse and composition, so it is a subalgebra, but it is
+    not closed under union.  Nebel and Bürckert (1995), "Reasoning about temporal relations: a
+    maximal tractable subclass of Allen's interval algebra", Journal of the ACM 42(1), proved
+    that reasoning with the relation sets in H is tractable, and that H is the largest
+    tractable set of relation sets that contains all of the basic relations.
+
+    See endpoint_orderings for the input and the errors that can be raised.
+    """
+    atoms = _point_atom_masks(algebra)
+    full = (1 << len(list(algebra.elements))) - 1
+    positive = atoms['<'] | atoms['<='] | atoms['=']
+    not_equal_clauses = _or_closure(atoms['!='])  # includes the empty clause (mask 0)
+    clauses = set(not_equal_clauses)
+    for mask in positive:
+        clauses |= {clause | mask for clause in not_equal_clauses}
+    return _relsets(algebra, _and_closure(clauses, full))
+
+
 if __name__ == '__main__':
 
     print("Smoke Test:")

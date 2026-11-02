@@ -51,6 +51,10 @@ Functions & Etc
 .. autofunction:: qualreas.is_transitive
 .. autofunction:: qualreas.algebra_to_json_file
 .. autofunction:: qualreas.print_point_algebra_composition_table
+.. autofunction:: qualreas.endpoint_orderings
+.. autofunction:: qualreas.convex_relsets
+.. autofunction:: qualreas.pointisable_relsets
+.. autofunction:: qualreas.ord_horn_relsets
 
 Network
 -------
