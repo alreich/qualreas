@@ -15,6 +15,9 @@ end of src/qualreas.py, turned into unit tests:
   * algebras can be built from dictionaries; relation sets, converse and composition behave as
     they should, including for bad input; add_constraint and propagate handle every kind of
     input and report what they did when asked to
+  * Algebra.closure gives the smallest collection of relation sets that contains the ones given
+    and is closed under intersection, converse and composition (checked against a brute-force
+    version, and for closures that are too big for that, against the closure properties)
   * the composition-identity and associativity checks notice an algebra that has been damaged
   * the summary and table-printing methods print what they promise to
 
@@ -41,6 +44,7 @@ import io
 import itertools
 import json
 import os
+import random
 import re
 import runpy
 import sys
@@ -1007,6 +1011,213 @@ class TestRelSetOperations(unittest.TestCase):
                 relset = self.allen.relset([rel])
                 self.assertEqual(self.allen.compose(self.allen.relset("E"), relset), relset)
                 self.assertEqual(self.allen.compose(relset, self.allen.relset("E")), relset)
+
+
+class TestClosure(unittest.TestCase):
+    """Algebra.closure: the smallest collection of relation sets that contains the ones given
+    and is closed under intersection (+), converse and composition."""
+
+    # (algebra file name, input to closure): each input is a list of relation sets
+    CASES = [("Linear_Point_Algebra", ["<"]),
+             ("Linear_Point_Algebra", ["<", "="]),
+             ("Linear_Point_Algebra", ["<|="]),
+             ("Right_Branching_Point_Algebra", ["<"]),
+             ("Left_Branching_Point_Algebra", ["<"]),
+             ("Linear_Interval_Algebra", ["B"]),
+             ("Linear_Interval_Algebra", ["E"]),
+             ("Linear_Interval_Algebra", ["D"]),
+             ("Linear_Interval_Algebra", ["B|M"]),
+             ("Linear_Interval_Algebra", ["B", "M"]),
+             ("Linear_Interval_Algebra", ["FI", "O|OI|D|B|F", "F|OI|SI|O"]),  # 92 relation sets
+             ("Extended_Linear_Interval_Algebra", ["PS"]),
+             ("RCC8_Algebra", ["NTPP"]),
+             ("RCC8_Algebra", ["EC"]),
+             ("RCC8_Algebra", ["DC|EC"])]
+
+    # A larger closure, of 525 relation sets, in Allen's algebra
+    LARGER = ["O|E|S", "BI|B|O|D", "MI|DI|OI"]
+
+    @classmethod
+    def setUpClass(cls):
+        cls.algebras = {name: load_algebra(name) for name in {name for name, _ in cls.CASES}}
+        cls.allen = cls.algebras["Linear_Interval_Algebra"]
+        cls.point = cls.algebras["Linear_Point_Algebra"]
+        cls.rcc8 = cls.algebras["RCC8_Algebra"]
+
+    @staticmethod
+    def texts(closure):
+        """The relation sets in a closure, as a set of strings like 'B|M' ('' is the empty one)."""
+        return {str(rs) for rs in closure}
+
+    @staticmethod
+    def brute_force_closure(alg, relsets):
+        """The closure, found the slow, obvious way: keep combining everything with everything
+        until nothing new appears."""
+        closed = set(relsets)
+        while True:
+            bigger = set(closed)
+            for x in closed:
+                bigger.add(alg.converse(x))
+                for y in closed:
+                    bigger.add(x + y)
+                    bigger.add(alg.compose(x, y))
+            if bigger == closed:
+                return frozenset(closed)
+            closed = bigger
+
+    def assert_closed(self, alg, closure):
+        for x in closure:
+            self.assertIn(alg.converse(x), closure)
+            for y in closure:
+                self.assertIn(x + y, closure)
+                self.assertIn(alg.compose(x, y), closure)
+
+    def assert_closed_on_a_sample(self, alg, closure, pairs=3000):
+        """Like assert_closed, but for a closure that is too big to check every pair."""
+        members = sorted(closure, key=int)
+        for x in members:
+            self.assertIn(alg.converse(x), closure)
+        chooser = random.Random(0)
+        for _ in range(pairs):
+            x, y = chooser.choice(members), chooser.choice(members)
+            self.assertIn(x + y, closure)
+            self.assertIn(alg.compose(x, y), closure)
+
+    def test_result_is_a_frozenset_of_relsets(self):
+        result = self.allen.closure(["B"])
+        self.assertIsInstance(result, frozenset)
+        for rs in result:
+            self.assertIsInstance(rs, qr.RelSet)
+
+    def test_a_relation_and_its_converse_in_the_point_algebra(self):
+        # {<}, its converse {>}, the empty relset (< + >), and the universal relset (<;>)
+        self.assertEqual(self.texts(self.point.closure(["<"])), {"<", ">", "", "<|=|>"})
+
+    def test_the_equality_relation_is_closed_by_itself(self):
+        # E is its own converse, E;E = E, and E + E = E, so nothing else is generated
+        self.assertEqual(self.texts(self.allen.closure(["E"])), {"E"})
+
+    def test_a_relation_in_allens_algebra(self):
+        # B;BI is the universal relset, and B + BI is the empty one
+        self.assertEqual(self.texts(self.allen.closure(["B"])),
+                         {"B", "BI", "", str(self.allen.elements)})
+
+    def test_a_relset_in_allens_algebra(self):
+        everything = str(self.allen.elements)
+        self.assertEqual(self.texts(self.allen.closure(["B|M"])),
+                         {"B|M", "B", "BI|MI", "BI", "", everything})
+
+    def test_a_relset_in_rcc8(self):
+        self.assertEqual(self.texts(self.rcc8.closure(["DC|EC"])),
+                         {"DC|EC", str(self.rcc8.elements)})
+
+    def test_a_relation_in_rcc8(self):
+        self.assertEqual(self.texts(self.rcc8.closure(["NTPP"])),
+                         {"NTPP", "NTPPI", "", "EQ|NTPP|NTPPI|PO|TPP|TPPI", str(self.rcc8.elements)})
+
+    def test_every_element_of_the_input_is_one_relset(self):
+        alg = self.allen
+        relset = alg.closure([alg.relset("B|M")])
+        for given in (["B|M"], [["B", "M"]], [("B", "M")], [{"B", "M"}]):
+            with self.subTest(given=given):
+                self.assertEqual(alg.closure(given), relset)
+        self.assertIn(alg.relset("B|M"), relset)
+        # Two relation sets, B and M, is a different input from the one relation set, B|M
+        separate = alg.closure(["B", "M"])
+        self.assertNotEqual(separate, relset)
+        self.assertNotIn(alg.relset("B|M"), separate)
+        self.assertEqual(alg.closure([alg.relset("B"), "M"]), separate)
+
+    def test_the_collection_can_be_any_kind_of_iterable(self):
+        alg = self.allen
+        expected = alg.closure(["B|M", "D"])
+        for given in (("B|M", "D"), {"B|M", "D"}, frozenset(["B|M", "D"]), (s for s in ("B|M", "D")),
+                      [alg.relset("B|M"), alg.relset("D")], {alg.relset("B|M"), alg.relset("D")}):
+            with self.subTest(given=type(given).__name__):
+                self.assertEqual(alg.closure(given), expected)
+
+    def test_order_and_duplicates_in_the_input_do_not_matter(self):
+        self.assertEqual(self.allen.closure(["B", "M"]), self.allen.closure(["M", "B", "B"]))
+
+    def test_empty_collection_gives_the_empty_closure(self):
+        for empty in ([], (), set(), iter([])):
+            with self.subTest(given=empty):
+                self.assertEqual(self.allen.closure(empty), frozenset())
+        # A collection containing the empty relset is different: it is a member of its own closure
+        self.assertEqual(self.texts(self.allen.closure([[]])), {""})
+        self.assertEqual(self.texts(self.allen.closure([self.allen.relset([])])), {""})
+
+    def test_closure_contains_the_input_and_is_closed(self):
+        for name, spec in self.CASES:
+            with self.subTest(algebra=name, given=spec):
+                alg = self.algebras[name]
+                closure = alg.closure(spec)
+                for given in spec:
+                    self.assertIn(alg.relset(given), closure)
+                self.assert_closed(alg, closure)
+
+    def test_closure_is_the_smallest_such_collection(self):
+        # Compare with a slow, obviously correct computation, and check that the closure
+        # is inside the closure of any larger input (which is also closed and contains it).
+        for name, spec in self.CASES:
+            with self.subTest(algebra=name, given=spec):
+                alg = self.algebras[name]
+                closure = alg.closure(spec)
+                self.assertEqual(closure, self.brute_force_closure(alg, [alg.relset(s) for s in spec]))
+                larger = alg.closure(spec + [list(alg.elements)[0]])  # one more relation
+                self.assertLessEqual(closure, larger)
+
+    def test_closure_of_a_closure_is_itself(self):
+        for name, spec in self.CASES:
+            with self.subTest(algebra=name, given=spec):
+                alg = self.algebras[name]
+                closure = alg.closure(spec)
+                self.assertEqual(alg.closure(closure), closure)
+
+    def test_closure_of_all_the_relations_of_a_point_algebra(self):
+        # Every single relation, and so every relset made from them by + and composition
+        alg = self.point
+        singles = [alg.relset([r]) for r in alg.elements]
+        closure = alg.closure(singles)
+        self.assertEqual(closure, self.brute_force_closure(alg, singles))
+        self.assertEqual(self.texts(closure), {"<", "=", ">", "", "<|=|>"})
+
+    def test_a_larger_closure(self):
+        # 525 relation sets: enough to make the method's internal tables grow several times
+        closure = self.allen.closure(self.LARGER)
+        self.assertEqual(len(closure), 525)
+        for given in self.LARGER:
+            self.assertIn(self.allen.relset(given), closure)
+        self.assert_closed_on_a_sample(self.allen, closure)
+
+    def test_one_relset_can_generate_every_relset(self):
+        # In Allen's algebra, B|FI|MI alone has all 2^13 = 8192 relation sets in its closure
+        closure = self.allen.closure(["B|FI|MI"])
+        self.assertEqual({int(rs) for rs in closure}, set(range(2 ** 13)))
+        self.assertEqual(closure, frozenset(self.allen.elements_bitset.fromint(i) for i in range(2 ** 13)))
+
+    @skip_unless_slow
+    def test_a_larger_closure_is_the_smallest_such_collection(self):
+        closure = self.allen.closure(self.LARGER)
+        self.assertEqual(closure,
+                         self.brute_force_closure(self.allen, [self.allen.relset(s) for s in self.LARGER]))
+
+    def test_bad_input(self):
+        # Not a collection of relation sets.  A single relset or string is not a collection.
+        for bad in (5, 3.5, None, "B|M", self.allen.relset("B|M"), self.allen.relset([])):
+            with self.subTest(given=bad):
+                with self.assertRaises(TypeError):
+                    self.allen.closure(bad)
+        with self.assertRaises(TypeError):
+            self.allen.closure([5])
+        for unknown in (["ZZ"], ["B", "B|ZZ"], [["B", "ZZ"]]):
+            with self.subTest(given=unknown):
+                with self.assertRaises(KeyError):
+                    self.allen.closure(unknown)
+
+    def test_relset_from_another_algebra_is_rejected(self):
+        with self.assertRaises(KeyError):
+            self.allen.closure([self.point.relset("<")])
 
 
 class TestAddConstraint(unittest.TestCase):

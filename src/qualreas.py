@@ -12,7 +12,7 @@ import string
 # NETWORKX: https://networkx.github.io/
 import networkx as nx
 from functools import reduce
-from collections import abc, OrderedDict
+from collections import abc, deque, OrderedDict
 import numpy as np
 
 __author__ = 'Alfred J. Reich'
@@ -292,6 +292,125 @@ class Algebra:
             for r2 in relset2:
                 result = result.union(self.transitivity_table[r1][r2])
         return result
+
+    def closure(self, relsets):
+        """Return the closure of a collection of relation sets under intersection, converse,
+        and composition.
+
+        An algebra with n relations really has 2^n elements, the relation sets (RelSets) that
+        can be made from those relations.  Given a collection of RelSets, this returns the
+        smallest collection of RelSets that contains them all and is closed under
+        intersection (the RelSet '+' operator), converse (Algebra.converse) and composition
+        (Algebra.compose).  That is, if x and y are in the result, then so are x + y,
+        converse(x), and compose(x, y).
+
+        The input is any iterable (list, tuple, set, ...) whose elements are relation sets:
+        RelSets, or anything that Algebra.relset accepts, such as the string 'B|M' or the
+        list ['B', 'M'].  A single RelSet or string is not a collection and is rejected.
+        The result is a frozenset of RelSets.  Nothing is added that the three operations do
+        not produce.  For example, the empty RelSet is in the result only if two of its
+        members are disjoint, and a single relation is in the result only if it was given or
+        was produced.
+
+        An empty collection has an empty closure.  A TypeError is raised if the input is not
+        a collection of relation sets, and a KeyError if a relation set contains a relation
+        that is not in this algebra.
+
+        The closure can be large (up to 2^n RelSets), and the time needed grows with the
+        square of its size.  For Allen's algebra (n = 13), the biggest possible closure, all
+        8192 RelSets, takes a few seconds.  For algebras with many relations, a closure that
+        is not small may be impractical to compute.  Algebras of more than 62 relations are
+        not supported.
+        """
+        if isinstance(relsets, (str, RelSet)) or not isinstance(relsets, abc.Iterable):
+            raise TypeError("Input must be a collection of relation sets, such as a list of RelSets.")
+        start = []
+        for rs in relsets:
+            if isinstance(rs, RelSet):  # re-create it in this algebra, to check its relations
+                rs = self.relset(list(rs.members()))
+            else:
+                rs = self.relset(rs)
+            start.append(int(rs))
+
+        names = list(self.elements)
+        n = len(names)
+        if n > 62:
+            raise ValueError("closure only supports algebras with at most 62 relations.")
+
+        # Everything below works on bit masks, where bit i stands for the relation names[i],
+        # because that is much faster than using RelSet objects.  (A RelSet is an int whose
+        # bits are those masks, and elements_bitset.fromint converts a mask back to a RelSet.)
+        position = {name: i for i, name in enumerate(names)}
+        converse_bit = [1 << position[self.converse(name)] for name in names]
+        # compose_bits[i, j] is the mask for the composition of relation i with relation j
+        compose_bits = np.array([[int(self.transitivity_table[r][s]) for s in names] for r in names],
+                                dtype=np.int64)
+
+        # Composition distributes over union, so for a fixed x the composition of x with any
+        # y is the union of row_x[j] over the relations j in y, where row_x[j] is the union
+        # of compose_bits[i, j] over the relations i in x.  To do that union quickly, the
+        # bits of a mask are split into chunks of 8, and for each chunk a table gives the
+        # union of row_x[j] for every possible combination of that chunk's bits.  Then, for
+        # a mask y, the composition of x with y is just one table lookup per chunk.
+        chunks = [(start_bit, min(8, n - start_bit)) for start_bit in range(0, n, 8)]
+
+        def chunk_index(mask, chunk):
+            start_bit, width = chunks[chunk]
+            return (mask >> start_bit) & ((1 << width) - 1)
+
+        # For each relation set processed so far (they are numbered in the order processed):
+        # its mask, its chunk indexes, and its composition tables.  Room is made as needed.
+        room = 256
+        masks = np.zeros(room, dtype=np.int64)
+        indexes = [np.zeros(room, dtype=np.int64) for _ in chunks]
+        tables = [np.zeros((room, 1 << width), dtype=np.int64) for _, width in chunks]
+        count = 0
+
+        # Worklist algorithm.  Each relation set is processed once, in the order found.  When
+        # one, x, is processed it is combined with every relation set processed so far (and
+        # with itself), so by the time the work list is empty every pair has been combined.
+        found = set()
+        work_list = deque()
+        for mask in start:
+            if mask not in found:
+                found.add(mask)
+                work_list.append(mask)
+        while work_list:
+            x = work_list.popleft()
+            if count == room:
+                room *= 2
+                masks = np.resize(masks, room)
+                indexes = [np.resize(a, room) for a in indexes]
+                tables = [np.resize(t, (room, t.shape[1])) for t in tables]
+            x_relations = [i for i in range(n) if x >> i & 1]
+            row = (np.bitwise_or.reduce(compose_bits[x_relations], axis=0) if x_relations
+                   else np.zeros(n, dtype=np.int64))
+            for c, (start_bit, width) in enumerate(chunks):
+                table = tables[c][count]
+                table[0] = 0
+                for b in range(width):  # fill in the table by doubling it, one bit at a time
+                    table[1 << b: 1 << (b + 1)] = table[: 1 << b] | row[start_bit + b]
+                indexes[c][count] = chunk_index(x, c)
+            masks[count] = x
+            count += 1
+
+            # Combine x with all of the relation sets processed so far, including itself.
+            x_then_y = np.zeros(count, dtype=np.int64)  # compose(x, y), for each y
+            y_then_x = np.zeros(count, dtype=np.int64)  # compose(y, x), for each y
+            for c in range(len(chunks)):
+                x_then_y |= tables[c][count - 1][indexes[c][:count]]
+                y_then_x |= tables[c][:count, indexes[c][count - 1]]
+            x_converse = 0
+            for i in x_relations:
+                x_converse |= converse_bit[i]
+            new = np.unique(np.concatenate((masks[:count] & x,  # x + y, for each y
+                                            x_then_y, y_then_x,
+                                            np.array([x_converse], dtype=np.int64))))
+            for mask in new.tolist():
+                if mask not in found:
+                    found.add(mask)
+                    work_list.append(mask)
+        return frozenset(self.elements_bitset.fromint(mask) for mask in found)
 
     def get_domain_classes(self, relset):
         """Returns the set of domain classes supported by the relations in a relset."""
