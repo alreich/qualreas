@@ -1,5 +1,7 @@
 # Qualitative Reasoning ("qualreas")
 
+[![tests](https://github.com/alreich/qualreas/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/alreich/qualreas/actions/workflows/tests.yml)
+
 The Python module, <b>qualreas</b>, provides a framework for working with the class of <b>Relation Algebras</b> like [Allen's Algebra of Time Intervals](https://en.wikipedia.org/wiki/Allen%27s_interval_algebra) and the [Region Connection Calculus (RCC)](https://en.wikipedia.org/wiki/Region_connection_calculus).  Specifically, <i>qualreas</i> provides a representation of <b>Constraint Networks</b> where the nodes represent <b>Entities</b> (Spatial, Temporal, or whatever) and the edges are labelled with <b>Relation Sets</b> (<i>relsets</i>) that represent constraints between the entities.
 
 The constraint networks in qualreas can be <b>propagated</b> to achieve <b>path consistency</b> and they can be "factored" into <b>consistent singleton networks</b>.
@@ -21,6 +23,7 @@ Algebras and Networks in qualreas can be read from, or written to, <b>JSON</b> o
     * [Get Entity (Network Node)](#nodes)
     * [Get Edge by Tail & Head Node IDs](#edges)
     * [The Algebra "Inside" the Network](#algebra)
+        * [Relation Sets (RelSet)](#relsets)
     * [Perform Constraint Propagation](#prop)
         * [RCC8 Example Figures](#rcc8_figures)
     * [Singleton Labelings of a Network](#labelings)
@@ -87,6 +90,8 @@ This is a brief description of the contents of each directory in this repository
 The important directories for now are: **data, notebooks, src, tests** and **docs**.  Documentation has mostly been done using Jupyter notebooks in the *notebooks* directory, and then saving those in *rst* format. That includes this readme.
 
 * .github -- GitHub Actions workflow that runs the tests
+* CODE_OF_CONDUCT.md -- The Contributor Covenant Code of Conduct, which sets out the standards of behavior expected of everyone taking part in the project's community (issues, pull requests, and discussions)
+* CONTRIBUTING.md -- Guidelines for contributors: how to report bugs and suggest features, set up a development environment, run the tests, update the notebooks and README, and submit a pull request
 * data/algebras -- Relation Algebras in JSON format
 * data/images -- What the title says
 * data/networks -- Example constraint Networks in JSON format
@@ -96,6 +101,7 @@ The important directories for now are: **data, notebooks, src, tests** and **doc
 * notebooks -- Jupyter Notebooks; A description of each can be found at the end of this notebook
 * pyproject.toml -- Packaging information, needed to install qualreas with pip
 * README.md -- This file
+* SECURITY.md -- The security policy: which versions receive security fixes, how to report a vulnerability privately (not in a public issue), and what is in scope
 * src -- The module, "qualreas.py"
 * tests -- Unit tests (see "Testing the installation", above)
 
@@ -534,6 +540,50 @@ The meaning of the composition example, above, is that if S, R, and T are spatia
 > if [(S DC R) or (S EC R)]
 > <p>and (R NTPP T)</p>
 > <p>then either (S DC T) or (S EC T) or (S NTPP T) or (S PO T) or (S TPP T)</p>
+
+#### Relation Sets (RelSet) <a class="anchor" id="relsets"></a>
+
+A <b>RelSet</b> is an efficient representation of a set of relations.  Each relation in an algebra corresponds to one bit of a [bitset](https://bitsets.readthedocs.io/en/stable/), so a RelSet is a compact string of bits, and union and intersection reduce to single bitwise operations.  A RelSet is read as a <i>disjunction</i>: the constraint <i>X B|M Y</i> means "X is before Y <b>or</b> X meets Y".  RelSets are created with the algebra's <b>relset</b> method, from a list of relation names or from a string such as "DC|EC", as shown above.
+
+A RelSet supports the following operations:
+
+| Operation | How to perform it | Meaning |
+|:-------|:-------|:-------|
+| Union | `RelSet.union()` method | The relations that are in either RelSet |
+| Intersection | Python `+` operator | The relations that are in both RelSets |
+| Converse | `Algebra.converse()` method | The converse of each relation in the RelSet; if X r Y, then Y converse(r) X |
+| Compose | `Algebra.compose()` method | The relations that can hold between X and Z, given that X is related to Y by the first RelSet and Y is related to Z by the second RelSet |
+
+NOTES:
+
+* Be careful: the `+` operator is <b>intersection</b>, not union.  Use the `union` method to get a union.
+* Converse and compose depend on the algebra in use (its converse and composition tables), so they are methods of the <b>Algebra</b>, whereas union and intersection are defined on the RelSet itself.
+* Each operation returns a RelSet, so the operations can be chained.
+
+Here are all four operations applied to a pair of RCC8 RelSets:
+
+
+```python
+a = rcc8.relset("PO|TPP|NTPP")
+b = rcc8.relset("TPP|NTPP|EQ")
+
+print(f"a = {a}")
+print(f"b = {b}")
+print()
+print(f"Union:        a.union(b)         = {a.union(b)}")
+print(f"Intersection: a + b              = {a + b}")
+print(f"Converse:     rcc8.converse(b)   = {rcc8.converse(b)}")
+print(f"Compose:      rcc8.compose(a, b) = {rcc8.compose(a, b)}")
+```
+
+    a = NTPP|PO|TPP
+    b = EQ|NTPP|TPP
+    
+    Union:        a.union(b)         = EQ|NTPP|PO|TPP
+    Intersection: a + b              = NTPP|TPP
+    Converse:     rcc8.converse(b)   = EQ|NTPPI|TPPI
+    Compose:      rcc8.compose(a, b) = NTPP|PO|TPP
+
 
 Now, back to <b>Constraint Networks</b>.
 
@@ -1151,7 +1201,8 @@ However, either way, the resulting file or string are not pretty printed.
 ```python
 import json
 
-rcc8_json_file = os.path.join(qr_path, "data", "networks", "rcc8_test1.json")
+# rcc8_json_file = os.path.join(qr_path, "data", "networks", "rcc8_test1.json")
+rcc8_json_file = os.path.join(qr.NETWORK_DIR, "rcc8_test1.json")
 
 with open(rcc8_json_file, "w") as fout:
     json.dump(rcc8_net_dict, fout)
