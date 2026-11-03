@@ -56,6 +56,13 @@ Functions & Etc
 .. autofunction:: qualreas.pointisable_relsets
 .. autofunction:: qualreas.ord_horn_relsets
 
+PathConsistencyCheck
+--------------------
+
+.. autoclass:: qualreas.PathConsistencyCheck
+    :members:
+    :undoc-members:
+
 Network
 -------
 

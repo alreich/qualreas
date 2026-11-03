@@ -7,8 +7,10 @@
 from bitsets import bitset, bases
 import os
 import json
+import itertools
 import random
 import string
+from dataclasses import dataclass
 # NETWORKX: https://networkx.github.io/
 import networkx as nx
 from functools import reduce
@@ -151,6 +153,156 @@ def abbrev(term_list):
                    "Region": "Reg",
                    "2DPoint": "2DPt"}
     return '|'.join([abbrev_dict[term] for term in term_list])
+
+
+# Path consistency, using bit masks.
+#
+# Network.propagate makes a Network path consistent, but it is far too slow for searching through
+# a great many networks.  The functions and class below do the same job much faster by using bit
+# masks instead of RelSets and networkx graphs.  Bit i of a mask stands for the i-th relation of
+# the algebra, which is also the i-th bit of a RelSet.  A network of n nodes is a square matrix
+# (a list of lists) of masks, where matrix[j][i] is the converse of matrix[i][j].
+
+class _MaskOps:
+    """Converse and composition of an algebra's relation sets, as bit masks."""
+
+    def __init__(self, algebra):
+        names = list(algebra.elements)
+        position = {name: i for i, name in enumerate(names)}
+        self.size = len(names)
+        self.full = (1 << self.size) - 1  # the relation set with every relation in it
+        self._composition = [[int(algebra.transitivity_table[r][s]) for s in names] for r in names]
+        self._converse = [1 << position[algebra.converse(r)] for r in names]
+        self._converse_cache = dict()
+        self._compose_cache = dict()
+
+    def converse(self, mask):
+        result = self._converse_cache.get(mask)
+        if result is None:
+            result = 0
+            for i in range(self.size):
+                if mask >> i & 1:
+                    result |= self._converse[i]
+            self._converse_cache[mask] = result
+        return result
+
+    def compose(self, mask1, mask2):
+        result = self._compose_cache.get((mask1, mask2))
+        if result is None:
+            result = 0
+            for i in range(self.size):
+                if mask1 >> i & 1:
+                    row = self._composition[i]
+                    for j in range(self.size):
+                        if mask2 >> j & 1:
+                            result |= row[j]
+            self._compose_cache[(mask1, mask2)] = result
+        return result
+
+
+def _set_label(ops, matrix, i, j, mask):
+    matrix[i][j] = mask
+    matrix[j][i] = ops.converse(mask)
+
+
+def _make_path_consistent(ops, matrix, nodes):
+    """Make a constraint matrix path consistent, in place: repeat C(i,k) = C(i,k) + C(i,j);C(j,k)
+    for every triple of nodes until nothing changes.  Return False, and stop, if a label becomes
+    empty (so the network is inconsistent), and True otherwise.  This is the same fixed point
+    that Network.propagate reaches."""
+    for i in range(nodes):
+        for j in range(i + 1, nodes):
+            if not matrix[i][j]:
+                return False
+    queue = deque((i, j) for i in range(nodes) for j in range(i + 1, nodes))
+    queued = set(queue)
+    while queue:
+        i, j = queue.popleft()
+        queued.discard((i, j))
+        for k in range(nodes):
+            if k == i or k == j:
+                continue
+            # Refine C(i,k) using i-j-k, and then refine C(k,j) using k-i-j
+            for (a, b), (c, d), (e, f) in (((i, k), (i, j), (j, k)), ((k, j), (k, i), (i, j))):
+                old = matrix[a][b]
+                new = old & ops.compose(matrix[c][d], matrix[e][f])
+                if new != old:
+                    if not new:
+                        return False
+                    _set_label(ops, matrix, a, b, new)
+                    pair = (min(a, b), max(a, b))
+                    if pair not in queued:
+                        queued.add(pair)
+                        queue.append(pair)
+    return True
+
+
+def _is_consistent(ops, matrix, nodes):
+    """Is there a singleton labeling of the network, each of whose edges is a single relation,
+    that is path consistent?  (The matrix is not changed.)  This is a backtracking search: make
+    the network path consistent, and if some label has more than one relation, try each of them."""
+    matrix = [row[:] for row in matrix]
+    if not _make_path_consistent(ops, matrix, nodes):
+        return False
+    choice = None
+    for i in range(nodes):
+        for j in range(i + 1, nodes):
+            count = bin(matrix[i][j]).count("1")
+            if count > 1 and (choice is None or count < choice[0]):
+                choice = (count, i, j)
+    if choice is None:
+        return True
+    _, i, j = choice
+    for r in range(ops.size):
+        if matrix[i][j] >> r & 1:
+            trial = [row[:] for row in matrix]
+            _set_label(ops, trial, i, j, 1 << r)
+            if _is_consistent(ops, trial, nodes):
+                return True
+    return False
+
+
+@dataclass(frozen=True)
+class PathConsistencyCheck:
+    """The result of Algebra.check_path_consistency.
+
+    * subalgebra_size -- the number of relation sets in the subalgebra that was checked
+    * refuted -- True if a network was found that is path consistent but not consistent
+    * nodes -- the number of nodes in that network (None if there isn't one)
+    * counterexample -- that network, as a dictionary that maps each pair of nodes, (i, j) with
+      i < j, to a RelSet (None if there isn't one)
+    * refined -- the counterexample after it is made path consistent (None if there isn't one)
+    * exhaustive -- the numbers of nodes for which every network was checked
+    * sampled -- the numbers of nodes for which only a sample of the networks was checked
+    * checked -- the number of path consistent networks that were tested for consistency
+
+    The sizes in exhaustive and sampled only include the ones that were finished: if a
+    counterexample is found, the search stops, and the size of the counterexample is not included.
+    """
+    subalgebra_size: int
+    refuted: bool
+    nodes: object
+    counterexample: object
+    refined: object
+    exhaustive: tuple
+    sampled: tuple
+    checked: int
+
+    def __str__(self):
+        if self.refuted:
+            return (f"Path consistency does not decide this subalgebra ({self.subalgebra_size} relation sets): "
+                    f"a path consistent network of {self.nodes} nodes that is not consistent was found.")
+        def sizes(numbers):
+            return " and ".join(", ".join(str(n) for n in numbers).rsplit(", ", 1))
+
+        parts = []
+        if self.exhaustive:
+            parts.append(f"every network of {sizes(self.exhaustive)} nodes")
+        if self.sampled:
+            parts.append(f"a sample of the networks of {sizes(self.sampled)} nodes")
+        return (f"No counterexample found in this subalgebra ({self.subalgebra_size} relation sets), "
+                f"after testing {self.checked} path consistent networks: {' and '.join(parts)}.  "
+                f"That is evidence, not proof.")
 
 
 class Algebra:
@@ -411,6 +563,198 @@ class Algebra:
                     found.add(mask)
                     work_list.append(mask)
         return frozenset(self.elements_bitset.fromint(mask) for mask in found)
+
+    def _get_mask_ops(self):
+        """The bit mask versions of converse and composition (made the first time they are needed)."""
+        ops = getattr(self, "_mask_ops", None)
+        if ops is None:
+            ops = self._mask_ops = _MaskOps(self)
+        return ops
+
+    def _constraint_matrix(self, constraints, nodes):
+        """Turn a dictionary of constraints into a matrix of bit masks.  See path_consistency."""
+        if not isinstance(constraints, abc.Mapping):
+            raise TypeError("The network must be a dictionary that maps pairs of node numbers to relation sets.")
+        ops = self._get_mask_ops()
+        edges = []
+        for key, relset in constraints.items():
+            if (not isinstance(key, tuple) or len(key) != 2 or key[0] == key[1]
+                    or not all(isinstance(k, int) and not isinstance(k, bool) and k >= 0 for k in key)):
+                raise ValueError(f"{key!r} is not a pair of different node numbers, such as (0, 1).")
+            if isinstance(relset, RelSet):  # re-create it in this algebra, to check its relations
+                relset = self.relset(list(relset.members()))
+            else:
+                relset = self.relset(relset)
+            edges.append((key, int(relset)))
+        needed = max((max(key) + 1 for key, _ in edges), default=0)
+        if nodes is None:
+            nodes = needed
+        elif not isinstance(nodes, int) or isinstance(nodes, bool) or nodes < needed:
+            raise ValueError(f"nodes must be an integer of at least {needed}, which is one more than "
+                             f"the highest node number in the network.")
+        matrix = [[ops.full] * nodes for _ in range(nodes)]
+        for (i, j), mask in edges:
+            _set_label(ops, matrix, i, j, matrix[i][j] & mask)
+        return matrix, nodes
+
+    def path_consistency(self, constraints, nodes=None):
+        """Make a network path consistent, and return the result.
+
+        The network is a dictionary that maps pairs of node numbers, (i, j), to relation sets:
+        the constraint that node i is related to node j by one of the relations in the set.  A
+        relation set can be anything that Algebra.relset accepts.  The nodes are numbered from 0,
+        and a pair of nodes that is not in the dictionary is unconstrained (all relations are
+        possible).  If both (i, j) and (j, i) are given, then both constraints apply.  The number
+        of nodes is one more than the highest node number given, unless the optional argument,
+        nodes, says otherwise.
+
+        Path consistency (also called algebraic closure) repeats C(i,k) = C(i,k) + C(i,j);C(j,k),
+        where + is intersection and ; is composition, for every three nodes i, j and k, until
+        nothing changes.  This is the same thing that Network.propagate does, but it is much
+        faster, because it works on a bare dictionary instead of a Network.
+
+        The result is a dictionary that maps every pair (i, j), with i < j, to a RelSet.  It is
+        None if one of the relation sets becomes empty, in which case the network is inconsistent.
+        Not every network that is path consistent is consistent (see is_consistent).
+
+        A TypeError is raised if the network is not a dictionary, and a ValueError if a key is not
+        a pair of different node numbers.  A KeyError is raised for a relation that is not in this
+        algebra.
+        """
+        matrix, nodes = self._constraint_matrix(constraints, nodes)
+        if not _make_path_consistent(self._get_mask_ops(), matrix, nodes):
+            return None
+        return {(i, j): self.elements_bitset.fromint(matrix[i][j])
+                for i in range(nodes) for j in range(i + 1, nodes)}
+
+    def is_consistent(self, constraints, nodes=None):
+        """Return True if a network is consistent, and False otherwise.  The network is given in
+        the same way as for path_consistency.
+
+        A network is called consistent here if some way of choosing a single relation for every
+        edge, from the ones allowed, is path consistent.  That is the same notion that
+        Network.consistent_singleton_labelings uses, but it is found by a backtracking search that
+        stops at the first one.  For Allen's interval algebra (and the algebras with a single
+        ontological class, like the point algebras and RCC8, are expected to behave in the same
+        way) it means that there really are intervals that satisfy every constraint, because a
+        path consistent network of single relations can be realized by intervals [Ladkin and
+        Maddux, 1994].  For the other algebras that is not known, and a network that is
+        consistent here may not have a realization.
+
+        Deciding consistency is NP-hard for Allen's algebra, so the search can take a long time
+        for large networks.  See path_consistency for the errors that can be raised.
+        """
+        matrix, nodes = self._constraint_matrix(constraints, nodes)
+        return _is_consistent(self._get_mask_ops(), matrix, nodes)
+
+    def check_path_consistency(self, relsets, nodes=6, walks=300, exhaustive_limit=50000, seed=0):
+        """Look for a network, whose constraints come from a subalgebra, that is path consistent
+        but is not consistent.  Such a network is a counterexample to the claim that path
+        consistency decides consistency for the subalgebra.  Return a PathConsistencyCheck.
+
+        Path consistency takes time proportional to the cube of the number of nodes in a network.
+        So, if path consistency decides consistency for a subalgebra (every path consistent network
+        that is made from relation sets in the subalgebra is consistent), then reasoning with the
+        subalgebra is tractable.  That is a sufficient condition for tractability, not a necessary
+        one: a subalgebra for which path consistency does not decide might still be tractable by
+        some other algorithm.  The check is a way to look for candidates, and to rule candidates
+        out.  Nebel and Bürckert (1995) showed that the ORD-Horn subalgebra, H, of Allen's algebra
+        is the only maximal tractable subalgebra that contains all of the basic relations, so, to
+        look for tractable subalgebras beyond H, look at subalgebras that leave out some of them.
+        (Krokhin, Jeavons and Jonsson, 2003, found all 18 maximal tractable subalgebras.)
+
+        The relsets argument is a collection of relation sets, like the one for Algebra.closure.
+        The networks that are checked are the ones whose constraints are in the closure of those
+        relation sets, which is the smallest subalgebra that contains them, together with the
+        relation set that contains all of the relations, because a pair of nodes can always be
+        left unconstrained.  Networks of 4, 5, ..., nodes nodes are checked, in that order, since
+        every path consistent network of 3 nodes is consistent.  For each size:
+
+        * If the number of networks is no more than exhaustive_limit, every one is checked.
+        * Otherwise, walks random walks are made.  A walk starts from the unconstrained network
+          (or, on every other walk, from a random network) and then repeatedly intersects a random
+          constraint with a random relation set from the subalgebra, keeping the change only if
+          the network stays path consistent, and testing the network for consistency after each
+          change.  This finds counterexamples that checking random networks does not.
+
+        The search stops at the first counterexample.  The result is reproducible: the same
+        arguments, including seed, give the same result.
+
+        If a counterexample is found, then it is a certificate that path consistency does not decide
+        the subalgebra, and it can be checked with path_consistency and is_consistent.  If none
+        is found, that is only evidence: networks of more than nodes nodes are not checked, the
+        walks only sample the networks of each size above the exhaustive limit, and a counterexample
+        for a subalgebra that is not tractable can need many nodes.  (For example, no counterexample
+        is found for the subalgebra of Allen's algebra that is generated by the basic relations
+        and B|BI, even though it is not tractable.)  The result says which sizes were checked
+        exhaustively.
+
+        A TypeError is raised if relsets is not a collection of relation sets, a KeyError if one has
+        a relation that is not in this algebra, and a ValueError if nodes is less than 4.
+        """
+        if isinstance(relsets, (str, RelSet)) or not isinstance(relsets, abc.Iterable):
+            raise TypeError("Input must be a collection of relation sets, such as a list of RelSets.")
+        if not isinstance(nodes, int) or isinstance(nodes, bool) or nodes < 4:
+            raise ValueError("nodes must be an integer that is at least 4.")
+        ops = self._get_mask_ops()
+        subalgebra = self.closure(list(relsets) + [self.elements])
+        labels = sorted((int(rs) for rs in subalgebra if int(rs)), key=lambda m: (bin(m).count("1"), m))
+        rng = random.Random(seed)
+        exhaustive, sampled = [], []
+        checked = 0
+
+        def result(refuted, size, counterexample, refined):
+            def as_relsets(matrix):
+                return {(i, j): self.elements_bitset.fromint(matrix[i][j])
+                        for i in range(size) for j in range(i + 1, size)}
+            return PathConsistencyCheck(len(subalgebra), refuted, size if refuted else None,
+                                        as_relsets(counterexample) if refuted else None,
+                                        as_relsets(refined) if refuted else None,
+                                        tuple(exhaustive), tuple(sampled), checked)
+
+        def matrix_of(pairs, edges, size):
+            matrix = [[ops.full] * size for _ in range(size)]
+            for (i, j), mask in zip(pairs, edges):
+                _set_label(ops, matrix, i, j, mask)
+            return matrix
+
+        for size in range(4, nodes + 1):
+            pairs = [(i, j) for i in range(size) for j in range(i + 1, size)]
+            if len(labels) ** len(pairs) <= exhaustive_limit:
+                for edges in itertools.product(labels, repeat=len(pairs)):
+                    refined = matrix_of(pairs, edges, size)
+                    if not _make_path_consistent(ops, refined, size):
+                        continue
+                    checked += 1
+                    if not _is_consistent(ops, refined, size):
+                        return result(True, size, matrix_of(pairs, edges, size), refined)
+                exhaustive.append(size)
+                continue
+            for walk in range(walks):
+                if walk % 2 == 0:  # start from the unconstrained network
+                    matrix = matrix_of(pairs, [ops.full] * len(pairs), size)
+                else:  # start from a random network
+                    matrix = matrix_of(pairs, [rng.choice(labels) for _ in pairs], size)
+                    if not _make_path_consistent(ops, matrix, size):
+                        continue
+                    checked += 1
+                    if not _is_consistent(ops, matrix, size):
+                        return result(True, size, matrix, matrix)
+                for _ in range(6 * len(pairs)):
+                    i, j = rng.choice(pairs)
+                    tighter = matrix[i][j] & rng.choice(labels)
+                    if not tighter or tighter == matrix[i][j]:
+                        continue
+                    trial = [row[:] for row in matrix]
+                    _set_label(ops, trial, i, j, tighter)
+                    if not _make_path_consistent(ops, trial, size):
+                        continue
+                    matrix = trial
+                    checked += 1
+                    if not _is_consistent(ops, matrix, size):
+                        return result(True, size, matrix, matrix)
+            sampled.append(size)
+        return result(False, 0, None, None)
 
     def get_domain_classes(self, relset):
         """Returns the set of domain classes supported by the relations in a relset."""
