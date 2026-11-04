@@ -11,6 +11,8 @@ This section describes the Relation Algebra format and usage found in qualreas.
     Allens_Interval_Algebra
     extended_interval_algebras
     time_point_algebras
+    intro_to_subalgebras_and_tractability
+    subalgebras_of_allens_algebra
 
 Constraint Networks
 ===================
